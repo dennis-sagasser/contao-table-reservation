@@ -1,0 +1,119 @@
+<!-- indexer::stop -->
+<?php $objSession = \Session::getInstance(); ?>
+<div class="<?php echo $this->class; ?> block"<?php echo $this->cssID; ?><?php if ($this->style): ?> style="<?php echo $this->style; ?>"<?php endif; ?>>
+<?php if ($this->headline): ?>
+
+<<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
+<?php endif; ?>
+
+<?php if (\Input::get('FORM_PAGE') === 'page2' && $this->infoMessage && \Input::post('FORM_SUBMIT') === 'form_reservation_submit') : ?>
+<p class="info"><?php echo $this->infoMessage ?><br /><br />
+<a href="/"><?php echo $GLOBALS['TL_LANG']['MSC']['backToStart']; ?></a><br /><br />
+
+<?php elseif (\Input::get('FORM_PAGE')==='page2' && !$this->infoMessage && $objSession->get('arrival')) : ?>
+<table id="formdata">
+    <tr>
+        <td class="label"><?php echo $GLOBALS['TL_LANG']['MSC']['dateOfArrival']; ?></td>
+        <td class="value"><?php echo $objSession->get('arrival'); ?></td>
+    </tr>
+        <td class="label"><?php echo $GLOBALS['TL_LANG']['MSC']['dateOfDeparture']; ?></td>
+        <td class="value"><?php echo $objSession->get('departure'); ?></td>
+        
+    <tr> 
+        <td class="label"><?php echo $GLOBALS['TL_LANG']['MSC']['rooms']; ?></td>
+        <td class="value">
+        <?php echo implode('<br />', $objSession->get('rooms')); ?>
+        </td>
+    </tr>
+    <tr>
+        <td class="label"><?php echo $GLOBALS['TL_LANG']['MSC']['total']; ?></td><td class="value"><?php echo $objSession->get('priceMessage') ?></td>
+    </tr>
+</table>
+<br /><br />
+<form action="<?php echo $this->action; ?>" id="reservation" method="post" enctype="application/x-www-form-urlencoded">
+<div class="formbody">
+<input type="hidden" name="FORM_SUBMIT" value="form_reservation_submit" />
+<input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}" />	
+
+<?php echo $this->objWidgetSalutation->generateWithError(); ?><br />
+
+<?php echo $this->objWidgetFirstName->generateLabel(); ?>
+<?php echo $this->objWidgetFirstName->generateWithError(); ?><br />
+
+<?php echo $this->objWidgetLastName->generateLabel(); ?>
+<?php echo $this->objWidgetLastName->generateWithError(); ?><br />
+
+<?php echo $this->objWidgetStreet->generateLabel(); ?>
+<?php echo $this->objWidgetStreet->generateWithError(); ?><br />
+
+<?php echo $this->objWidgetPostCode->generateLabel(); ?>
+<?php echo $this->objWidgetPostCode->generateWithError(); ?> /
+<?php echo $this->objWidgetCity->generateWithError(); ?><br />
+
+<?php echo $this->objWidgetCountry->generateLabel(); ?>
+<?php echo $this->objWidgetCountry->generateWithError(); ?><br />
+ 
+<?php echo $this->objWidgetEmail->generateLabel(); ?>
+<?php echo $this->objWidgetEmail->generateWithError(); ?><br />
+
+<?php echo $this->objWidgetPhone->generateLabel(); ?>
+<?php echo $this->objWidgetPhone->generateWithError(); ?><br />
+
+<?php echo $this->objWidgetRemarks->generateLabel(); ?>
+<?php echo $this->objWidgetRemarks->generateWithError(); ?><br />
+
+<?php echo $this->objWidgetConfirmation->generateWithError(); ?><br /><br />
+
+<?php echo $this->objWidgetSubmit->generate(); ?>
+
+</div>
+</form>
+
+<?php else: ?>
+
+<?php if ($this->errorMessage): ?>
+<p class="error"><?php echo $this->errorMessage; ?>
+<?php endif; ?>
+
+<?php if ($this->infoMessage): ?>
+<p class="info"><?php echo $this->infoMessage; ?><br /><br /><?php echo $this->priceMessage; ?>
+<a href="#"><b><?php echo $GLOBALS['TL_LANG']['MSC']['showTotalOverview']; ?></b></a><br /><br />
+<table class="invisible">
+<thead><td>#</td><td><?php echo $GLOBALS['TL_LANG']['MSC']['date']; ?></td><td><?php echo $GLOBALS['TL_LANG']['MSC']['price']; ?></td><td><?php echo $GLOBALS['TL_LANG']['MSC']['type']; ?></td></thead>
+    <tfoot><td colspan="4"><small><br /><?php echo $GLOBALS['TL_LANG']['MSC']['inclusive']; ?></small></td></tfoot>
+    <?php foreach ($this->arrOverview as $type): ?>
+    <?php foreach ($type as $row): ?>
+    <tr><td><?php echo ++$i; ?>.</td><td><?php echo $row['date']; ?></td><td><?php echo $row['price']; ?> €</td><td><?php echo $row['tablecategory']; ?></td></tr>
+    <?php endforeach; ?> 
+    <?php endforeach; ?>
+</table>
+<a style="color:green;" href="{{env::referer}}?FORM_PAGE=page2"><?php echo $GLOBALS['TL_LANG']['MSC']['reserveNow']; ?></a>
+</p>
+<?php endif; ?>
+
+
+<form action="<?php echo $this->action; ?>" id="availability" method="post" enctype="application/x-www-form-urlencoded">
+<div class="formbody">
+<input type="hidden" name="FORM_SUBMIT" value="form_availability_submit" />
+<input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}" />	
+<?php echo $this->objWidgetArrival->generateLabel(); ?>
+<?php echo $this->objWidgetArrival->generateWithError(); ?><br />
+
+<?php echo $this->objWidgetDeparture->generateLabel(); ?>
+<?php echo $this->objWidgetDeparture->generateWithError(); ?><br /> 
+
+
+<?php echo $this->objWidgetCheckboxes->generateWithError(); ?><br /> 
+<?php foreach ($this->arrSelects as $select): ?>
+<?php echo $select->validate(); ?>
+<?php echo $select->generateLabel(); ?>
+<?php echo $select->generateWithError(); ?><br /> 
+<?php endforeach; ?><br /> 
+ 
+<?php echo $this->objWidgetSubmit->generate(); ?>
+
+</div>
+</form>
+<?php endif; ?>
+</div>
+<!-- indexer::continue -->

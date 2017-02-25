@@ -1,0 +1,68 @@
+/* TableReservation, (c)2017 Dennis Sagasser, LGPL license */
+.toggleInputDiv {
+    background-color: #0C0;
+    cursor: pointer
+}
+
+.toggleInputDiv.active, .toggleInputDiv:hover {
+    background-color: #ffdf62
+}
+
+.dayOfMonth {
+    color: #fff;
+    font-size: 10px
+}
+
+.dayOfWeek {
+    background-color: #fff
+}
+
+.tdCalendarDay {
+    text-align: center;
+    font-size: 9px;
+    border: 1px solid #999;
+    margin: 1px;
+    color: #fff
+}
+
+.emptyInput {
+    border: 1px solid red;
+    width: 15px;
+    height: 10px;
+    font-size: 9px
+}
+
+.filledInput {
+    border: 1px solid #555;
+    width: 15px;
+    height: 10px;
+    font-size: 9px
+}
+
+.emptyInput:focus, .filledInput:focus {
+    background-color: #ebfdd7
+}
+
+.calendarWidget {
+    border-spacing: 2px;
+    border-collapse: separate
+}
+
+.shortMonthColumn {
+    font-size: 10px
+}
+
+.shortMonthName {
+    font-weight: 700;
+    color: #444
+}
+
+#tl_buttons .header_new {
+    background-image: url(../images/edit16.gif)
+}
+
+#tl_table_occupancy > .tl_formbody_edit {
+    overflow-x: auto;
+    margin: 0 18px;
+    padding-left: 0;
+}
