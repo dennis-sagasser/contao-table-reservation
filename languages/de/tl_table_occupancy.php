@@ -41,6 +41,12 @@ $GLOBALS['TL_LANG']['tl_table_occupancy']['countMorning']      = array('Sitzplä
 $GLOBALS['TL_LANG']['tl_table_occupancy']['countNoon']         = array('Sitzplätze Mittag', 'Die Anzahl der verfügbaren Sitplätze zu Mittag.');
 $GLOBALS['TL_LANG']['tl_table_occupancy']['countEvening']      = array('Sitzplätze Abend', 'Die Anzahl der verfügbaren Sitplätze am Abend.');
 $GLOBALS['TL_LANG']['tl_table_occupancy']['year']              = array('Jahr', '');
+$GLOBALS['TL_LANG']['tl_table_occupancy']['morningAlt']        = 'Vormittag';
+$GLOBALS['TL_LANG']['tl_table_occupancy']['morningTitle']      = 'Tageszeit Vormittag';
+$GLOBALS['TL_LANG']['tl_table_occupancy']['noonAlt']           = 'Mittagszeit';
+$GLOBALS['TL_LANG']['tl_table_occupancy']['noonTitle']         = 'Tageszeit Mittag';
+$GLOBALS['TL_LANG']['tl_table_occupancy']['eveningAlt']        = 'Abend';
+$GLOBALS['TL_LANG']['tl_table_occupancy']['eveningTitle']      = 'Tageszeit Abend';
 
 /**
  * Legends

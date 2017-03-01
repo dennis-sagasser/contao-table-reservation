@@ -220,7 +220,6 @@ class tl_table_occupancy extends \Backend
     /**
      * Parent call of the constructor.
      *
-     * @return null
      */
     public function __construct()
     {
@@ -230,11 +229,11 @@ class tl_table_occupancy extends \Backend
     /**
      * Generates a year calendar widget to edit number of seats for every day in year.
      *
-     * @param object $dc Data container object
+     * @param \DataContainer $dc Data container object
      *
      * @return string
      */
-    public function generateCalendarWidget(DataContainer $dc)
+    public function generateCalendarWidget(\DataContainer $dc)
     {
 
         $intYear        = Input::get('intYear');
@@ -246,11 +245,27 @@ class tl_table_occupancy extends \Backend
         $intCurrentMonth = 0;
         $intParentId     = $dc->activeRecord->pid;
 
+        $strMorningSrc = 'system/modules/table_reservation/assets/images/sunrise16.png';
+        $strNoonSrc    = 'system/modules/table_reservation/assets/images/sun16.png';
+        $strEveningSrc = 'system/modules/table_reservation/assets/images/moon16.png';
+
+        $strMorningAlt = $GLOBALS['TL_LANG']['tl_table_occupancy']['morningAlt'];
+        $strNoonAlt    = $GLOBALS['TL_LANG']['tl_table_occupancy']['noonAlt'];
+        $strEveningAlt = $GLOBALS['TL_LANG']['tl_table_occupancy']['eveningAlt'];
+
+        $strMorningAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['morningTitle'] . '""';
+        $strNoonAltAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['noonTitle'] . '""';
+        $strEveningAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['eveningTitle'] . '"';
+
         while ($intCurrentMonth < 12) {
             $strMonthNameShort = $GLOBALS['TL_LANG']['MONTHS_SHORT'][$intCurrentMonth];
             $strHtmlYearCalendar .= '<tr>';
-            $strHtmlYearCalendar .= '<td class="shortMonthColumn"><span class="shortMonthName">' . $strMonthNameShort . '</span><br><br>MO<br>MI<br>AB</td>';
+            $strHtmlYearCalendar .= '<td class="shortMonthColumn"><div class="shortMonthName">' . $strMonthNameShort . '</div><br>';
+            $strHtmlYearCalendar .= \Image::getHtml($strMorningSrc, $strMorningAlt, $strMorningAttr);
+            $strHtmlYearCalendar .= \Image::getHtml($strNoonSrc, $strNoonAlt, $strNoonAltAttr);
+            $strHtmlYearCalendar .= \Image::getHtml($strEveningSrc, $strEveningAlt, $strEveningAttr);
             $strHtmlYearCalendar .= $this->datesMonth(++$intCurrentMonth, $intCurrentYear, $intParentId);
+            $strHtmlYearCalendar .= '</td>';
             $strHtmlYearCalendar .= '</tr>';
         }
 
@@ -351,7 +366,6 @@ class tl_table_occupancy extends \Backend
     /**
      * Redirect to edit current date when date already exists in DB.
      *
-     * @return null
      */
     public function checkDate()
     {

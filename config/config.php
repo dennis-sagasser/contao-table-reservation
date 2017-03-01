@@ -28,7 +28,7 @@ $GLOBALS['BE_MOD']['table_reservation'] = array(
         'tables'     => array('tl_table_category', 'tl_table_occupancy'),
         //'callback'     => 'ClassName',
         'icon'       => 'system/modules/table_reservation/assets/images/table16.png',
-        'stylesheet' => 'system/modules/table_reservation/assets/css/layout.css',
+        'stylesheet' => 'system/modules/table_reservation/assets/css/layout.min.css',
         'javascript' => 'system/modules/table_reservation/assets/js/datepicker.js'
     ),
     'table_reservation_list' => array(

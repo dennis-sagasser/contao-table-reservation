@@ -24,35 +24,22 @@
 
     <table id="overviewTable" class="invisible">
         <thead>
-            <tr>
-                <td>#</td>
-                <td><?= $GLOBALS['TL_LANG']['MSC']['date']; ?></td>
-                <td><?= $GLOBALS['TL_LANG']['MSC']['price']; ?></td>
-                <td><?= $GLOBALS['TL_LANG']['MSC']['type']; ?></td>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <td colspan="4">
-                    <small><br><?= $GLOBALS['TL_LANG']['MSC']['inclusive']; ?></small>
-                </td>
-            </tr>
-        </tfoot>
-        <?php foreach ($this->arrOverview as $type): ?>
-        <?php foreach ($type as $row): ?>
         <tr>
-            <td><?= ++$i; ?>.</td>
-            <td><?= $row['date']; ?></td>
-            <td><?= $row['price']; ?> €</td>
-            <td><?= $row['tablecategory']; ?></td>
+            <td><strong><?= $GLOBALS['TL_LANG']['MSC']['strFormArrival']; ?></strong></td>
+            <td><strong><?= $GLOBALS['TL_LANG']['MSC']['seats']; ?></strong></td>
         </tr>
-        <?php endforeach; ?>
+        </thead>
+        <?php foreach ($this->arrSeats as $row): ?>
+        <tr>
+            <td><?= $this->objSession->get('arrival'); ?></td>
+            <td><?= $row; ?></td>
+        </tr>
         <?php endforeach; ?>
     </table>
     <a style="color:green;"
        href="{{env::url}}/{{env::request}}?FORM_PAGE=page2"><?= $GLOBALS['TL_LANG']['MSC']['reserveNow']; ?>
     </a>
-    </div>
+</div>
 <?php endif; ?>
 
 <?php $this->endblock() ?>

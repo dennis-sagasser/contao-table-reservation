@@ -41,6 +41,12 @@ $GLOBALS['TL_LANG']['tl_table_occupancy']['countMorning']      = array('Seats mo
 $GLOBALS['TL_LANG']['tl_table_occupancy']['countNoon']         = array('Seats noon', 'The number of available seats at noon.');
 $GLOBALS['TL_LANG']['tl_table_occupancy']['countEvening']      = array('Seats evening', 'The number of available seats in the evening.');
 $GLOBALS['TL_LANG']['tl_table_occupancy']['year']              = array('Year', '');
+$GLOBALS['TL_LANG']['tl_table_occupancy']['morningAlt']        = 'Morning';
+$GLOBALS['TL_LANG']['tl_table_occupancy']['morningTitle']      = 'Morning';
+$GLOBALS['TL_LANG']['tl_table_occupancy']['noonAlt']           = 'Midday';
+$GLOBALS['TL_LANG']['tl_table_occupancy']['noonTitle']         = 'Midday';
+$GLOBALS['TL_LANG']['tl_table_occupancy']['eveningAlt']        = 'Evening';
+$GLOBALS['TL_LANG']['tl_table_occupancy']['eveningTitle']      = 'Evening';
 
 /**
  * Legends
