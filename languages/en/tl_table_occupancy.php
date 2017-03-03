@@ -62,4 +62,4 @@ $GLOBALS['TL_LANG']['tl_table_occupancy']['calendar_legend'] = 'Annual calendar'
  * Buttons
  */
 $GLOBALS['TL_LANG']['tl_table_occupancy']['new'] = array('Edit occupancy', 'Open the calendar for the table occupancy.');
-$GLOBALS['TL_LANG']['MSC']['editRecord']         = 'Edit occupancy';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['editRecord']         = 'Edit occupancy';

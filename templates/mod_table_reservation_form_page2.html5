@@ -1,42 +1,24 @@
 <!-- indexer::stop -->
-<?php $this->extend('mod_reservation_form'); ?>
+<?php $this->extend('mod_table_reservation_form'); ?>
 
 <?php $this->block('header'); ?>
 <?php $this->parent(); ?>
 <?php $this->endblock(); ?>
 
-<?php //if (\Input::get('FORM_PAGE') === 'page2' && $this->infoMessage && \Input::post('FORM_SUBMIT') === 'form_reservation_submit') : ?>
-
-<?php $this->block('message'); ?>
-<p class="info">
-    <?= $this->infoMessage ?>
-    <br><br>
-    <a href="/"><?= $GLOBALS['TL_LANG']['MSC']['backToStart']; ?></a>
-    <br><br>
-</p>
-<?php $this->endblock(); ?>
-
-<?php //elseif (\Input::get('FORM_PAGE')==='page2' && !$this->infoMessage && $this->objSession->get('arrival')) : ?>
+<?php $this->block('overview') ?>
 
 <table id="formdata">
     <tr>
-        <td class="label"><?= $GLOBALS['TL_LANG']['MSC']['dateOfArrival']; ?></td>
+        <td class="label"><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['dateAndTime']; ?></td>
         <td class="value"><?= $this->objSession->get('arrival'); ?></td>
     </tr>
     <tr>
-        <td class="label"><?= $GLOBALS['TL_LANG']['MSC']['dateOfDeparture']; ?></td>
-        <td class="value"><?= $this->objSession->get('departure'); ?></td>
-    </tr>
-    <tr>
-        <td class="label"><?= $GLOBALS['TL_LANG']['MSC']['rooms']; ?></td>
-        <td class="value"><?= implode('<br>', $this->objSession->get('tables')); ?></td>
-    </tr>
-    <tr>
-        <td class="label"><?= $GLOBALS['TL_LANG']['MSC']['total']; ?></td>
-        <td class="value"><?= $this->objSession->get('priceMessage') ?></td>
+        <td class="label"><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservation']; ?></td>
+        <td class="value"><?= implode('<br>', $this->objSession->get('seats')); ?></td>
     </tr>
 </table>
 <br><br>
+
 <?php $this->endblock(); ?>
 
 <?php $this->block('form') ?>
@@ -71,6 +53,4 @@
 </form>
 
 <?php $this->endblock(); ?>
-
-<?php //endif ?>
 <!-- indexer::continue -->

@@ -1,32 +1,36 @@
 <!-- indexer::stop -->
-<div class="<?= $this->class; ?> block"<?= $this->cssID; ?><?php if ($this->style): ?> style="<?= $this->style; ?>"<?php endif; ?>>
+<div class="<?= $this->class; ?> block"<?= $this->cssID; ?>
+<?php if ($this->style): ?> style="<?= $this->style; ?>"
+<?php endif; ?>>
 
-<?php $this->block('header') ?>
+<?php $this->block('header'); ?>
 <?php if ($this->headline): ?>
 <<?= $this->hl; ?>><?= $this->headline; ?></<?= $this->hl; ?>>
 <?php endif; ?>
-<?php $this->endblock() ?>
+<?php $this->endblock(); ?>
 
-<?php $this->block('message') ?>
+<?php $this->block('message'); ?>
 <?php if ($this->errorMessage): ?>
 <p class="error"><?= $this->errorMessage; ?></p>
 <?php endif; ?>
-<?php $this->endblock() ?>
+<?php $this->endblock(); ?>
 
-<?php $this->block('overview') ?>
+<?php $this->block('overview'); ?>
 
 <?php if ($this->infoMessage): ?>
 <div class="info">
     <?= $this->infoMessage; ?>
     <br><br>
-    <a href="#"><?= $GLOBALS['TL_LANG']['MSC']['showTotalOverview']; ?></a>
+    <a style="cursor: pointer" target="_self">
+        <?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['showTotalOverview']; ?>
+    </a>
     <br><br>
 
     <table id="overviewTable" class="invisible">
         <thead>
         <tr>
-            <td><strong><?= $GLOBALS['TL_LANG']['MSC']['strFormArrival']; ?></strong></td>
-            <td><strong><?= $GLOBALS['TL_LANG']['MSC']['seats']; ?></strong></td>
+            <td><strong><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['strFormArrival']; ?></strong></td>
+            <td><strong><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['seats']; ?></strong></td>
         </tr>
         </thead>
         <?php foreach ($this->arrSeats as $row): ?>
@@ -37,22 +41,25 @@
         <?php endforeach; ?>
     </table>
     <a style="color:green;"
-       href="{{env::url}}/{{env::request}}?FORM_PAGE=page2"><?= $GLOBALS['TL_LANG']['MSC']['reserveNow']; ?>
+       href="<?= $this->strReserveNowUrl ?>"><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['reserveNow']; ?>
     </a>
 </div>
 <?php endif; ?>
 
-<?php $this->endblock() ?>
+<?php $this->endblock(); ?>
 
-<?php $this->block('form') ?>
+<?php $this->block('form'); ?>
 <form action="<?= $this->action; ?>" id="availability" method="post" enctype="application/x-www-form-urlencoded">
     <div class="formbody">
         <input type="hidden" name="FORM_SUBMIT" value="form_availability_submit"/>
         <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}"/>
-        <?= $this->objWidgetArrival->generateLabel(); ?>
-        <?= $this->objWidgetArrival->generateWithError(); ?><br>
+        <?= $this->objWidgetArrival ? $this->objWidgetArrival->generateLabel() :''; ?>
+        <?= $this->objWidgetArrival ? $this->objWidgetArrival->generateWithError() : ''; ?><br>
 
-        <?= $this->objWidgetCheckboxes->generateWithError(); ?><br>
+        <?= $this->objWidgetCheckboxes ? $this->objWidgetCheckboxes->generateWithError() : ''; ?><br>
+
+        <?php if ($this->arrSelects): ?>
+
         <?php foreach ($this->arrSelects as $select): ?>
         <?= $select->validate(); ?>
         <?= $select->generateLabel(); ?>
@@ -61,8 +68,9 @@
 
         <?= $this->objWidgetSubmit->generate(); ?>
 
+        <?php endif; ?>
     </div>
 </form>
-<?php $this->endblock() ?>
+<?php $this->endblock(); ?>
 </div>
 <!-- indexer::continue -->

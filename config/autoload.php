@@ -25,6 +25,7 @@ ClassLoader::addClasses(array
  */
 TemplateLoader::addFiles(array
 (
-	'mod_reservation_form_page2' => 'system/modules/table_reservation/templates',
-	'mod_reservation_form'       => 'system/modules/table_reservation/templates',
+	'mod_table_reservation_form_success' => 'system/modules/table_reservation/templates',
+	'mod_table_reservation_form'         => 'system/modules/table_reservation/templates',
+	'mod_table_reservation_form_page2'   => 'system/modules/table_reservation/templates',
 ));

@@ -62,4 +62,4 @@ $GLOBALS['TL_LANG']['tl_table_occupancy']['calendar_legend'] = 'Jahreskalender';
  * Buttons
  */
 $GLOBALS['TL_LANG']['tl_table_occupancy']['new'] = array('Zimmerbelegung bearbeiten', 'Den Kalender für die Zimmerbelegung öffnen.');
-$GLOBALS['TL_LANG']['MSC']['editRecord']         = 'Zimmerbelegung bearbeiten';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['editRecord']         = 'Zimmerbelegung bearbeiten';
