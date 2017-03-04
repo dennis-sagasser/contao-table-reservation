@@ -33,14 +33,14 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_table_occupancy']['showPeriodOptions'] = array('Zeitspanne aktivieren', 'Aktiviert die Optionen, um mehrere Tage gleichzeitig zu bearbeiten. Achtung: Bereits angelegte Daten werden überschrieben.');
-$GLOBALS['TL_LANG']['tl_table_occupancy']['startDate']         = array('Startdatum', 'Bitte geben Sie das Startdatum gemäß des globalen Datumsformats ein.');
-$GLOBALS['TL_LANG']['tl_table_occupancy']['date']              = array('Datum', '');
-$GLOBALS['TL_LANG']['tl_table_occupancy']['endDate']           = array('Enddatum', 'Bitte geben Sie das Startdatum gemäß des globalen Datumsformats ein.');
-$GLOBALS['TL_LANG']['tl_table_occupancy']['countMorning']      = array('Sitzplätze Morgen', 'Die Anzahl der verfügbaren Sitplätze am Morgen.');
-$GLOBALS['TL_LANG']['tl_table_occupancy']['countNoon']         = array('Sitzplätze Mittag', 'Die Anzahl der verfügbaren Sitplätze zu Mittag.');
-$GLOBALS['TL_LANG']['tl_table_occupancy']['countEvening']      = array('Sitzplätze Abend', 'Die Anzahl der verfügbaren Sitplätze am Abend.');
-$GLOBALS['TL_LANG']['tl_table_occupancy']['year']              = array('Jahr', '');
+$GLOBALS['TL_LANG']['tl_table_occupancy']['showPeriodOptions'] = ['Zeitspanne aktivieren', 'Aktiviert die Optionen, um mehrere Tage gleichzeitig zu bearbeiten. Achtung: Bereits angelegte Daten werden überschrieben.'];
+$GLOBALS['TL_LANG']['tl_table_occupancy']['startDate']         = ['Startdatum', 'Bitte geben Sie das Startdatum gemäß des globalen Datumsformats ein.'];
+$GLOBALS['TL_LANG']['tl_table_occupancy']['date']              = ['Datum', ''];
+$GLOBALS['TL_LANG']['tl_table_occupancy']['endDate']           = ['Enddatum', 'Bitte geben Sie das Startdatum gemäß des globalen Datumsformats ein.'];
+$GLOBALS['TL_LANG']['tl_table_occupancy']['countMorning']      = ['Sitzplätze Morgen', 'Die Anzahl der verfügbaren Sitplätze am Morgen.'];
+$GLOBALS['TL_LANG']['tl_table_occupancy']['countNoon']         = ['Sitzplätze Mittag', 'Die Anzahl der verfügbaren Sitplätze zu Mittag.'];
+$GLOBALS['TL_LANG']['tl_table_occupancy']['countEvening']      = ['Sitzplätze Abend', 'Die Anzahl der verfügbaren Sitplätze am Abend.'];
+$GLOBALS['TL_LANG']['tl_table_occupancy']['year']              = ['Jahr', ''];
 $GLOBALS['TL_LANG']['tl_table_occupancy']['morningAlt']        = 'Vormittag';
 $GLOBALS['TL_LANG']['tl_table_occupancy']['morningTitle']      = 'Tageszeit Vormittag';
 $GLOBALS['TL_LANG']['tl_table_occupancy']['noonAlt']           = 'Mittagszeit';
@@ -61,5 +61,5 @@ $GLOBALS['TL_LANG']['tl_table_occupancy']['calendar_legend'] = 'Jahreskalender';
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_table_occupancy']['new'] = array('Zimmerbelegung bearbeiten', 'Den Kalender für die Zimmerbelegung öffnen.');
-$GLOBALS['TL_LANG']['MSC']['table_reservation']['editRecord']         = 'Zimmerbelegung bearbeiten';
+$GLOBALS['TL_LANG']['tl_table_occupancy']['new']              = ['Zimmerbelegung bearbeiten', 'Den Kalender für die Zimmerbelegung öffnen.'];
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['editRecord'] = 'Zimmerbelegung bearbeiten';

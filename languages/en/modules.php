@@ -30,12 +30,9 @@
  * @link      https://contao.org
  */
 
-$GLOBALS['TL_LANG']['MOD']['table_reservation'][0]      = 'Table Reservation';
-$GLOBALS['TL_LANG']['MOD']['table_config'][0]           = 'Settings';
-$GLOBALS['TL_LANG']['MOD']['table_config'][1]           = 'General settings';
-$GLOBALS['TL_LANG']['MOD']['table_categories'][0]       = 'Table categories';
-$GLOBALS['TL_LANG']['MOD']['table_categories'][1]       = 'Manage table categories';
-$GLOBALS['TL_LANG']['MOD']['table_reservation_list'][0] = 'Reservation list';
-$GLOBALS['TL_LANG']['MOD']['table_reservation_list'][1] = 'View reservation list';
-$GLOBALS['TL_LANG']['FMD']['seat_reservation']          = 'Table Reservation';
-$GLOBALS['TL_LANG']['FMD']['table_reservation']         = array('Reservation form', 'Provides a form to reserve seats.');
+$GLOBALS['TL_LANG']['MOD']['table_reservation']      = ['Table Reservation', ''];
+$GLOBALS['TL_LANG']['MOD']['table_config']           = ['Settings', 'General settings'];
+$GLOBALS['TL_LANG']['MOD']['table_categories']       = ['Table categories', 'Manage table categoriesn'];
+$GLOBALS['TL_LANG']['MOD']['table_reservation_list'] = ['Reservation list', 'View reservation list'];
+$GLOBALS['TL_LANG']['FMD']['seat_reservation']       = ['Table Reservation', ''];
+$GLOBALS['TL_LANG']['FMD']['table_reservation']      = ['Reservation form', 'Provides a form to reserve seats.'];

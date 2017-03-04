@@ -41,10 +41,10 @@ $GLOBALS['BE_MOD']['table_reservation'] = array(
 );
 
 $GLOBALS['FE_MOD']['seat_reservation']['table_reservation'] = 'ModuleTableReservation';
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][]            = array('HookMyInsertTags', 'myReplaceInsertTags');
-//$GLOBALS['TL_CSS'][]                                  = '/system/modules/table_reservation/assets/css/form.css';
-$GLOBALS['TL_MOOTOOLS'][] = '<script type="text/javascript">// <![CDATA[
-    $$("a").addEvent("click", function() {
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array('HookMyInsertTags', 'myReplaceInsertTags');
+$GLOBALS['TL_CSS'][]                                        = 'system/modules/table_reservation/assets/css/form.min.css';
+$GLOBALS['TL_MOOTOOLS'][]                                   = '<script type="text/javascript">// <![CDATA[
+    $$("view-details").addEvent("click", function() {
             $("overviewTable").toggleClass("invisible");
     });
     // ]]></script>';

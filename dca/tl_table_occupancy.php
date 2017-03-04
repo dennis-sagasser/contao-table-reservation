@@ -253,8 +253,8 @@ class tl_table_occupancy extends \Backend
         $strNoonAlt    = $GLOBALS['TL_LANG']['tl_table_occupancy']['noonAlt'];
         $strEveningAlt = $GLOBALS['TL_LANG']['tl_table_occupancy']['eveningAlt'];
 
-        $strMorningAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['morningTitle'] . '""';
-        $strNoonAltAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['noonTitle'] . '""';
+        $strMorningAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['morningTitle'] . '"';
+        $strNoonAltAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['noonTitle'] . '"';
         $strEveningAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['eveningTitle'] . '"';
 
         while ($intCurrentMonth < 12) {

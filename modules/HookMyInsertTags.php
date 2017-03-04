@@ -46,7 +46,8 @@ class HookMyInsertTags extends \Frontend
 
         if ($arrSplit[0] == 'reservation') {
             if (isset($arrSplit[1]) && $arrSplit[1] == 'salutation') {
-                $strSalutation = (\Input::post('salutation') === 'male') ? $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSir'] . ' ' . \Input::post('lastname') :
+                $strSalutation = (\Input::post('salutation') === 'male') ?
+                    $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSir'] . ' ' . \Input::post('lastname') :
                     $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearMadame'] . \Input::post('lastname');
                 return $strSalutation;
             }
@@ -68,9 +69,9 @@ class HookMyInsertTags extends \Frontend
             if (isset($arrSplit[1]) && $arrSplit[1] == 'arrival') {
                 return $objSession->get('arrival');
             }
-            if (isset($arrSplit[1]) && $arrSplit[1] == 'tables') {
-                return is_array($objSession->get('tables')) ?
-                    implode(', ', $objSession->get('tables')) : $objSession->get('tables');
+            if (isset($arrSplit[1]) && $arrSplit[1] == 'seats') {
+                return is_array($objSession->get('seats')) ?
+                    implode(', ', $objSession->get('seats')) : $objSession->get('seats');
             }
         }
         return false;

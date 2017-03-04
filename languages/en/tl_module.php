@@ -33,7 +33,7 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_module']['res_seats'] = array('Table category', 'Please choose at least one table category.');
+$GLOBALS['TL_LANG']['tl_module']['res_seats'] = ['Table category', 'Please choose at least one table category.'];
 
 /**
  * Legends

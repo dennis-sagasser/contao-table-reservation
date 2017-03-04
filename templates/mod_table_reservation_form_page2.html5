@@ -9,7 +9,7 @@
 
 <table id="formdata">
     <tr>
-        <td class="label"><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['dateAndTime']; ?></td>
+        <td class="label"><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrival']; ?></td>
         <td class="value"><?= $this->objSession->get('arrival'); ?></td>
     </tr>
     <tr>

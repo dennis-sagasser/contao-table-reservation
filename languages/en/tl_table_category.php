@@ -33,12 +33,12 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_table_category']['table_category'] = array('Table category', 'Please enter the description of the table category.');
-$GLOBALS['TL_LANG']['tl_table_category']['maxcount']       = array('Maximum amount of persons', 'Please enter the maximum number of possible seat reservations.');
-$GLOBALS['TL_LANG']['tl_table_category']['description']    = array('Description', 'Here you can enter a short description for the table category.');
-$GLOBALS['TL_LANG']['tl_table_category']['published']      = array('Publish table category', 'Show the table category in the frontend.');
-$GLOBALS['TL_LANG']['tl_table_category']['start']          = array('Show from', 'Show the table category from this day in the frontend.');
-$GLOBALS['TL_LANG']['tl_table_category']['stop']           = array('Show until', 'Show the table category up to this day in the frontend.');
+$GLOBALS['TL_LANG']['tl_table_category']['table_category'] = ['Table category', 'Please enter the description of the table category.'];
+$GLOBALS['TL_LANG']['tl_table_category']['maxcount']       = ['Maximum amount of persons', 'Please enter the maximum number of possible seat reservations.'];
+$GLOBALS['TL_LANG']['tl_table_category']['description']    = ['Description', 'Here you can enter a short description for the table category.'];
+$GLOBALS['TL_LANG']['tl_table_category']['published']      = ['Publish table category', 'Show the table category in the frontend.'];
+$GLOBALS['TL_LANG']['tl_table_category']['start']          = ['Show from', 'Show the table category from this day in the frontend.'];
+$GLOBALS['TL_LANG']['tl_table_category']['stop']           = ['Show until', 'Show the table category up to this day in the frontend.'];
 
 /**
  * Legends
@@ -53,13 +53,13 @@ $GLOBALS['TL_LANG']['tl_table_category']['publish_legend']        = 'Publish';
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_table_category']['new']           = array('Create table category', 'Crate a new table category');
-$GLOBALS['TL_LANG']['tl_table_category']['edit']          = array('Edit', 'Edit table category ID %s');
-$GLOBALS['TL_LANG']['tl_table_category']['copy']          = array('Copy', 'Copy table category ID %s');
-$GLOBALS['TL_LANG']['tl_table_category']['delete']        = array('Delete', 'Remove table category ID %s');
-$GLOBALS['TL_LANG']['tl_table_category']['show']          = array('Show', 'Show data set ID %s');
-$GLOBALS['TL_LANG']['tl_table_category']['create']        = array('Seat reservation calendar', 'Open the calendar to show and edit the seat reservation.');
-$GLOBALS['TL_LANG']['tl_table_category']['reset']         = array('Reset', 'Reset the seat reservation for table category.');
+$GLOBALS['TL_LANG']['tl_table_category']['new']           = ['Create table category', 'Crate a new table category'];
+$GLOBALS['TL_LANG']['tl_table_category']['edit']          = ['Edit', 'Edit table category ID %s'];
+$GLOBALS['TL_LANG']['tl_table_category']['copy']          = ['Copy', 'Copy table category ID %s'];
+$GLOBALS['TL_LANG']['tl_table_category']['delete']        = ['Delete', 'Remove table category ID %s'];
+$GLOBALS['TL_LANG']['tl_table_category']['show']          = ['Show', 'Show data set ID %s'];
+$GLOBALS['TL_LANG']['tl_table_category']['create']        = ['Seat reservation calendar', 'Open the calendar to show and edit the seat reservation.'];
+$GLOBALS['TL_LANG']['tl_table_category']['reset']         = ['Reset', 'Reset the seat reservation for table category.'];
 $GLOBALS['TL_LANG']['tl_table_category']['resetConfirm']  = 'The entire occupancy for table category ID %s will be removed';
-$GLOBALS['TL_LANG']['tl_table_category']['toggle']        = array('Toggle visibility', 'Toggle the visibility for table category ID %s.');
+$GLOBALS['TL_LANG']['tl_table_category']['toggle']        = ['Toggle visibility', 'Toggle the visibility for table category ID %s.'];
 $GLOBALS['TL_LANG']['tl_table_category']['deleteConfirm'] = 'Really remove table category ID %s?\nCaution: All seat reservations for this table category will be removed.';

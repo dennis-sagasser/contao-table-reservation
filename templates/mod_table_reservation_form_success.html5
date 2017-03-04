@@ -17,6 +17,5 @@
 <?php $this->endblock(); ?>
 
 <?php $this->block('form'); ?>
-<div></div>
 <?php $this->endblock(); ?>
 <!-- indexer::continue -->

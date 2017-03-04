@@ -33,12 +33,12 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_table_category']['table_category'] = array('Tischkategorie', 'Bitte geben Sie die Bezeichnung des Tischkategories ein.');
-$GLOBALS['TL_LANG']['tl_table_category']['maxcount']       = array('Maximale Personenanzahl', 'Bitte geben Sie das Maximum möglicher Online-Sitzplatzeservierungen an.');
-$GLOBALS['TL_LANG']['tl_table_category']['description']    = array('Beschreibung', 'Hier können Sie eine kurze Beschreibung für die Tischkategorie angeben.');
-$GLOBALS['TL_LANG']['tl_table_category']['published']      = array('Tischkategorie veröffentlichen', 'Die Tischkategorie auf der Website anzeigen.');
-$GLOBALS['TL_LANG']['tl_table_category']['start']          = array('Anzeigen ab', 'Die Tischkategorie erst ab diesem Tag auf der Website anzeigen.');
-$GLOBALS['TL_LANG']['tl_table_category']['stop']           = array('Anzeigen bis', 'Die Tischkategorie bis zu diesem Tag auf der Website anzeigen.');
+$GLOBALS['TL_LANG']['tl_table_category']['table_category'] = ['Tischkategorie', 'Bitte geben Sie die Bezeichnung des Tischkategories ein.'];
+$GLOBALS['TL_LANG']['tl_table_category']['maxcount']       = ['Maximale Personenanzahl', 'Bitte geben Sie das Maximum möglicher Online-Sitzplatzeservierungen an.'];
+$GLOBALS['TL_LANG']['tl_table_category']['description']    = ['Beschreibung', 'Hier können Sie eine kurze Beschreibung für die Tischkategorie angeben.'];
+$GLOBALS['TL_LANG']['tl_table_category']['published']      = ['Tischkategorie veröffentlichen', 'Die Tischkategorie auf der Website anzeigen.'];
+$GLOBALS['TL_LANG']['tl_table_category']['start']          = ['Anzeigen ab', 'Die Tischkategorie erst ab diesem Tag auf der Website anzeigen.'];
+$GLOBALS['TL_LANG']['tl_table_category']['stop']           = ['Anzeigen bis', 'Die Tischkategorie bis zu diesem Tag auf der Website anzeigen.'];
 
 /**
  * Legends
@@ -53,13 +53,13 @@ $GLOBALS['TL_LANG']['tl_table_category']['publish_legend']        = 'Veröffentl
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_table_category']['new']           = array('Tischkategorie anlegen', 'Eine neue Tischkategorie anlegen');
-$GLOBALS['TL_LANG']['tl_table_category']['edit']          = array('Bearbeiten', 'Tischkategorie ID %s bearbeiten');
-$GLOBALS['TL_LANG']['tl_table_category']['copy']          = array('Kopieren', 'Tischkategorie ID %s kopieren');
-$GLOBALS['TL_LANG']['tl_table_category']['delete']        = array('Entfernen', 'Tischkategorie ID %s entfernen');
-$GLOBALS['TL_LANG']['tl_table_category']['show']          = array('Anzeigen', 'Datensatz ID %s anzeigen');
-$GLOBALS['TL_LANG']['tl_table_category']['create']        = array('Tischbelegungskalender', 'Kalender für die Sitzplatzbelegung anzeigen');
-$GLOBALS['TL_LANG']['tl_table_category']['reset']         = array('Zurücksetzen', 'Sitzplatzbelegungen zurücksetzen');
+$GLOBALS['TL_LANG']['tl_table_category']['new']           = ['Tischkategorie anlegen', 'Eine neue Tischkategorie anlegen'];
+$GLOBALS['TL_LANG']['tl_table_category']['edit']          = ['Bearbeiten', 'Tischkategorie ID %s bearbeiten'];
+$GLOBALS['TL_LANG']['tl_table_category']['copy']          = ['Kopieren', 'Tischkategorie ID %s kopieren'];
+$GLOBALS['TL_LANG']['tl_table_category']['delete']        = ['Entfernen', 'Tischkategorie ID %s entfernen'];
+$GLOBALS['TL_LANG']['tl_table_category']['show']          = ['Anzeigen', 'Datensatz ID %s anzeigen'];
+$GLOBALS['TL_LANG']['tl_table_category']['create']        = ['Tischbelegungskalender', 'Kalender für die Sitzplatzbelegung anzeigen'];
+$GLOBALS['TL_LANG']['tl_table_category']['reset']         = ['Zurücksetzen', 'Sitzplatzbelegungen zurücksetzen'];
 $GLOBALS['TL_LANG']['tl_table_category']['resetConfirm']  = 'Die gesamte Belegung für Tischkategorie ID %s wird gelöscht';
-$GLOBALS['TL_LANG']['tl_table_category']['toggle']        = array('Sichtbarkeit umschalten', 'Sichbarkeit für die Tischkategorie ID %s festlegen');
+$GLOBALS['TL_LANG']['tl_table_category']['toggle']        = ['Sichtbarkeit umschalten', 'Sichbarkeit für die Tischkategorie ID %s festlegen'];
 $GLOBALS['TL_LANG']['tl_table_category']['deleteConfirm'] = 'Soll die Tischkategorie ID %s wirklich gelöscht werden?\nAchtung: Alle Sitzplatzbelegungen für diese Tischkategorie werden ebenfalls entfernt.';

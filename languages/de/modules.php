@@ -30,12 +30,9 @@
  * @link      https://contao.org
  */
 
-$GLOBALS['TL_LANG']['MOD']['table_reservation'][0]      = 'Sitzplatzreservierung';
-$GLOBALS['TL_LANG']['MOD']['table_config'][0]           = 'Einstellungen';
-$GLOBALS['TL_LANG']['MOD']['table_config'][1]           = 'Allgemeine Einstellungen';
-$GLOBALS['TL_LANG']['MOD']['table_categories'][0]       = 'Tischkategorien';
-$GLOBALS['TL_LANG']['MOD']['table_categories'][1]       = 'Tischkategorien verwalten';
-$GLOBALS['TL_LANG']['MOD']['table_reservation_list'][0] = 'Reservierungsliste';
-$GLOBALS['TL_LANG']['MOD']['table_reservation_list'][1] = 'Reservierungsliste einsehen';
-$GLOBALS['TL_LANG']['FMD']['seat_reservation']          = 'Sitzplatzreservierung';
-$GLOBALS['TL_LANG']['FMD']['table_reservation']         = array('Reservierungsformular', 'Stellt ein Formular für Sitzplatzreservierungen bereit.');
+$GLOBALS['TL_LANG']['MOD']['table_reservation']      = ['Sitzplatzreservierung', ''];
+$GLOBALS['TL_LANG']['MOD']['table_config']           = ['Einstellungen', 'Allgemeine Einstellungen'];
+$GLOBALS['TL_LANG']['MOD']['table_categories']       = ['Tischkategorien', 'Tischkategorien verwalten'];
+$GLOBALS['TL_LANG']['MOD']['table_reservation_list'] = ['Reservierungsliste', 'Reservierungsliste einsehen'];
+$GLOBALS['TL_LANG']['FMD']['seat_reservation']       = ['Sitzplatzreservierung', ''];
+$GLOBALS['TL_LANG']['FMD']['table_reservation']      = ['Reservierungsformular', 'Stellt ein Formular für Sitzplatzreservierungen bereit.'];
