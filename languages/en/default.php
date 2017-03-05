@@ -35,7 +35,8 @@
  */
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrival']                    = 'Date and time';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSubmit']                     = 'Check availability';
-$GLOBALS['TL_LANG']['MSC']['table_reservation']['count']                          = 'person(s)';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['countSingular']                  = 'person';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['count']                          = 'persons';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formTableCategory']              = 'Choose table category';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['countError']                     = 'Please choose the desired number of persons.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['noSeatsForTableCategory']        = 'No free seats for table category "%s" during this period.';
@@ -62,7 +63,8 @@ $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSubmit']        
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSuccess']         = 'Thank you for your reservation! You will shortly receive an email with further information.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservation']                    = 'Reservation:';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['showTotalOverview']              = '[View details]';
-$GLOBALS['TL_LANG']['MSC']['table_reservation']['seats']                          = 'Seat(s)';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['seat']                           = 'Seat';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['seats']                          = 'Seats';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reserveNow']                     = 'Make a reservation now »';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['backToStart']                    = '« back to home';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSir']                        = 'Dear Mr.';

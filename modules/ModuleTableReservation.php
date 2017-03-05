@@ -56,7 +56,6 @@ class ModuleTableReservation extends \Module
     /**
      * Generate module
      *
-     * @return null
      */
     protected function compile()
     {
@@ -93,7 +92,10 @@ class ModuleTableReservation extends \Module
             ORDER BY tablecategory")
             ->execute(time());
 
+        $arrSelect = [];
+
         while ($objModuleParams->next()) {
+            $arrSelectOptions = [];
             for ($i = 0; $i <= $objModuleParams->maxcount; $i++) {
                 $arrSelectOptions[$i] = array('value' => $i, 'label' => $i);
             }
@@ -122,7 +124,7 @@ class ModuleTableReservation extends \Module
             $this->compileAvailabilityCheck($objWidgetArrival, $objWidgetCheckboxes);
         }
 
-        if (\Input::get('FORM_PAGE') === 'page2') {
+        if (\Input::get('FORM_PAGE') === 'page2' && $this->objSession->get('seats')) {
 
             $this->strTemplate          = 'mod_table_reservation_form_page2';
             $this->Template             = new \FrontendTemplate($this->strTemplate);
@@ -133,7 +135,10 @@ class ModuleTableReservation extends \Module
             $objWidgetSalutation->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSalutation'];
             $objWidgetSalutation->name      = 'salutation';
             $objWidgetSalutation->mandatory = true;
-            $objWidgetSalutation->options   = array(array('value' => 'male', 'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formMale']), array('value' => 'female', 'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFemale']));
+            $objWidgetSalutation->options   = array(
+                array('value' => 'male', 'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formMale']),
+                array('value' => 'female', 'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFemale'])
+            );
 
             $this->Template->objWidgetSalutation = $objWidgetSalutation;
 
@@ -204,7 +209,7 @@ class ModuleTableReservation extends \Module
             $this->Template->objWidgetSubmit = $objWidgetSubmit;
         }
 
-        if (\Input::post('FORM_SUBMIT') === 'form_reservation_submit') {
+        if (\Input::post('FORM_SUBMIT') === 'form_reservation_submit' && $this->objSession->get('seats')) {
             $this->compileReservationCheck(
                 $objWidgetSalutation,
                 $objWidgetFirstName,
@@ -223,32 +228,37 @@ class ModuleTableReservation extends \Module
      */
     public function send()
     {
-        $objSettings = $this->Database->prepare("SELECT * FROM tl_reservation_settings")->limit(1)->execute();
+        $objSettings = $this->Database->prepare("SELECT * FROM tl_table_reservation_settings")->limit(1)->execute();
 
+        if ($objSettings->numRows < 1) {
+            return '';
+        }
+
+        // Overwrite the SMTP configuration
         if ($objSettings->useSMTP) {
-            $GLOBALS['TL_CONFIG']['useSMTP']  = true;
-            $GLOBALS['TL_CONFIG']['smtpHost'] = $objSettings->smtpHost;
-            $GLOBALS['TL_CONFIG']['smtpUser'] = $objSettings->smtpUser;
-            $GLOBALS['TL_CONFIG']['smtpPass'] = $objSettings->smtpPass;
-            $GLOBALS['TL_CONFIG']['smtpEnc']  = $objSettings->smtpEnc;
-            $GLOBALS['TL_CONFIG']['smtpPort'] = $objSettings->smtpPort;
+            \Config::set('useSMTP', true);
+            \Config::set('smtpHost', $objSettings->smtpHost);
+            \Config::set('smtpUser', $objSettings->smtpUser);
+            \Config::set('smtpPass', $objSettings->smtpPass);
+            \Config::set('smtpEnc', $objSettings->smtpEnc);
+            \Config::set('smtpPort', $objSettings->smtpPort);
         }
 
         // Add default sender address
         if ($objSettings->sender == '') {
-            list($objSettings->senderName, $objSettings->sender) = class_exists("StringUtil") ?
-                \StringUtil::splitFriendlyEmail($GLOBALS['TL_CONFIG']['adminEmail']) :
-                \String::splitFriendlyEmail($GLOBALS['TL_CONFIG']['adminEmail']);
+            list($objSettings->senderName, $objSettings->sender) = \StringUtil::splitFriendlyEmail(
+                \Config::get('adminEmail')
+            );
         }
 
         // Add default Bcc
         if ($objSettings->bCc == '') {
-            list($objSettings->senderName, $objSettings->bCc) = class_exists("StringUtil") ?
-                \StringUtil::splitFriendlyEmail($GLOBALS['TL_CONFIG']['adminEmail']) :
-                \String::splitFriendlyEmail($GLOBALS['TL_CONFIG']['adminEmail']);
+            list($objSettings->senderName, $objSettings->bCc) = \StringUtil::splitFriendlyEmail(
+                \Config::get('adminEmail')
+            );
         }
 
-        $arrAttachments            = array();
+        $arrAttachments            = [];
         $blnAttachmentsFormatError = false;
 
         // Add attachments
@@ -334,14 +344,13 @@ class ModuleTableReservation extends \Module
      * @param string $strHtml HTML text
      * @param string $css CSS
      *
-     * @return string CSS
      */
     protected function sendConfirmation(\Email $objEmail, \Database\Result $objSettings, $strRecipient, $strText, $strHtml, $css = null)
     {
+        $arrRecipients['email'] = $strRecipient;
+
         // Prepare the text content
-        $objEmail->text = class_exists("StringUtil") ?
-            \StringUtil::parseSimpleTokens($strText, $strRecipient) :
-            \String::parseSimpleTokens($strText, $strRecipient);
+        $objEmail->text = \StringUtil::parseSimpleTokens($strText, $arrRecipients);
 
         // Add the HTML content
         if (!$objSettings->sendText) {
@@ -350,17 +359,15 @@ class ModuleTableReservation extends \Module
                 $objSettings->template = 'mail_default';
             }
 
-            // Load the mail template
+            /** @var \BackendTemplate|object $objTemplate */
             $objTemplate = new \BackendTemplate($objSettings->template);
             $objTemplate->setData($objSettings->row());
 
             $objTemplate->title     = $objSettings->subject;
-            $objTemplate->body      = class_exists("StringUtil") ?
-                \StringUtil::parseSimpleTokens($strHtml, $strRecipient) :
-                \String::parseSimpleTokens($strHtml, $strRecipient);
-            $objTemplate->charset   = $GLOBALS['TL_CONFIG']['characterSet'];
+            $objTemplate->body      = \StringUtil::parseSimpleTokens($strHtml, $arrRecipients);
+            $objTemplate->charset   = \Config::get('characterSet');
             $objTemplate->css       = $css; // Backwards compatibility
-            $objTemplate->recipient = $strRecipient;
+            $objTemplate->recipient = $arrRecipients['email'];
 
             // Parse template
             $objEmail->html     = $objTemplate->parse();
@@ -369,14 +376,14 @@ class ModuleTableReservation extends \Module
 
         // Deactivate invalid addresses
         try {
-            $objEmail->sendTo($strRecipient);
+            $objEmail->sendTo($arrRecipients['email']);
         } catch (\Swift_RfcComplianceException $e) {
-            $_SESSION['REJECTED_RECIPIENTS'][] = $strRecipient;
+            $_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipients['email'];
         }
 
         // Rejected recipients
         if ($objEmail->hasFailures()) {
-            $_SESSION['REJECTED_RECIPIENTS'][] = $strRecipient;
+            $_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipients['email'];
         }
     }
 
@@ -386,7 +393,6 @@ class ModuleTableReservation extends \Module
      * @param \Widget $objWidgetArrival Reservation time input
      * @param \Widget $objWidgetCheckboxes Table categories checkboxes
      *
-     * @return null
      */
     protected function compileAvailabilityCheck(\Widget $objWidgetArrival, \Widget $objWidgetCheckboxes)
     {
@@ -431,6 +437,10 @@ class ModuleTableReservation extends \Module
         $arrPostTableCategory = is_array(\Input::post('tableCategory')) ?
             \Input::post('tableCategory') : array(\Input::post('tableCategory'));
 
+        $arrTableCategories = [];
+        $arrCountSeats      = [];
+        $arrSeats           = [];
+
         foreach ($arrPostTableCategory as $intTableCategory) {
             (intval(\Input::post($intTableCategory)) < 1) ?
                 $objWidgetCheckboxes->addError($GLOBALS['TL_LANG']['MSC']['table_reservation']['countError']) :
@@ -459,14 +469,31 @@ class ModuleTableReservation extends \Module
                              AND t.id = ?) tmp2 ON tmp1.pid = tmp1.id")
                     ->execute($strArrivalDate, $intTableCategory, $intTableCategory)->fetchAssoc();
 
+            $strCountMsg = (intval(\Input::post($intTableCategory)) === 1) ?
+                $GLOBALS['TL_LANG']['MSC']['table_reservation']['countSingular'] :
+                $GLOBALS['TL_LANG']['MSC']['table_reservation']['count'];
+
             empty($arrResultRow[$strCount]) ?
                 $objWidgetCheckboxes->addError(
-                    sprintf($GLOBALS['TL_LANG']['MSC']['table_reservation']['noSeatsForTableCategory'], $arrResultRow['tablecategory'])) :
+                    sprintf(
+                        $GLOBALS['TL_LANG']['MSC']['table_reservation']['noSeatsForTableCategory'],
+                        $arrResultRow['tablecategory']
+                    )
+                ) :
                 (intval(\Input::post($intTableCategory)) > intval($arrResultRow[$strCount])) ?
                     $objWidgetCheckboxes->addError(
-                        sprintf($GLOBALS['TL_LANG']['MSC']['table_reservation']['maxCountError'], $arrResultRow['tablecategory'],
-                            $arrResultRow[$strCount])) :
-                    $arrSeats[] = sprintf(("%d %s %s"), intval(\Input::post($intTableCategory)), $GLOBALS['TL_LANG']['MSC']['table_reservation']['count'], $arrResultRow['tablecategory']);
+                        sprintf(
+                            $GLOBALS['TL_LANG']['MSC']['table_reservation']['maxCountError'],
+                            $arrResultRow['tablecategory'],
+                            $arrResultRow[$strCount]
+                        )
+                    ) :
+                    $arrSeats[] = sprintf(
+                        ("%d %s %s"),
+                        intval(\Input::post($intTableCategory)),
+                        $strCountMsg,
+                        $arrResultRow['tablecategory']
+                    );
 
             $arrTableCategories[] = $intTableCategory;
             $arrCountSeats[]      = [
@@ -506,7 +533,6 @@ class ModuleTableReservation extends \Module
      * @param \Widget $objWidgetRemarks Remarks textarea
      * @param \Widget $objWidgetConfirmation Confirmation checkbox
      *
-     * @return null
      */
     protected function compileReservationCheck(
         \Widget $objWidgetSalutation,

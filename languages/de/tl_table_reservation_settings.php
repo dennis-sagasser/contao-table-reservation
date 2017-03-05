@@ -74,7 +74,7 @@ $GLOBALS['TL_LANG']['tl_table_reservation_settings']['smtp_legend']       = 'SMT
  * Miscellaneous
  */
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['editRecord']             = 'E-Mail-Einstellungen bearbeiten';
-$GLOBALS['TL_LANG']['tl_table_reservation_settings']['default_subject']   = 'Ihre Reservierung beim Hotel Mustermann';
+$GLOBALS['TL_LANG']['tl_table_reservation_settings']['default_subject']   = 'Ihre Reservierung im Restaurant Mustermann';
 $GLOBALS['TL_LANG']['tl_table_reservation_settings']['default_html_text'] = '<p>{{reservation::salutation}},<br><br>
     vielen Dank für Ihre Reservierung im Restaurant Mustermann.
     Gern bestätigen wir Ihre Online-Reservierung, wie folgt:<br><br>

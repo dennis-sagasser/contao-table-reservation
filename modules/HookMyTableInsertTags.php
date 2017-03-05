@@ -30,7 +30,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class HookMyInsertTags extends \Frontend
+class HookMyTableInsertTags extends \Frontend
 {
     /**
      * Replaces custom insert tags

@@ -34,13 +34,13 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival']   = ['Date and time', ''];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats']     = ['Seat(s)', ''];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats']     = ['Seats', ''];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['firstname'] = ['First name', ''];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['lastname']  = ['Last name', ''];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['email']     = ['E-Mail', ''];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['phone']     = ['Phone number', ''];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['remarks']   = ['Remarks', ''];
 
-$GLOBALS['TL_LANG']['tl_reservation_list']['show']          = ['Show details', 'Show reservations details for entry %s'];
-$GLOBALS['TL_LANG']['tl_reservation_list']['delete']        = ['Delete reservation', 'Delete reservation #%s'];
-$GLOBALS['TL_LANG']['tl_reservation_list']['deleteConfirm'] = 'Really remove reservation #%s?';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['show']          = ['Show details', 'Show reservations details for entry %s'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['delete']        = ['Delete reservation', 'Delete reservation #%s'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['deleteConfirm'] = 'Really remove reservation #%s?';

@@ -74,7 +74,7 @@ $GLOBALS['TL_LANG']['tl_table_reservation_settings']['smtp_legend']       = 'SMT
  * Miscellaneous
  */
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['editRecord']             = 'Edit e-mail settings';
-$GLOBALS['TL_LANG']['tl_table_reservation_settings']['default_subject']   = 'Your reservation at Hotel Mustermann';
+$GLOBALS['TL_LANG']['tl_table_reservation_settings']['default_subject']   = 'Your reservation at Restaurant Mustermann';
 $GLOBALS['TL_LANG']['tl_table_reservation_settings']['default_html_text'] = '{{reservation::salutation}},<br><br>
     thank you very much for your reservation at Restaurant Mustermann. Please find the confirmation for your online booking below:<br><br><br>
     First name: {{reservation::firstname}}<br>
@@ -83,7 +83,7 @@ $GLOBALS['TL_LANG']['tl_table_reservation_settings']['default_html_text'] = '{{r
     Telephone: {{reservation::phone}}<br>
     E-mail: {{reservation::email}}<br>
     Date and time: {{reservation::arrival}}<br>
-    Seat(s): {{reservation::seats}}<br>
+    Seats: {{reservation::seats}}<br>
     Remarks: {{reservation::remarks}}<br><br>
     With kindest regards<br>
     The Reservation Department<br><br>
