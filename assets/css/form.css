@@ -1,8 +1,4 @@
 /* TableReservation, (c)2017 Dennis Sagasser, LGPL license */
-a#view-details {
-    cursor: pointer;
-}
-
 a#reserve-now {
     color: green;
 }
