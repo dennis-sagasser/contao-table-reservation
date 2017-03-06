@@ -61,7 +61,7 @@ $GLOBALS['TL_LANG']['MSC']['table_reservation']['formConfirmation']             
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formConfirmationText']           = 'I hereby confirm the binding reservation.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSubmit']          = 'Binding reservation';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSuccess']         = 'Thank you for your reservation! You will shortly receive an email with further information.';
-$GLOBALS['TL_LANG']['MSC']['table_reservation']['reservation']                    = 'Reservation:';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['reservation']                    = 'Reservation';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['showTotalOverview']              = '[View details]';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['seat']                           = 'Seat';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['seats']                          = 'Seats';

@@ -48,7 +48,7 @@ class HookMyTableInsertTags extends \Frontend
             if (isset($arrSplit[1]) && $arrSplit[1] == 'salutation') {
                 $strSalutation = (\Input::post('salutation') === 'male') ?
                     $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSir'] . ' ' . \Input::post('lastname') :
-                    $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearMadame'] . \Input::post('lastname');
+                    $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearMadame'] . ' ' . \Input::post('lastname');
                 return $strSalutation;
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'firstname') {

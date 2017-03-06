@@ -69,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_table_category'] = array
         (
             'all' => array
             (
-                'label'         => &$GLOBALS['TL_LANG']['MSC']['table_reservation']['all'],
+                'label'         => &$GLOBALS['TL_LANG']['MSC']['all'],
                 'href'          => 'act=select',
                 'class'         => 'header_edit_all',
                 'attributes'    => 'onclick="Backend.getScrollOffset()" accesskey="e"'
