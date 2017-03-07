@@ -19,7 +19,7 @@
 /**
  * Add Callback to show MooTools hint.
  */
-$GLOBALS['TL_DCA']['tl_module']['table_config']['onload_callback'] = array(array('tl_module_table_reservation', 'showJsLibraryHint'));
+$GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'] = array(array('tl_module_table_reservation', 'showJsLibraryHint'));
 
 /**
  * Add palettes to tl_module
