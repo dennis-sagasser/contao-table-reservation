@@ -66,5 +66,4 @@ class HooksBackend extends \Backend
 
         return $strBuffer;
     }
-
 }
