@@ -56,7 +56,7 @@ class HooksBackend extends \Backend
      */
     public function myParseBackendTemplate($strBuffer, $strTemplate)
     {
-        if ($strTemplate == 'be_main' && (\Input::get("do") === 'config')) {
+        if ($strTemplate == 'be_main' && (\Input::get("do") === 'table_config')) {
             $strBuffer = preg_replace(
                 '/<a href=(.*?) class=\"header_back\"/',
                 '<a href="javascript:history.back()" class="header_back"',
