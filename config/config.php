@@ -41,5 +41,6 @@ $GLOBALS['BE_MOD']['table_reservation'] = array(
 );
 
 $GLOBALS['FE_MOD']['seat_reservation']['table_reservation'] = 'ModuleTableReservation';
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array('HookMyTableInsertTags', 'myReplaceInsertTags');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = ['HooksFrontend', 'myReplaceInsertTags'];
+$GLOBALS['TL_HOOKS']['parseBackendTemplate'][]              = ['HooksBackend', 'myParseBackendTemplate'];
 $GLOBALS['TL_CSS'][]                                        = 'system/modules/table_reservation/assets/css/form.min.css';

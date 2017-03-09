@@ -19,9 +19,9 @@
 namespace Contao;
 
 /**
- * Class HookMyInsertTags
+ * Class HooksFrontend
  *
- * Specifies insert tags for the confirmation mail to the customer.
+ * Specifies frontend hooks for the table reservation
  *
  * @category  Contao
  * @package   TableReservation
@@ -30,10 +30,10 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class HookMyTableInsertTags extends \Frontend
+class HooksFrontend extends \Frontend
 {
     /**
-     * Replaces custom insert tags
+     * Replaces custom insert tags for the confirmation mail to the customer
      *
      * @param string $strTag Inserttag
      *

@@ -15,8 +15,16 @@
 ClassLoader::addClasses(array
 (
 	// Modules
-	'Contao\HookMyTableInsertTags'  => 'system/modules/table_reservation/modules/HookMyTableInsertTags.php',
 	'Contao\ModuleTableReservation' => 'system/modules/table_reservation/modules/ModuleTableReservation.php',
+
+	// Classes
+	'tl_table_category'             => 'system/modules/table_reservation/classes/tl_table_category.php',
+	'tl_table_occupancy'            => 'system/modules/table_reservation/classes/tl_table_occupancy.php',
+	'tl_table_reservation_settings' => 'system/modules/table_reservation/classes/tl_table_reservation_settings.php',
+
+	// Library
+	'Contao\HooksBackend'           => 'system/modules/table_reservation/library/TableReservation/HooksBackend.php',
+	'Contao\HooksFrontend'          => 'system/modules/table_reservation/library/TableReservation/HooksFrontend.php',
 ));
 
 
