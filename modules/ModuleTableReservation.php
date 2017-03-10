@@ -192,6 +192,16 @@ class ModuleTableReservation extends \Module
 
             $this->Template->objWidgetRemarks = $objWidgetRemarks;
 
+            $objWidgetCaptcha            = new \FormCaptcha();
+            $objWidgetCaptcha->id        = 'captcha';
+            $objWidgetCaptcha->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formCaptcha'];
+            $objWidgetCaptcha->name      = 'captcha';
+            $objWidgetCaptcha->mandatory = true;
+            $objWidgetCaptcha->value     = \Input::post('captcha');
+
+            $this->Template->objWidgetCaptcha = $objWidgetCaptcha;
+
+
             $objWidgetConfirmation            = new \FormCheckBox();
             $objWidgetConfirmation->id        = 'confirmation';
             $objWidgetConfirmation->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formConfirmation'];
@@ -217,6 +227,7 @@ class ModuleTableReservation extends \Module
                 $objWidgetEmail,
                 $objWidgetPhone,
                 $objWidgetRemarks,
+                $objWidgetCaptcha,
                 $objWidgetConfirmation
             );
         }
@@ -531,6 +542,7 @@ class ModuleTableReservation extends \Module
      * @param \Widget $objWidgetEmail Email input
      * @param \Widget $objWidgetPhone Phone input
      * @param \Widget $objWidgetRemarks Remarks textarea
+     * @param \Widget $objWidgetCaptcha captcha input
      * @param \Widget $objWidgetConfirmation Confirmation checkbox
      *
      */
@@ -541,6 +553,7 @@ class ModuleTableReservation extends \Module
         \Widget $objWidgetEmail,
         \Widget $objWidgetPhone,
         \Widget $objWidgetRemarks,
+        \Widget $objWidgetCaptcha,
         \Widget $objWidgetConfirmation
     )
     {
@@ -550,6 +563,7 @@ class ModuleTableReservation extends \Module
         $objWidgetEmail->validate();
         $objWidgetPhone->validate();
         $objWidgetRemarks->validate();
+        $objWidgetCaptcha->validate();
         $objWidgetConfirmation->validate();
 
         if (!$objWidgetSalutation->hasErrors() &&
@@ -558,6 +572,7 @@ class ModuleTableReservation extends \Module
             !$objWidgetEmail->hasErrors() &&
             !$objWidgetPhone->hasErrors() &&
             !$objWidgetRemarks->hasErrors() &&
+            !$objWidgetCaptcha->hasErrors() &&
             !$objWidgetConfirmation->hasErrors()
         ) {
 

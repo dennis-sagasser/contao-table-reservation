@@ -57,6 +57,7 @@ $GLOBALS['TL_LANG']['MSC']['table_reservation']['formCountry']                  
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formEmail']                      = 'E-Mail';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formPhone']                      = 'Phone number';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formRemarks']                    = 'Remarks';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['formCaptcha']                    = 'Security question';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formConfirmation']               = 'Confirmation';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formConfirmationText']           = 'I hereby confirm the binding reservation.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSubmit']          = 'Binding reservation';

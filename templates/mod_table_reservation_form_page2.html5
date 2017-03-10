@@ -45,6 +45,10 @@
         <?= $this->objWidgetRemarks->generateLabel(); ?>
         <?= $this->objWidgetRemarks->generateWithError(); ?><br>
 
+        <?= $this->objWidgetCaptcha->generateLabel(); ?>
+        <?= $this->objWidgetCaptcha->generateQuestion(); ?>
+        <?= $this->objWidgetCaptcha->generateWithError(); ?><br>
+
         <?= $this->objWidgetConfirmation->generateWithError(); ?><br><br>
 
         <?= $this->objWidgetSubmit->generate(); ?>
