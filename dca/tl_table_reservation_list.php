@@ -36,12 +36,9 @@
 $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
 (
     // Config
-    'config' => array
+    'config'   => array
     (
         'dataContainer' => 'Table',
-        'closed'        => true,
-        'notEditable'   => true,
-        'notDeletable'  => false,
         'sql'           => array
         (
             'keys' => array
@@ -51,7 +48,7 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
         ),
     ),
     // List
-    'list'   => array
+    'list'     => array
     (
         'sorting'    => array
         (
@@ -66,6 +63,18 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
         ),
         'operations' => array
         (
+            'edit'   => array
+            (
+                'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['edit'],
+                'href'  => 'act=edit',
+                'icon'  => 'edit.gif'
+            ),
+            'copy'   => array
+            (
+                'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['copy'],
+                'href'  => 'act=copy',
+                'icon'  => 'copy.gif'
+            ),
             'show'   => array
             (
                 'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['show'],
@@ -81,8 +90,13 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
             ),
         )
     ),
+    // Palettes
+    'palettes' => array
+    (
+        'default' => '{reservation_legend},arrival,seats;{guest_legend},lastname,firstname,phone,email,remarks;'
+    ),
     // Fields
-    'fields' => array
+    'fields'   => array
     (
         'id'        => array
         (
@@ -91,55 +105,94 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
         ),
         'tstamp'    => array
         (
-            'sql' => "int(10) unsigned NOT NULL"
+            'inputType' => 'text',
+            'sql'       => "int(10) unsigned NOT NULL",
         ),
         'arrival'   => array
         (
-            'label'   => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival'],
-            'sql'     => "int(10) unsigned NOT NULL default '0'",
-            'flag'    => 6,
-            'search'  => true,
-            'sorting' => true,
-            'filter'  => true,
-            'eval'    => array
+            'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival'],
+            'sql'       => "int(10) unsigned NOT NULL default '0'",
+            'flag'      => 6,
+            'search'    => true,
+            'sorting'   => true,
+            'filter'    => true,
+            'inputType' => 'text',
+            'default'   => time(),
+            'eval'      => array
             (
-                'rgxp' => 'datim'
+                'rgxp'       => 'datim',
+                'datepicker' => true,
+                'mandatory'  => true,
+
             ),
         ),
         'seats'     => array
         (
-            'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats'],
-            'sql'   => "text NOT NULL"
+            'inputType' => 'listWizard',
+            'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats'],
+            'sql'       => "text NOT NULL",
+            'eval'      => array
+            (
+                'mandatory' => true,
+            ),
+
         ),
         'lastname'  => array
         (
-            'label'   => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['lastname'],
-            'sql'     => "varchar(255) NOT NULL default ''",
-            'search'  => true,
-            'sorting' => true,
-            'filter'  => true,
+            'inputType' => 'text',
+            'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['lastname'],
+            'sql'       => "varchar(255) NOT NULL default ''",
+            'search'    => true,
+            'sorting'   => true,
+            'filter'    => true,
+            'eval'      => array
+            (
+                'rgxp'      => 'alpha',
+                'tl_class'  => 'w50',
+                'mandatory' => true,
+            ),
         ),
         'firstname' => array
         (
-            'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['firstname'],
-            'sql'   => "varchar(255) NOT NULL default ''",
+            'inputType' => 'text',
+            'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['firstname'],
+            'sql'       => "varchar(255) NOT NULL default ''",
+            'eval'      => array
+            (
+                'rgxp'     => 'alpha',
+                'tl_class' => 'w50'
+            ),
         ),
         'phone'     => array
         (
-            'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['phone'],
-            'sql'   => "varchar(255) NULL"
+            'inputType' => 'text',
+            'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['phone'],
+            'sql'       => "varchar(255) NULL",
+            'eval'      => array
+            (
+                'rgxp'     => 'phone',
+                'tl_class' => 'w50'
+
+            ),
         ),
         'email'     => array
         (
-            'label'   => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['email'],
-            'sql'     => "varchar(255) NOT NULL default ''",
-            'search'  => true,
-            'sorting' => true,
+            'inputType' => 'text',
+            'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['email'],
+            'sql'       => "varchar(255) NOT NULL default ''",
+            'search'    => true,
+            'sorting'   => true,
+            'eval'      => array
+            (
+                'rgxp'     => 'email',
+                'tl_class' => 'w50'
+            ),
         ),
         'remarks'   => array
         (
-            'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['remarks'],
-            'sql'   => "text NULL"
+            'inputType' => 'textarea',
+            'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['remarks'],
+            'sql'       => "text NULL",
         ),
     )
 );
