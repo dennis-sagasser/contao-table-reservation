@@ -130,7 +130,7 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
         (
             'inputType' => 'listWizard',
             'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats'],
-            'sql'       => "text NOT NULL",
+            'sql'       => "blob NOT NULL",
             'eval'      => array
             (
                 'mandatory' => true,
