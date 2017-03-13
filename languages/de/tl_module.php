@@ -33,7 +33,9 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_module']['res_seats'] = ['Tischkategorie', 'Bitte wählen Sie mindestens eine Tischkategorie.'];
+$GLOBALS['TL_LANG']['tl_module']['tableCategories'] = ['Tischkategorie', 'Bitte wählen Sie mindestens eine Tischkategorie.'];
+$GLOBALS['TL_LANG']['tl_module']['dateTimeFormat']  = ['Datums- und Zeitformat', 'Datums- und Zeitformat für den Kalendar im Frontend. Falls nicht angegegeben, wird das globale Format verwendet. Der Datums- und Zeitformat-String wird mit der PHP-Funktion date() geparst.'];
+$GLOBALS['TL_LANG']['tl_module']['timeFormat']      = ['Zeitformat', 'Zeitformat für den Kalendar im Frontend. Falls nicht angegegeben, wird das globale Format verwendet. Der Zeitformat-String wird mit der PHP-Funktion date() geparst.'];
 
 /**
  * Legends

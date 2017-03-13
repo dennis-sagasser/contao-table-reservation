@@ -64,6 +64,14 @@ class ModuleTableReservation extends \Module
 
         $this->loadLanguageFile('tl_table_reservation');
 
+        $arrModuleParams = $this->Database->prepare("
+            SELECT table_categories, table_dateTimeFormat , table_timeFormat 
+            FROM tl_module 
+            WHERE id=?")
+            ->limit(1)
+            ->execute($this->id)
+            ->fetchAssoc();
+
         // Initialize form fields
         $objWidgetArrival                = new \FormCalendarField();
         $objWidgetArrival->dateImage     = true;
@@ -74,6 +82,7 @@ class ModuleTableReservation extends \Module
         $objWidgetArrival->rgxp          = 'datim';
         $objWidgetArrival->dateDirection = 'geToday';
         $objWidgetArrival->draggable     = false;
+        $objWidgetArrival->dateFormat    = $arrModuleParams['table_dateTimeFormat'];
         $objWidgetArrival->value         = \Input::post('arrival');
 
         $this->Template->objWidgetArrival = $objWidgetArrival;
@@ -84,7 +93,7 @@ class ModuleTableReservation extends \Module
 
         $this->Template->objWidgetSubmit = $objWidgetSubmit;
 
-        $objModuleParams = $this->Database->prepare("
+        $objCategorySettings = $this->Database->prepare("
             SELECT id AS value, tablecategory AS label, maxcount
             FROM tl_table_category 
             WHERE published = '1' 
@@ -94,15 +103,15 @@ class ModuleTableReservation extends \Module
 
         $arrSelect = [];
 
-        while ($objModuleParams->next()) {
+        while ($objCategorySettings->next()) {
             $arrSelectOptions = [];
-            for ($i = 0; $i <= $objModuleParams->maxcount; $i++) {
+            for ($i = 0; $i <= $objCategorySettings->maxcount; $i++) {
                 $arrSelectOptions[$i] = array('value' => $i, 'label' => $i);
             }
             $objSelectMenu          = new \FormSelectMenu();
-            $objSelectMenu->id      = $objModuleParams->value;
-            $objSelectMenu->label   = $GLOBALS['TL_LANG']['MSC']['table_reservation']['count'] . ' ' . $objModuleParams->label;
-            $objSelectMenu->name    = $objModuleParams->value;
+            $objSelectMenu->id      = $objCategorySettings->value;
+            $objSelectMenu->label   = $GLOBALS['TL_LANG']['MSC']['table_reservation']['count'] . ' ' . $objCategorySettings->label;
+            $objSelectMenu->name    = $objCategorySettings->value;
             $objSelectMenu->options = $arrSelectOptions;
 
             $arrSelect[] = $objSelectMenu;
@@ -115,13 +124,17 @@ class ModuleTableReservation extends \Module
         $objWidgetCheckboxes->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formTableCategory'];
         $objWidgetCheckboxes->name      = 'tableCategory';
         $objWidgetCheckboxes->mandatory = true;
-        $objWidgetCheckboxes->options   = $objModuleParams->fetchAllAssoc();
+        $objWidgetCheckboxes->options   = $objCategorySettings->fetchAllAssoc();
         $objWidgetCheckboxes->value     = \Input::post('tableCategory');
 
         $this->Template->objWidgetCheckboxes = $objWidgetCheckboxes;
 
         if (\Input::post('FORM_SUBMIT') === 'form_availability_submit') {
-            $this->compileAvailabilityCheck($objWidgetArrival, $objWidgetCheckboxes);
+            $this->compileAvailabilityCheck(
+                $objWidgetArrival,
+                $objWidgetCheckboxes,
+                $arrModuleParams['table_timeFormat']
+            );
         }
 
         if (\Input::get('FORM_PAGE') === 'page2' && $this->objSession->get('seats')) {
@@ -403,13 +416,19 @@ class ModuleTableReservation extends \Module
      *
      * @param \Widget $objWidgetArrival Reservation time input
      * @param \Widget $objWidgetCheckboxes Table categories checkboxes
+     * @param string $strTimeFormat Time format string from module settings
      *
      */
-    protected function compileAvailabilityCheck(\Widget $objWidgetArrival, \Widget $objWidgetCheckboxes)
+    protected function compileAvailabilityCheck(
+        \Widget $objWidgetArrival,
+        \Widget $objWidgetCheckboxes,
+        $strTimeFormat
+    )
     {
         $objWidgetArrival->validate();
         $objWidgetCheckboxes->validate();
 
+        $strTimeFormat  = empty($strTimeFormat) ? \Config::get('timeFormat') : $strTimeFormat;
         $objArrivalDate = new \Date(strtotime(\Input::post('arrival')));
 
         $intDayBegin        = $objArrivalDate->dayBegin;
@@ -418,7 +437,7 @@ class ModuleTableReservation extends \Module
 
         // reservation at least 30 minutes before
         $intValidReservationTime = strtotime('+0 hours 30 minutes', time());
-        $strValidReservationTime = date($GLOBALS['TL_CONFIG']['timeFormat'], $intValidReservationTime);
+        $strValidReservationTime = date($strTimeFormat, $intValidReservationTime);
 
         ($intValidReservationTime <= $intArrivalDateTime) ?:
             $objWidgetArrival->addError(sprintf($GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationTooLate'],
