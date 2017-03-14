@@ -623,11 +623,12 @@ class ModuleTableReservation extends \Module
 
             $objInsertReservation = $this->Database->prepare("
                     INSERT INTO tl_table_reservation_list
-                    (arrival, tstamp, seats, lastname, firstname, phone, email, remarks)
-                    VALUES(?, ?, ?, ?, ?, ?, ?, ?)")
+                    (arrival, tstamp, seats, gender, lastname, firstname, phone, email, remarks)
+                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)")
                 ->execute($this->objSession->get('tstampArrival'),
                     time(),
                     $this->objSession->get('seats'),
+                    \Input::post('salutation'),
                     \Input::post('lastname'),
                     \Input::post('firstname'),
                     \Input::post('phone'),

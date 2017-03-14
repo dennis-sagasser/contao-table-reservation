@@ -33,13 +33,14 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival']   = ['Datum und Uhrzeit', 'Bitte geben Sie Datum und Uhrzeit der Reservierung an.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats']     = ['Sitzplätze', 'Bitte geben Sie die gewünschte Personenanzahl und Tischkategorie an (z.B.: 1 x Veranda).'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['firstname'] = ['Vorname', 'Bitte geben Sie den Vornamen des Gastes an.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['lastname']  = ['Nachname', 'Bitte geben Sie den Nachnamen des Gastes an.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['email']     = ['E-Mail', 'Bitte geben Sie die E-Mail-Adresse des Gastes an.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['phone']     = ['Telefon', 'Bitte geben Sie die Telefonnummer des Gastes ein.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['remarks']   = ['Bemerkungen', 'Hier können Sie Bemerkungen zur Reservierung angeben.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival']    = ['Datum und Uhrzeit', 'Bitte geben Sie Datum und Uhrzeit der Reservierung an.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats']      = ['Sitzplätze', 'Bitte geben Sie die gewünschte Personenanzahl und Tischkategorie an (z.B.: 1 x Veranda).'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['salutation'] = ['Anrede', 'Bitte wählen Sie das Geschlecht des Gastes.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['firstname']  = ['Vorname', 'Bitte geben Sie den Vornamen des Gastes an.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['lastname']   = ['Nachname', 'Bitte geben Sie den Nachnamen des Gastes an.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['email']      = ['E-Mail', 'Bitte geben Sie die E-Mail-Adresse des Gastes an.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['phone']      = ['Telefon', 'Bitte geben Sie die Telefonnummer des Gastes ein.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['remarks']    = ['Bemerkungen', 'Hier können Sie Bemerkungen zur Reservierung angeben.'];
 
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['new']           = ['Reservierung anlegen', 'Eine neue Reservierung erstellen'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['edit']          = ['Details bearbeiten', 'Reservierungsdetails für Datensatz %s bearbeiten'];

@@ -33,13 +33,14 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival']   = ['Date and time', 'Please enter date and time for reservation.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats']     = ['Seats', 'Please enter the number of persons and table category (e.g.: 1 x veranda).'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['firstname'] = ['First name', 'Please enter the guest first name.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['lastname']  = ['Last name', 'Please enter the guest last name.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['email']     = ['E-Mail', 'Please enter the guest email address.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['phone']     = ['Phone number', 'Please enter the guest phone number.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['remarks']   = ['Remarks', 'Here you can specify remarks for the reservation.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival']    = ['Date and time', 'Please enter date and time for reservation.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats']      = ['Seats', 'Please enter the number of persons and table category (e.g.: 1 x veranda).'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['salutation'] = ['Salutation', 'Please select gender.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['firstname']  = ['First name', 'Please enter the guest first name.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['lastname']   = ['Last name', 'Please enter the guest last name.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['email']      = ['E-Mail', 'Please enter the guest email address.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['phone']      = ['Phone number', 'Please enter the guest phone number.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['remarks']    = ['Remarks', 'Here you can specify remarks for the reservation.'];
 
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['new']           = ['Create reservation', 'Create a new reservation entry'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['edit']          = ['Edit details', 'Edit reservations details for entry %s'];

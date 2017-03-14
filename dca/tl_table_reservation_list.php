@@ -93,7 +93,7 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
     // Palettes
     'palettes' => array
     (
-        'default' => '{reservation_legend},arrival,seats;{guest_legend},lastname,firstname,phone,email,remarks;'
+        'default' => '{reservation_legend},arrival,seats;{guest_legend},gender,lastname,firstname,phone,email,remarks;'
     ),
     // Fields
     'fields'   => array
@@ -137,6 +137,15 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
             ),
 
         ),
+        'gender'    => array
+        (
+            'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['salutation'],
+            'inputType' => 'select',
+            'options'   => array('male', 'female'),
+            'reference' => &$GLOBALS['TL_LANG']['MSC'],
+            'eval'      => array('includeBlankOption' => true),
+            'sql'       => "varchar(32) NOT NULL default ''"
+        ),
         'lastname'  => array
         (
             'inputType' => 'text',
@@ -170,8 +179,9 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
             'sql'       => "varchar(255) NULL",
             'eval'      => array
             (
-                'rgxp'     => 'phone',
-                'tl_class' => 'w50'
+                'rgxp'      => 'phone',
+                'tl_class'  => 'w50',
+                'mandatory' => true
 
             ),
         ),
