@@ -6,19 +6,7 @@
 <?php $this->endblock(); ?>
 
 <?php $this->block('overview') ?>
-
-<table id="formdata">
-    <tr>
-        <td class="label"><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrival']; ?></td>
-        <td class="value"><?= $this->objSession->get('arrival'); ?></td>
-    </tr>
-    <tr>
-        <td class="label"><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservation']; ?></td>
-        <td class="value"><?= implode('<br>', $this->objSession->get('seats')); ?></td>
-    </tr>
-</table>
-<br><br>
-
+<?php $this->parent(); ?>
 <?php $this->endblock(); ?>
 
 <?php $this->block('form') ?>

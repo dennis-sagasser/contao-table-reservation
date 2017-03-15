@@ -1,4 +1,6 @@
 <!-- indexer::stop -->
+<?php $GLOBALS['TL_CSS']['table_reservation'] = 'system/modules/table_reservation/assets/css/bootstrap-button.min.css'; ?>
+
 <div class="<?= $this->class; ?> block"<?= $this->cssID; ?>
     <?php if ($this->style): ?> style="<?= $this->style; ?>"
     <?php endif; ?>>
@@ -35,9 +37,6 @@
                 </tr>
             <?php endforeach; ?>
         </table>
-        <a id="reserve-now"
-           href="<?= $this->strReserveNowUrl ?>"><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['reserveNow']; ?>
-        </a>
     </div>
 <?php endif; ?>
 
@@ -62,6 +61,12 @@
             <?php endforeach; ?><br>
 
             <?= $this->objWidgetSubmit->generate(); ?>
+
+            <?php if ($this->infoMessage): ?>
+                <a class="btn btn-success" href="<?= $this->strReserveNowUrl ?>">
+                    <?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['reserveNow']; ?>
+                </a>
+            <?php endif; ?>
 
         <?php endif; ?>
     </div>

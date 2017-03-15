@@ -89,6 +89,7 @@ class ModuleTableReservation extends \Module
 
         $objWidgetSubmit         = new \FormSubmit();
         $objWidgetSubmit->id     = 'submit';
+        $objWidgetSubmit->class  = 'btn btn-default';
         $objWidgetSubmit->slabel = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSubmit'];
 
         $this->Template->objWidgetSubmit = $objWidgetSubmit;
@@ -139,9 +140,11 @@ class ModuleTableReservation extends \Module
 
         if (\Input::get('FORM_PAGE') === 'page2' && $this->objSession->get('seats')) {
 
-            $this->strTemplate          = 'mod_table_reservation_form_page2';
-            $this->Template             = new \FrontendTemplate($this->strTemplate);
-            $this->Template->objSession = $this->objSession;
+            $this->strTemplate           = 'mod_table_reservation_form_page2';
+            $this->Template              = new \FrontendTemplate($this->strTemplate);
+            $this->Template->infoMessage = $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationPossible'];
+            $this->Template->arrSeats    = $this->objSession->get('seats');
+            $this->Template->objSession  = $this->objSession;
 
             $objWidgetSalutation            = new \FormRadioButton();
             $objWidgetSalutation->id        = 'salutation';
@@ -227,6 +230,7 @@ class ModuleTableReservation extends \Module
 
             $objWidgetSubmit        = new \FormSubmit();
             $objWidgetSubmit->id    = 'submit';
+            $objWidgetSubmit->class = 'btn btn-success';
             $objWidgetSubmit->label = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSubmit'];
 
             $this->Template->objWidgetSubmit = $objWidgetSubmit;
