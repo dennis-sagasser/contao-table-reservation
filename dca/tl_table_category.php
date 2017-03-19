@@ -155,7 +155,7 @@ $GLOBALS['TL_DCA']['tl_table_category'] = array
                 'mandatory' => true,
                 'maxlength' => 255,
                 'unique'    => true,
-                'rgxp'      => 'alpha',
+                'rgxp'      => 'extnd',
                 'doNotCopy' => true,
                 'tl_class'  => 'w50'
             ),
