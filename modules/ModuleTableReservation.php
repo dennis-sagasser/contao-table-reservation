@@ -134,6 +134,7 @@ class ModuleTableReservation extends \Module
             $this->compileAvailabilityCheck(
                 $objWidgetArrival,
                 $objWidgetCheckboxes,
+                $arrModuleParams['table_dateTimeFormat'],
                 $arrModuleParams['table_timeFormat']
             );
         }
@@ -420,12 +421,14 @@ class ModuleTableReservation extends \Module
      *
      * @param \Widget $objWidgetArrival Reservation time input
      * @param \Widget $objWidgetCheckboxes Table categories checkboxes
+     * @param string $strDateTimeFormat Datetime format string from module settings
      * @param string $strTimeFormat Time format string from module settings
      *
      */
     protected function compileAvailabilityCheck(
         \Widget $objWidgetArrival,
         \Widget $objWidgetCheckboxes,
+        $strDateTimeFormat,
         $strTimeFormat
     )
     {
@@ -547,7 +550,7 @@ class ModuleTableReservation extends \Module
             $strReserveNowUrl                 = $this->addToUrl('FORM_PAGE=page2');
             $this->Template->strReserveNowUrl = $strReserveNowUrl;
 
-            $this->objSession->set('arrival', \Input::post('arrival'));
+            $this->objSession->set('arrival', date($strDateTimeFormat, $intArrivalDateTime));
             $this->objSession->set('seats', $arrSeats);
             $this->objSession->set('tstampArrival', $intArrivalDateTime);
             $this->objSession->set('arrCategoriesCount', $arrCategoriesCount);

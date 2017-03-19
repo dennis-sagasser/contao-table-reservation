@@ -38,14 +38,18 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
     // Config
     'config'   => array
     (
-        'dataContainer' => 'Table',
-        'sql'           => array
+        'dataContainer'   => 'Table',
+        'sql'             => array
         (
             'keys' => array
             (
                 'id' => 'primary',
             )
         ),
+        'onload_callback' => array
+        (
+            array('tl_table_reservation_list', 'formatDates')
+        )
     ),
     // List
     'list'     => array
@@ -59,7 +63,7 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
         'label'      => array
         (
             'fields' => array('arrival', 'seats', 'firstname', 'lastname'),
-            'format' => '<em>%s</em> <b>|</b> %s <b>|</b> %s %s'
+            'format' => '<em>%s</em> <b>|</b> %s <b>|</b> %s %s',
         ),
         'operations' => array
         (
