@@ -33,7 +33,7 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_table_category']['table_category'] = ['Tischkategorie', 'Bitte geben Sie die Bezeichnung des Tischkategories ein.'];
+$GLOBALS['TL_LANG']['tl_table_category']['table_category'] = ['Tischkategorie', 'Bitte geben Sie die Bezeichnung der Tischkategorie ein.'];
 $GLOBALS['TL_LANG']['tl_table_category']['maxcount']       = ['Maximale Personenanzahl', 'Bitte geben Sie das Maximum möglicher Online-Sitzplatzeservierungen an.'];
 $GLOBALS['TL_LANG']['tl_table_category']['description']    = ['Beschreibung', 'Hier können Sie eine kurze Beschreibung für die Tischkategorie angeben.'];
 $GLOBALS['TL_LANG']['tl_table_category']['published']      = ['Tischkategorie veröffentlichen', 'Die Tischkategorie auf der Website anzeigen.'];
