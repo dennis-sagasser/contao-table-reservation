@@ -65,7 +65,7 @@ class ModuleTableReservation extends \Module
         $this->loadLanguageFile('tl_table_reservation');
 
         $arrModuleParams = $this->Database->prepare("
-            SELECT table_categories, table_dateTimeFormat , table_timeFormat 
+            SELECT table_categories, table_dateTimeFormat , table_timeFormat, table_openingHours, table_leadTime 
             FROM tl_module 
             WHERE id=?")
             ->limit(1)
@@ -131,12 +131,7 @@ class ModuleTableReservation extends \Module
         $this->Template->objWidgetCheckboxes = $objWidgetCheckboxes;
 
         if (\Input::post('FORM_SUBMIT') === 'form_availability_submit') {
-            $this->compileAvailabilityCheck(
-                $objWidgetArrival,
-                $objWidgetCheckboxes,
-                $arrModuleParams['table_dateTimeFormat'],
-                $arrModuleParams['table_timeFormat']
-            );
+            $this->compileAvailabilityCheck($objWidgetArrival, $objWidgetCheckboxes, $arrModuleParams);
         }
 
         if (\Input::get('FORM_PAGE') === 'page2' && $this->objSession->get('seats')) {
@@ -421,54 +416,56 @@ class ModuleTableReservation extends \Module
      *
      * @param \Widget $objWidgetArrival Reservation time input
      * @param \Widget $objWidgetCheckboxes Table categories checkboxes
-     * @param string $strDateTimeFormat Datetime format string from module settings
-     * @param string $strTimeFormat Time format string from module settings
+     * @param array $arrModuleParams Module parameter array
      *
      */
     protected function compileAvailabilityCheck(
         \Widget $objWidgetArrival,
         \Widget $objWidgetCheckboxes,
-        $strDateTimeFormat,
-        $strTimeFormat
+        $arrModuleParams
     )
     {
         $objWidgetArrival->validate();
         $objWidgetCheckboxes->validate();
 
-        $strTimeFormat  = empty($strTimeFormat) ? \Config::get('timeFormat') : $strTimeFormat;
+        $strTimeFormat = empty($arrModuleParams['table_timeFormat']) ?
+            \Config::get('timeFormat') : $arrModuleParams['table_timeFormat'];
+
         $objArrivalDate = new \Date(strtotime(\Input::post('arrival')));
 
-        $intDayBegin        = $objArrivalDate->dayBegin;
         $intArrivalDateTime = $objArrivalDate->tstamp;
         $strArrivalDate     = date("Y-m-d", $objArrivalDate->tstamp);
 
-        // reservation at least 30 minutes before
-        $intValidReservationTime = strtotime('+0 hours 30 minutes', time());
+        $arrLeadTime             = unserialize($arrModuleParams['table_leadTime']);
+        $strLeadTime             = sprintf("+ %s %s", $arrLeadTime['value'], $arrLeadTime['unit']);
+        $intValidReservationTime = strtotime($strLeadTime, time());
         $strValidReservationTime = date($strTimeFormat, $intValidReservationTime);
 
-        ($intValidReservationTime <= $intArrivalDateTime) ?:
+
+        if ($intValidReservationTime > $intArrivalDateTime) {
             $objWidgetArrival->addError(sprintf($GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationTooLate'],
                 $strValidReservationTime));
 
-        // morning from 0 - 12h
-        $intMorning = strtotime('+12 hours', $intDayBegin);
-        // noon from 12 - 15h
-        $intNoon = strtotime('+3 hours', $intMorning);
-        // evening from 15 - 24h
-        $intEvening = strtotime('+9 hours', $intNoon);
+            return;
+        }
+        $arrOpeningHours = unserialize($arrModuleParams['table_openingHours']);
 
-        switch (true) {
-            case (($intArrivalDateTime > $intDayBegin) && ($intArrivalDateTime < $intMorning)):
-                $strCount = 'countMorning';
-                break;
-            case (($intArrivalDateTime >= $intMorning) && ($intArrivalDateTime < $intNoon)):
-                $strCount = 'countNoon';
-                break;
-            case (($intArrivalDateTime >= $intNoon) && ($intArrivalDateTime < $intEvening)):
-                $strCount = 'countEvening';
-                break;
-            default:
-                $strCount = null;
+        $intArrivalTime = strtotime($objArrivalDate->time, 0);
+
+        foreach ($arrOpeningHours as $arrOpeningHour) {
+
+            if (($intArrivalTime >= $arrOpeningHour['openFrom']) &&
+                ($intArrivalTime <= $arrOpeningHour['openTo']) &&
+                ($arrOpeningHour['weekDay'] === strftime('%A', $objArrivalDate->tstamp))
+            ) {
+                $strCount = $arrOpeningHour['dayTime'];
+            }
+        }
+
+        if (empty($strCount)) {
+            $objWidgetArrival->addError($GLOBALS['TL_LANG']['MSC']['table_reservation']['closed']);
+
+            return;
         }
 
         $arrPostTableCategory = is_array(\Input::post('tableCategory')) ?
@@ -510,27 +507,32 @@ class ModuleTableReservation extends \Module
                 $GLOBALS['TL_LANG']['MSC']['table_reservation']['countSingular'] :
                 $GLOBALS['TL_LANG']['MSC']['table_reservation']['count'];
 
-            empty($arrResultRow[$strCount]) ?
+            if (empty($arrResultRow[$strCount])) {
                 $objWidgetCheckboxes->addError(
                     sprintf(
                         $GLOBALS['TL_LANG']['MSC']['table_reservation']['noSeatsForTableCategory'],
                         $arrResultRow['tablecategory']
-                    )
-                ) :
-                (intval(\Input::post($intTableCategory)) > intval($arrResultRow[$strCount])) ?
-                    $objWidgetCheckboxes->addError(
-                        sprintf(
-                            $GLOBALS['TL_LANG']['MSC']['table_reservation']['maxCountError'],
-                            $arrResultRow['tablecategory'],
-                            $arrResultRow[$strCount]
-                        )
-                    ) :
-                    $arrSeats[] = sprintf(
-                        ("%d %s %s"),
-                        intval(\Input::post($intTableCategory)),
-                        $strCountMsg,
-                        $arrResultRow['tablecategory']
-                    );
+                    ));
+
+                return;
+            }
+
+            if (intval(\Input::post($intTableCategory)) > intval($arrResultRow[$strCount])) {
+                $objWidgetCheckboxes->addError(
+                    sprintf(
+                        $GLOBALS['TL_LANG']['MSC']['table_reservation']['maxCountError'],
+                        $arrResultRow['tablecategory'],
+                        $arrResultRow[$strCount]
+                    ));
+
+                return;
+            }
+
+            $arrSeats[] = sprintf(("%d %s %s"),
+                intval(\Input::post($intTableCategory)),
+                $strCountMsg,
+                $arrResultRow['tablecategory']
+            );
 
             $arrTableCategories[] = $intTableCategory;
             $arrCountSeats[]      = [
@@ -550,7 +552,7 @@ class ModuleTableReservation extends \Module
             $strReserveNowUrl                 = $this->addToUrl('FORM_PAGE=page2');
             $this->Template->strReserveNowUrl = $strReserveNowUrl;
 
-            $this->objSession->set('arrival', date($strDateTimeFormat, $intArrivalDateTime));
+            $this->objSession->set('arrival', date($arrModuleParams['table_dateTimeFormat'], $intArrivalDateTime));
             $this->objSession->set('seats', $arrSeats);
             $this->objSession->set('tstampArrival', $intArrivalDateTime);
             $this->objSession->set('arrCategoriesCount', $arrCategoriesCount);

@@ -47,7 +47,7 @@ class tl_table_reservation_list extends Backend
     public function formatDates()
     {
         $arrModuleParams = $this->Database->prepare("
-            SELECT table_dateTimeFormat AS datimFormat
+            SELECT table_dateTimeFormat AS datimFormat, table_timeFormat AS timeFormat
             FROM tl_module 
             WHERE type='table_reservation'")
             ->limit(1)
@@ -56,6 +56,10 @@ class tl_table_reservation_list extends Backend
 
         if (!empty($arrModuleParams['datimFormat'])) {
             \Config::set('datimFormat', $arrModuleParams['datimFormat']);
+        }
+
+        if (!empty($arrModuleParams['timeFormat'])) {
+            \Config::set('timeFormat', $arrModuleParams['timeFormat']);
         }
     }
 }

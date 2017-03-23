@@ -45,6 +45,7 @@ $GLOBALS['TL_LANG']['MSC']['table_reservation']['maxCountError']                
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationPossible']            = 'A reservation is possible for this period of time:';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationNotPossible']         = 'Sorry. Reservation is not possible.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationTooLate']             = 'Next possible reservation is after: "%s".';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['closed']                         = 'The time is outside the opening times.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSalutation']                 = 'Gender';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formMale']                       = 'Mr.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFemale']                     = 'Mrs.';

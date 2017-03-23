@@ -40,11 +40,14 @@ class tl_module_table_reservation extends Backend
         $this->import('BackendUser', 'User');
 
         if (!$this->User->isAdmin) {
-            return array();
+            return [];
         }
 
-        $arrTableCategories = array();
-        $objTableCategories = $this->Database->execute("SELECT id, tablecategory FROM tl_table_category ORDER BY tablecategory");
+        $arrTableCategories = [];
+        $objTableCategories = $this->Database->execute("
+            SELECT id, tablecategory 
+            FROM tl_table_category 
+            ORDER BY tablecategory");
 
         while ($objTableCategories->next()) {
             if ($this->User->isAdmin) {
@@ -63,11 +66,11 @@ class tl_module_table_reservation extends Backend
      */
     public function showJsLibraryHint($dc)
     {
-        if ($_POST || Input::get('act') != 'edit') {
+        if ($_POST || \Input::get('act') != 'edit') {
             return;
         }
 
-        $objModule = ModuleModel::findByPk($dc->id);
+        $objModule = \ModuleModel::findByPk($dc->id);
         if ($objModule === null) {
             echo 'null' . $dc->id;
             return;
@@ -75,8 +78,45 @@ class tl_module_table_reservation extends Backend
 
         switch ($objModule->type) {
             case 'table_reservation':
-                Message::addInfo($GLOBALS['TL_LANG']['tl_module']['info']);
+                \Message::addInfo($GLOBALS['TL_LANG']['tl_module']['info']);
                 break;
         }
+    }
+
+    /**
+     * Get the keys and values for days dropdown
+     *
+     * * @return array $arrDays Array of dropdpwn options
+     */
+    public function getDays()
+    {
+        $arrDays      = [];
+        $intTimestamp = strtotime('next Sunday');
+
+        for ($i = 0; $i < 7; $i++) {
+            $strKeys[]             = strftime('%A', $intTimestamp);
+            $intTimestamp          = strtotime('+1 day', $intTimestamp);
+            $arrDays[$strKeys[$i]] = $GLOBALS['TL_LANG']['DAYS'][$i];
+        }
+
+        return $arrDays;
+    }
+
+    /**
+     * Get the keys and values for daytime dropdown
+     *
+     * * @return array $arrDayTimes Array of dropdpwn options
+     */
+    public function getDayTimes()
+    {
+        $this->loadLanguageFile('tl_table_occupancy');
+
+        $arrDayTimes = [];
+
+        $arrDayTimes['countMorning'] = $GLOBALS['TL_LANG']['tl_table_occupancy']['morningAlt'];
+        $arrDayTimes['countNoon']    = $GLOBALS['TL_LANG']['tl_table_occupancy']['noonAlt'];
+        $arrDayTimes['countEvening'] = $GLOBALS['TL_LANG']['tl_table_occupancy']['eveningAlt'];
+
+        return $arrDayTimes;
     }
 }

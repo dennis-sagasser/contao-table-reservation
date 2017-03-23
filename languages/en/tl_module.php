@@ -36,6 +36,16 @@
 $GLOBALS['TL_LANG']['tl_module']['tableCategories'] = ['Table category', 'Please choose at least one table category.'];
 $GLOBALS['TL_LANG']['tl_module']['dateTimeFormat']  = ['Date and time format', 'Date and time format for the frontend calendar field. If empty, global format is used. The date and time format string will be parsed with the PHP date() function.'];
 $GLOBALS['TL_LANG']['tl_module']['timeFormat']      = ['Time format', 'Time format for the frontend calendar field. If empty, global format is used. The time format string will be parsed with the PHP date() function.'];
+$GLOBALS['TL_LANG']['tl_module']['leadTime']        = ['Lead time', 'Enter the time, which must be at least between reservation and arrival.'];
+$GLOBALS['TL_LANG']['tl_module']['openingHours']    = ['Opening hours', 'Please specify the opening hours for the different daytimes.'];
+$GLOBALS['TL_LANG']['tl_module']['weekDay']         = ['Weekday', 'Select a day for the opening hours.'];
+$GLOBALS['TL_LANG']['tl_module']['dayTime']         = ['DayTime', 'Select a daytime for the opening hours.'];
+$GLOBALS['TL_LANG']['tl_module']['openFrom']        = ['From', 'Specify the opening time.'];
+$GLOBALS['TL_LANG']['tl_module']['openTo']          = ['To', 'Specify the closing time.'];
+$GLOBALS['TL_LANG']['tl_module']['minutes'][0]      = 'Minutes';
+$GLOBALS['TL_LANG']['tl_module']['hours'][0]        = 'Hours';
+$GLOBALS['TL_LANG']['tl_module']['days'][0]         = 'Days';
+$GLOBALS['TL_LANG']['tl_module']['weeks'][0]        = 'Weeks';
 
 /**
  * Legends
