@@ -33,12 +33,14 @@
 /**
  * Miscellaneous
  */
-$GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrival']                    = 'Date and time';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDate']                = 'Date';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDateTime']            = 'Date and time';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSubmit']                     = 'Check availability';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['countSingular']                  = 'person';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['count']                          = 'persons';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formTableCategory']              = 'Choose table category';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['countError']                     = 'Please choose the desired number of persons.';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['timeSlotError']                  = 'Please choose timeslot.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['noSeatsForTableCategory']        = 'No free seats for table category "%s" during this period.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['notEnoughSeatsForTableCategory'] = 'Not enough free seats for table category "%s" during this period.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['maxCountError']                  = 'Reservation for table category "%s" not possible. Maximum number of seats for this period: %s.';

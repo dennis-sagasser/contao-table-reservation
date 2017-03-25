@@ -33,6 +33,7 @@
 /**
  * Fields
  */
+$GLOBALS['TL_LANG']['tl_module']['showTimeSlots']   = ['Zeitfenster aktivieren', 'Wenn Sie Zeitfenster aktivieren, kann der Nutzer im Frontend ein bei den Öffunungszeiten oben angegebenes Zeitfenster wählen anstatt eine feste Zeitangabe zu machen.'];
 $GLOBALS['TL_LANG']['tl_module']['tableCategories'] = ['Tischkategorie', 'Bitte wählen Sie mindestens eine Tischkategorie.'];
 $GLOBALS['TL_LANG']['tl_module']['dateTimeFormat']  = ['Datums- und Zeitformat', 'Datums- und Zeitformat für den Kalendar im Frontend. Falls nicht angegegeben, wird das globale Format verwendet. Der Datums- und Zeitformat-String wird mit der PHP-Funktion date() geparst.'];
 $GLOBALS['TL_LANG']['tl_module']['timeFormat']      = ['Zeitformat', 'Zeitformat für den Kalendar im Frontend. Falls nicht angegegeben, wird das globale Format verwendet. Der Zeitformat-String wird mit der PHP-Funktion date() geparst.'];

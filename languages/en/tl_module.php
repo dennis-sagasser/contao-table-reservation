@@ -33,6 +33,7 @@
 /**
  * Fields
  */
+$GLOBALS['TL_LANG']['tl_module']['showTimeSlots']   = ['Activate timeslots', 'If you enable timeslots, the frontend user can choose a timeslot from opening times above instead of entering a fixed time.'];
 $GLOBALS['TL_LANG']['tl_module']['tableCategories'] = ['Table category', 'Please choose at least one table category.'];
 $GLOBALS['TL_LANG']['tl_module']['dateTimeFormat']  = ['Date and time format', 'Date and time format for the frontend calendar field. If empty, global format is used. The date and time format string will be parsed with the PHP date() function.'];
 $GLOBALS['TL_LANG']['tl_module']['timeFormat']      = ['Time format', 'Time format for the frontend calendar field. If empty, global format is used. The time format string will be parsed with the PHP date() function.'];

@@ -34,6 +34,7 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival']    = ['Date and time', 'Please enter date and time for reservation.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['departure']  = ['Departure', 'Please enter date and time for reservation.'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['seats']      = ['Seats', 'Please enter the number of persons and table category (e.g.: 1 x veranda).'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['salutation'] = ['Salutation', 'Please select gender.'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['firstname']  = ['First name', 'Please enter the guest first name.'];

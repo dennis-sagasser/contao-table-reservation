@@ -26,13 +26,15 @@
         <table id="overviewTable">
             <thead>
             <tr>
-                <td><strong><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrival']; ?></strong></td>
+                <td><strong><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDateTime']; ?></strong></td>
                 <td><strong><?= $GLOBALS['TL_LANG']['MSC']['table_reservation']['seats']; ?></strong></td>
             </tr>
             </thead>
             <?php foreach ($this->arrSeats as $row): ?>
                 <tr>
-                    <td><?= $this->objSession->get('arrival'); ?></td>
+                    <td>
+                        <?= $this->objSession->get('arrival'); ?>&nbsp;
+                    </td>
                     <td><?= $row; ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -50,6 +52,8 @@
         <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}"/>
         <?= $this->objWidgetArrival ? $this->objWidgetArrival->generateLabel() : ''; ?>
         <?= $this->objWidgetArrival ? $this->objWidgetArrival->generateWithError() : ''; ?><br>
+
+        <?= $this->objWidgetTimeSlots ? $this->objWidgetTimeSlots->generateWithError() : ''; ?><br>
 
         <?= $this->objWidgetCheckboxes ? $this->objWidgetCheckboxes->generateWithError() : ''; ?><br>
 

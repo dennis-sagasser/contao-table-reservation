@@ -26,14 +26,11 @@ $GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = ['tl_table_rese
 /**
  * Palettes
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][]    = 'table_showTimeSlots';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['table_reservation'] = '{title_legend},name,headline,type;{config_legend},table_dateTimeFormat,table_timeFormat,table_leadTime,table_openingHours,table_showTimeSlots,table_categories;{redirect_legend},jumpTo;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['table_reservation'] = '{title_legend},name,headline,type;{config_legend},table_dateTimeFormat,table_timeFormat,table_openingHours,table_showTimeSlots,table_leadTime,table_categories;{redirect_legend},jumpTo;{expert_legend:hide},guests,cssID,space';
 
 /**
  * Subpalettes
  */
-$GLOBALS['TL_DCA']['tl_module']['subpalettes']['table_showTimeSlots'] = 'table_timeSlots';
-
 
 /**
  * Fields
@@ -116,32 +113,23 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['table_openingHours'] = [
     'sql'       => "blob NULL"
 ];
 
+$GLOBALS['TL_DCA']['tl_module']['fields']['table_showTimeSlots'] = [
+    'label'     => &$GLOBALS['TL_LANG']['tl_module']['showTimeSlots'],
+    'exclude'   => false,
+    'inputType' => 'checkbox',
+    'eval'      => ['mandatory' => false, 'isBoolean' => true, 'submitOnChange' => true, 'tl_class' => 'w50'],
+    'sql'       => "char(1) NOT NULL default ''"
+];
+
 $GLOBALS['TL_DCA']['tl_module']['fields']['table_leadTime'] = [
     'label'     => &$GLOBALS['TL_LANG']['tl_module']['leadTime'],
     'exclude'   => true,
     'inputType' => 'timePeriod',
-    'options'   => array('minutes', 'hours', 'days', 'weeks'),
+    'options'   => ['minutes', 'hours', 'days', 'weeks'],
     'reference' => &$GLOBALS['TL_LANG']['tl_module'],
-    'eval'      => array('mandatory' => true, 'rgxp' => 'natural', 'minval' => 0, 'tl_class' => 'w50'),
+    'eval'      => ['mandatory' => true, 'rgxp' => 'natural', 'minval' => 0, 'tl_class' => 'w50'],
     'sql'       => "varchar(64) NOT NULL default ''"
 ];
-
-//$GLOBALS['TL_DCA']['tl_module']['fields']['table_showTimeSlots'] = [
-//    'label'     => &$GLOBALS['TL_LANG']['tl_module']['showTimeSlots'],
-//    'exclude'   => false,
-//    'inputType' => 'checkbox',
-//    'eval'      => array('mandatory' => false, 'isBoolean' => true, 'submitOnChange' => true),
-//    'sql'       => "char(1) NOT NULL default ''"
-//];
-//
-//$GLOBALS['TL_DCA']['tl_module']['fields']['table_timeSlots'] = [
-//    'label'     => &$GLOBALS['TL_LANG']['tl_module']['timeSlots'],
-//    'exclude'   => true,
-//    'inputType' => 'listWizard',
-//    'options'   => ['id' => '123'],
-//    'eval'      => ['mandatory' => true, 'tl_class' => 'long'],
-//    'sql'       => "blob NULL"
-//];
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['table_categories'] = [
     'label'            => &$GLOBALS['TL_LANG']['tl_module']['tableCategories'],

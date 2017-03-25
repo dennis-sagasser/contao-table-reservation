@@ -130,6 +130,15 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
 
             ),
         ),
+        'departure' => array
+        (
+            'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['departure'],
+            'sql'   => "int(10) unsigned NULL",
+            'eval'  => array
+            (
+                'rgxp' => 'datim',
+            ),
+        ),
         'seats'     => array
         (
             'inputType' => 'listWizard',
