@@ -15,7 +15,6 @@
 ClassLoader::addClasses(array
 (
 	// Modules
-	'Contao\HookMyTableInsertTags'  => 'system/modules/table_reservation/modules/HookMyTableInsertTags.php',
 	'Contao\ModuleTableReservation' => 'system/modules/table_reservation/modules/ModuleTableReservation.php',
 
 	// Classes
