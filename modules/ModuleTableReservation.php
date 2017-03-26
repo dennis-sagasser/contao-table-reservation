@@ -486,7 +486,7 @@ class ModuleTableReservation extends \Module
             \Config::get('timeFormat') : $arrModuleParams['table_timeFormat'];
 
         if (!empty($objWidgetTimeSlots)) {
-            if (empty(\Input::post('timeslots'))) {
+            if (\Input::post('timeslots') === '') {
                 $objWidgetTimeSlots->addError($GLOBALS['TL_LANG']['MSC']['table_reservation']['timeSlotError']);
 
                 return;
