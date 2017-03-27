@@ -35,6 +35,7 @@
  */
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDate']                = 'Date';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDateTime']            = 'Date and time';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['formTimeSlots']                  = 'Time slot';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSubmit']                     = 'Check availability';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['countSingular']                  = 'person';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['count']                          = 'persons';

@@ -33,12 +33,12 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_module']['showTimeSlots']   = ['Zeitfenster aktivieren', 'Wenn Sie Zeitfenster aktivieren, kann der Nutzer im Frontend ein bei den Öffunungszeiten oben angegebenes Zeitfenster wählen anstatt eine feste Zeitangabe zu machen.'];
+$GLOBALS['TL_LANG']['tl_module']['showTimeSlots']   = ['Zeitfenster aktivieren', 'Wenn Sie Zeitfenster aktivieren, kann der Nutzer im Frontend ein bei den Öffnungszeiten oben angegebenes Zeitfenster wählen anstatt eine feste Zeitangabe zu machen.'];
 $GLOBALS['TL_LANG']['tl_module']['tableCategories'] = ['Tischkategorie', 'Bitte wählen Sie mindestens eine Tischkategorie.'];
 $GLOBALS['TL_LANG']['tl_module']['dateTimeFormat']  = ['Datums- und Zeitformat', 'Datums- und Zeitformat für den Kalendar im Frontend. Falls nicht angegegeben, wird das globale Format verwendet. Der Datums- und Zeitformat-String wird mit der PHP-Funktion date() geparst.'];
 $GLOBALS['TL_LANG']['tl_module']['timeFormat']      = ['Zeitformat', 'Zeitformat für den Kalendar im Frontend. Falls nicht angegegeben, wird das globale Format verwendet. Der Zeitformat-String wird mit der PHP-Funktion date() geparst.'];
 $GLOBALS['TL_LANG']['tl_module']['leadTime']        = ['Vorlaufzeit', 'Tragen Sie die Zeit ein, die mindestens zwischen Reservierung und Ankunft liegen muss.'];
-$GLOBALS['TL_LANG']['tl_module']['openingHours']    = ['Öffnungszeiten', 'Geben Sie die Öffungszeiten für die verschiedenen Tageszeiten an.'];
+$GLOBALS['TL_LANG']['tl_module']['openingHours']    = ['Öffnungszeiten', 'Geben Sie die Öffnungszeiten für die verschiedenen Tageszeiten an.'];
 $GLOBALS['TL_LANG']['tl_module']['weekDay']         = ['Wochentag', 'Wählen Sie den Tag für die Öffnungszeiten aus.'];
 $GLOBALS['TL_LANG']['tl_module']['dayTime']         = ['Tageszeit', 'Wählen Sie die Tageszeit für die Öffnungszeiten aus.'];
 $GLOBALS['TL_LANG']['tl_module']['openFrom']        = ['Von', 'Geben Sie die Öffnungszeit an.'];

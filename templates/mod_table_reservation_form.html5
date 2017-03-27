@@ -53,6 +53,7 @@
         <?= $this->objWidgetArrival ? $this->objWidgetArrival->generateLabel() : ''; ?>
         <?= $this->objWidgetArrival ? $this->objWidgetArrival->generateWithError() : ''; ?><br>
 
+        <?= $this->objWidgetTimeSlots ? $this->objWidgetTimeSlots->generateLabel() : ''; ?>
         <?= $this->objWidgetTimeSlots ? $this->objWidgetTimeSlots->generateWithError() : ''; ?><br>
 
         <?= $this->objWidgetCheckboxes ? $this->objWidgetCheckboxes->generateWithError() : ''; ?><br>
