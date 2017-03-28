@@ -33,87 +33,72 @@
 /**
  * Table tl_table_reservation_list
  */
-$GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
-(
+$GLOBALS['TL_DCA']['tl_table_reservation_list'] = [
     // Config
-    'config'   => array
-    (
+    'config'   => [
         'dataContainer'   => 'Table',
-        'sql'             => array
-        (
-            'keys' => array
-            (
+        'sql'             => [
+            'keys' => [
                 'id' => 'primary',
-            )
-        ),
-        'onload_callback' => array
-        (
-            array('tl_table_reservation_list', 'formatDates')
-        )
-    ),
+            ]
+        ],
+        'onload_callback' => [
+            ['tl_table_reservation_list', 'formatDates']
+        ]
+    ],
     // List
-    'list'     => array
-    (
-        'sorting'    => array
-        (
+    'list'     => [
+        'sorting'    => [
             'mode'        => 2,
             'panelLayout' => 'filter;search,sort,limit',
-            'fields'      => array('id ASC'),
-        ),
-        'label'      => array
-        (
-            'fields' => array('arrival', 'seats', 'firstname', 'lastname'),
-            'format' => '<em>%s</em> <b>|</b> %s <b>|</b> %s %s',
-        ),
-        'operations' => array
-        (
-            'edit'   => array
-            (
+            'fields'      => ['id ASC'],
+        ],
+        'label'      => [
+            'fields'         => ['arrival', 'seats', 'firstname', 'lastname'],
+            'format'         => '<em>%s</em> <b>|</b> %s <b>|</b> %s %s',
+            'label_callback' => [
+                'tl_table_reservation_list', 'listReservations',
+            ],
+        ],
+        'operations' => [
+            'edit'   => [
                 'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['edit'],
                 'href'  => 'act=edit',
                 'icon'  => 'edit.gif'
-            ),
-            'copy'   => array
-            (
+            ],
+            'copy'   => [
                 'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['copy'],
                 'href'  => 'act=copy',
                 'icon'  => 'copy.gif'
-            ),
-            'show'   => array
-            (
+            ],
+            'show'   => [
                 'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['show'],
                 'href'  => 'act=show',
                 'icon'  => 'show.gif'
-            ),
-            'delete' => array
-            (
+            ],
+            'delete' => [
                 'label'      => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
-                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['tl_table_reservation_list']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
-            ),
-        )
-    ),
+                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['tl_table_reservation_list']['deleteConfirm'] . '\'])return false;Backend.getScrollOffset()"',
+            ],
+        ]
+    ],
     // Palettes
-    'palettes' => array
-    (
+    'palettes' => [
         'default' => '{reservation_legend},arrival,seats;{guest_legend},gender,lastname,firstname,phone,email,remarks;'
-    ),
+    ],
     // Fields
-    'fields'   => array
-    (
-        'id'        => array
-        (
+    'fields'   => [
+        'id'        => [
             'sql'     => "int(10) unsigned NOT NULL auto_increment",
             'sorting' => true,
-        ),
-        'tstamp'    => array
-        (
+        ],
+        'tstamp'    => [
             'inputType' => 'text',
             'sql'       => "int(10) unsigned NOT NULL",
-        ),
-        'arrival'   => array
-        (
+        ],
+        'arrival'   => [
             'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival'],
             'sql'       => "int(10) unsigned NOT NULL default '0'",
             'flag'      => 6,
@@ -122,100 +107,113 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = array
             'filter'    => true,
             'inputType' => 'text',
             'default'   => time(),
-            'eval'      => array
-            (
+            'eval'      => [
                 'rgxp'       => 'datim',
                 'datepicker' => true,
                 'mandatory'  => true,
-
-            ),
-        ),
-        'departure' => array
-        (
+            ],
+        ],
+        'departure' => [
             'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['departure'],
             'sql'   => "int(10) unsigned NULL",
-            'eval'  => array
-            (
+            'eval'  => [
                 'rgxp' => 'datim',
-            ),
-        ),
-        'seats'     => array
-        (
-            'inputType' => 'listWizard',
+            ]
+        ],
+        'seats'     => [
             'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats'],
+            'exclude'   => true,
+            'inputType' => 'multiColumnWizard',
             'sql'       => "blob NOT NULL",
-            'eval'      => array
-            (
-                'mandatory' => true,
-            ),
-
-        ),
-        'gender'    => array
-        (
+            'eval'      => [
+                'mandatory'    => true,
+                'columnFields' => [
+                    'count'    => [
+                        'label'            => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats'],
+                        'inputType'        => 'select',
+                        'options_callback' => [
+                            'tl_table_reservation_list', 'getCount',
+                        ],
+                        'reference'        => &$GLOBALS['TL_LANG']['MSC'],
+                        'eval'             => [
+                            'mandatory'          => true,
+                            'style'              => 'width:200px',
+                            'includeBlankOption' => true,
+                            'chosen'             => true
+                        ],
+                    ],
+                    'category' => [
+                        'label'            => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['category'],
+                        'inputType'        => 'select',
+                        'options_callback' => [
+                            'tl_table_reservation_list', 'getCatergory',
+                        ],
+                        'reference'        => &$GLOBALS['TL_LANG']['MSC'],
+                        'eval'             => [
+                            'mandatory'          => true,
+                            'style'              => 'width:200px',
+                            'includeBlankOption' => true,
+                            'chosen'             => true
+                        ],
+                    ],
+                ]
+            ]
+        ],
+        'gender'    => [
             'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['salutation'],
             'inputType' => 'select',
-            'options'   => array('male', 'female'),
+            'options'   => ['male', 'female'],
             'reference' => &$GLOBALS['TL_LANG']['MSC'],
-            'eval'      => array('includeBlankOption' => true),
+            'eval'      => ['includeBlankOption' => true],
             'sql'       => "varchar(32) NOT NULL default ''"
-        ),
-        'lastname'  => array
-        (
+        ],
+        'lastname'  => [
             'inputType' => 'text',
             'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['lastname'],
             'sql'       => "varchar(255) NOT NULL default ''",
             'search'    => true,
             'sorting'   => true,
             'filter'    => true,
-            'eval'      => array
-            (
+            'eval'      => [
                 'rgxp'      => 'alpha',
                 'tl_class'  => 'w50',
                 'mandatory' => true,
-            ),
-        ),
-        'firstname' => array
-        (
+            ],
+        ],
+        'firstname' => [
             'inputType' => 'text',
             'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['firstname'],
             'sql'       => "varchar(255) NOT NULL default ''",
-            'eval'      => array
-            (
+            'eval'      => [
                 'rgxp'     => 'alpha',
                 'tl_class' => 'w50'
-            ),
-        ),
-        'phone'     => array
-        (
+            ],
+        ],
+        'phone'     => [
             'inputType' => 'text',
             'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['phone'],
             'sql'       => "varchar(255) NULL",
-            'eval'      => array
-            (
+            'eval'      => [
                 'rgxp'      => 'phone',
                 'tl_class'  => 'w50',
                 'mandatory' => true
-
-            ),
-        ),
-        'email'     => array
-        (
+            ],
+        ],
+        'email'     => [
             'inputType' => 'text',
             'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['email'],
             'sql'       => "varchar(255) NOT NULL default ''",
             'search'    => true,
             'sorting'   => true,
-            'eval'      => array
-            (
+            'eval'      => [
                 'rgxp'     => 'email',
                 'tl_class' => 'w50'
-            ),
-        ),
-        'remarks'   => array
-        (
+            ],
+        ],
+        'remarks'   => [
             'inputType' => 'textarea',
             'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['remarks'],
             'sql'       => "text NULL",
-        ),
-    )
-);
+        ],
+    ],
+];

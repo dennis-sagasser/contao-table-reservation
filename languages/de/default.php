@@ -37,7 +37,6 @@ $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDate']              
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDateTime']            = 'Datum und Zeit';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formTimeSlots']                  = 'Zeitfenster';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSubmit']                     = 'Verfügbarkeit prüfen';
-$GLOBALS['TL_LANG']['MSC']['table_reservation']['countSingular']                  = 'Person';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['count']                          = 'Personen';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formTableCategory']              = 'Tischkategorie wählen';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['countError']                     = 'Bitte geben Sie die gewünschte Personenanzahl an.';
@@ -63,8 +62,8 @@ $GLOBALS['TL_LANG']['MSC']['table_reservation']['formConfirmationText']         
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSubmit']          = 'Verbindlich reservieren';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSuccess']         = 'Vielen Dank für ihre Reservierung! In Kürze erhalten Sie von uns eine E-Mail mit weiterführenden Informationen.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservation']                    = 'Reservierung';
-$GLOBALS['TL_LANG']['MSC']['table_reservation']['seat']                           = 'Sitzplatz';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['seats']                          = 'Sitzplätze';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['tableCategory']                  = 'Tischkategorie';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reserveNow']                     = 'Jetzt reservieren »';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['backToStart']                    = '« Zurück zur Startseite';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSir']                        = 'Sehr geehrter Herr';

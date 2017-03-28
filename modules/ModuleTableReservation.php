@@ -573,10 +573,6 @@ class ModuleTableReservation extends \Module
                              AND t.id = ?) tmp2 ON tmp1.pid = tmp1.id")
                     ->execute($strArrivalDate, $intTableCategory, $intTableCategory)->fetchAssoc();
 
-            $strCountMsg = (intval(\Input::post($intTableCategory)) === 1) ?
-                $GLOBALS['TL_LANG']['MSC']['table_reservation']['countSingular'] :
-                $GLOBALS['TL_LANG']['MSC']['table_reservation']['count'];
-
             if (empty($arrResultRow[$strCount])) {
                 $objWidgetCheckboxes->addError(
                     sprintf(
@@ -598,11 +594,11 @@ class ModuleTableReservation extends \Module
                 return;
             }
 
-            $arrSeats[] = sprintf(("%d %s %s"),
-                intval(\Input::post($intTableCategory)),
-                $strCountMsg,
-                $arrResultRow['tablecategory']
-            );
+            $arrSeats[] = [
+                'count'        => intval(\Input::post($intTableCategory)),
+                'category'     => $intTableCategory,
+                'categoryName' => $arrResultRow['tablecategory']
+            ];
 
             $arrTableCategories[] = $intTableCategory;
             $arrCountSeats[]      = [
@@ -705,6 +701,15 @@ class ModuleTableReservation extends \Module
             $this->Template->infoMessage = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSuccess'];
             $this->send();
 
+            $arrSeats         = $this->objSession->get('seats');
+            $arrSeatsCategory = [];
+
+            foreach ($arrSeats as $arrSeat) {
+                unset($arrSeat['categoryName']);
+                $arrSeatsCategory[] = $arrSeat;
+
+            }
+
             $objInsertReservation = $this->Database->prepare("
                     INSERT INTO tl_table_reservation_list
                     (tstamp, arrival, departure, seats, gender, lastname, firstname, phone, email, remarks)
@@ -713,7 +718,7 @@ class ModuleTableReservation extends \Module
                     time(),
                     $this->objSession->get('tstampArrival'),
                     $this->objSession->get('tstampDeparture'),
-                    $this->objSession->get('seats'),
+                    $arrSeatsCategory,
                     \Input::post('salutation'),
                     \Input::post('lastname'),
                     \Input::post('firstname'),
