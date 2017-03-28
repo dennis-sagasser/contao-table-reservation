@@ -707,7 +707,6 @@ class ModuleTableReservation extends \Module
             foreach ($arrSeats as $arrSeat) {
                 unset($arrSeat['categoryName']);
                 $arrSeatsCategory[] = $arrSeat;
-
             }
 
             $objInsertReservation = $this->Database->prepare("

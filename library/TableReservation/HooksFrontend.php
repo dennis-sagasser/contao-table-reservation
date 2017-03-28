@@ -70,8 +70,15 @@ class HooksFrontend extends \Frontend
                 return $objSession->get('arrival');
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'seats') {
-                return is_array($objSession->get('seats')) ?
-                    implode(', ', $objSession->get('seats')) : $objSession->get('seats');
+                $arrSeats         = $objSession->get('seats');
+                $arrSeatsCategory = [];
+
+                foreach ($arrSeats as $arrSeat) {
+                    unset($arrSeat['category']);
+                    $arrSeatsCategory[] = $arrSeat['count'] . " (" . $arrSeat['categoryName'] . ")";
+                }
+
+                return implode(', ', $arrSeatsCategory);
             }
         }
         return false;
