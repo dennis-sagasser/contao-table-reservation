@@ -35,8 +35,8 @@
  */
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival']    = ['Datum und Uhrzeit', 'Bitte geben Sie Datum und Uhrzeit der Reservierung an.'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['departure']  = ['Abfahrt', 'Bitte geben Sie Datum und Uhrzeit der Reservierung an.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats']      = ['Sitzplätze', 'Bitte wählen Sie die gewünschte Personenanzahl und Kategorie aus.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['count']      = ['Personenanzahl', 'Bitte wählen Sie die gewünschte Personenanzahl aus.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats']      = ['Personen', 'Bitte wählen Sie die gewünschte Personenanzahl und Kategorie aus.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['count']      = ['Personen', 'Bitte wählen Sie die gewünschte Personenanzahl aus.'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['category']   = ['Kategorie', 'Bitte wählen Sie die gewünschte Tischkategorie aus.'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['salutation'] = ['Anrede', 'Bitte wählen Sie das Geschlecht des Gastes.'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['firstname']  = ['Vorname', 'Bitte geben Sie den Vornamen des Gastes an.'];

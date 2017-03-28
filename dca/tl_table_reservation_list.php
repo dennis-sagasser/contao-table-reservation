@@ -129,7 +129,7 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = [
                 'mandatory'    => true,
                 'columnFields' => [
                     'count'    => [
-                        'label'            => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats'],
+                        'label'            => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['count'],
                         'inputType'        => 'select',
                         'options_callback' => [
                             'tl_table_reservation_list', 'getCount',
