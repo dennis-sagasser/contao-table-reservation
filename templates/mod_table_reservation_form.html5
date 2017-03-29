@@ -47,7 +47,7 @@
 <?php $this->endblock(); ?>
 
 <?php $this->block('form'); ?>
-<form novalidate="novalidate" action="<?= $this->action; ?>" id="availability" method="post"
+<form action="<?= $this->action; ?>" id="availability" method="post"
       enctype="application/x-www-form-urlencoded">
     <div class="formbody">
         <input type="hidden" name="FORM_SUBMIT" value="form_availability_submit"/>
