@@ -52,6 +52,7 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = [
             'mode'        => 2,
             'panelLayout' => 'filter;search,sort,limit',
             'fields'      => ['id ASC'],
+            'filter'      => [['arrival > ?', time()]]
         ],
         'label'      => [
             'fields'         => ['arrival', 'seats', 'firstname', 'lastname'],
@@ -101,7 +102,7 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = [
         'arrival'   => [
             'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival'],
             'sql'       => "int(10) unsigned NOT NULL default '0'",
-            'flag'      => 6,
+            'flag'      => 5,
             'search'    => true,
             'sorting'   => true,
             'filter'    => true,
