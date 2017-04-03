@@ -16,6 +16,8 @@
  * @link        https://contao.org
  */
 
+namespace Contao;
+
 /**
  * Class tl_table_reservation_list
  *
@@ -28,7 +30,7 @@
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_table_reservation_list extends Backend
+class tl_table_reservation_list extends \Backend
 {
 
     /**

@@ -16,6 +16,8 @@
  * @link        https://contao.org
  */
 
+namespace Contao;
+
 /**
  * Class tl_table_occupancy
  *
@@ -47,11 +49,11 @@ class tl_table_occupancy extends \Backend
     public function generateCalendarWidget(\DataContainer $dc)
     {
 
-        $intYear        = Input::get('intYear');
-        $intCurrentYear = isset($intYear) ? Input::get('intYear') : (int)Date::parse('Y');
+        $intYear        = \Input::get('intYear');
+        $intCurrentYear = isset($intYear) ? \Input::get('intYear') : (int)\Date::parse('Y');
 
         $strHtmlYearCalendar = '<div><table class="calendarWidget">';
-        $strHtmlYearCalendar .= '<caption><h3><a href=' . Environment::get('requestUri') . '&intYear=' . ($intCurrentYear - 1) . '>«</a>&nbsp;' . $GLOBALS['TL_LANG']['tl_table_occupancy']['year'][0] . '&nbsp;' . $intCurrentYear . '&nbsp;<a href=' . Environment::get('uri') . '&intYear=' . ($intCurrentYear + 1) . '>»</a></h3></caption>';
+        $strHtmlYearCalendar .= '<caption><h3><a href=' . \Environment::get('requestUri') . '&intYear=' . ($intCurrentYear - 1) . '>«</a>&nbsp;' . $GLOBALS['TL_LANG']['tl_table_occupancy']['year'][0] . '&nbsp;' . $intCurrentYear . '&nbsp;<a href=' . \Environment::get('uri') . '&intYear=' . ($intCurrentYear + 1) . '>»</a></h3></caption>';
 
         $intCurrentMonth = 0;
         $intParentId     = $dc->activeRecord->pid;
@@ -124,19 +126,19 @@ class tl_table_occupancy extends \Backend
                 <input id="ctrl_countEvening_' . $strCurrentDate . '" type="text" value="' . $objDbSelectResult->countEvening . '" name="' . $strCurrentDate . '[countEvening]" maxlength="2" ' . ($strCurrentDate === date('Y-m-d') ? '' : 'disabled') . ' class="' . ($classInput = ($objDbSelectResult->countEvening < 1) ? 'emptyInput' : 'filledInput') . '"></td>
             ';
 
-            if (Input::post('FORM_SUBMIT') == 'tl_table_occupancy') {
+            if (\Input::post('FORM_SUBMIT') == 'tl_table_occupancy') {
 
-                if (Input::post('showPeriodOptions') && $mktime >= strtotime(Input::post('startDate')) && $mktime <= strtotime(Input::post('endDate'))) {
+                if (\Input::post('showPeriodOptions') && $mktime >= strtotime(\Input::post('startDate')) && $mktime <= strtotime(\Input::post('endDate'))) {
 
                     $postDate                 = array();
                     $postDate['date']         = $strCurrentDate;
-                    $postDate['countMorning'] = Input::post('countMorning');
-                    $postDate['countNoon']    = Input::post('countNoon');
-                    $postDate['countEvening'] = Input::post('countEvening');
+                    $postDate['countMorning'] = \Input::post('countMorning');
+                    $postDate['countNoon']    = \Input::post('countNoon');
+                    $postDate['countEvening'] = \Input::post('countEvening');
 
                 } else {
 
-                    $postDate = Input::post($strCurrentDate);
+                    $postDate = \Input::post($strCurrentDate);
 
                 }
 
@@ -180,24 +182,24 @@ class tl_table_occupancy extends \Backend
      */
     public function checkDate()
     {
-        if (Input::get('key') === 'reset') {
-            $intId       = Input::get('id');
-            $objDbResult = Database::getInstance()->prepare("
+        if (\Input::get('key') === 'reset') {
+            $intId       = \Input::get('id');
+            $objDbResult = \Database::getInstance()->prepare("
             DELETE FROM tl_table_occupancy 
             WHERE       pid=?")
                 ->execute($intId);
         }
 
         $strCurrentDate = date('Y-m-d');
-        $intParentId    = Input::get('pid');
-        $objDbResult    = Database::getInstance()->prepare("
+        $intParentId    = \Input::get('pid');
+        $objDbResult    = \Database::getInstance()->prepare("
             SELECT  id 
             FROM    tl_table_occupancy 
             WHERE   date=? 
             AND     pid=?")
             ->execute($strCurrentDate, $intParentId);
 
-        if ($objDbResult->numRows && (Input::get('act') === 'create')) {
+        if ($objDbResult->numRows && (\Input::get('act') === 'create')) {
             $this->redirect($this->addToUrl('&table=tl_table_occupancy&act=edit&id=' . $objDbResult->id));
         }
     }
