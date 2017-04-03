@@ -16,6 +16,8 @@
  * @link        https://contao.org
  */
 
+namespace Contao;
+
 /**
  * Class tl_module_table_reservation
  *

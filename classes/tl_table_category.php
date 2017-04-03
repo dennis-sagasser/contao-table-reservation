@@ -16,6 +16,8 @@
  * @link        https://contao.org
  */
 
+namespace Contao;
+
 /**
  * Class tl_table_category
  *
