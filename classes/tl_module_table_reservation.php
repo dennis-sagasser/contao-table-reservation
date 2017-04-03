@@ -30,7 +30,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_module_table_reservation extends Backend
+class tl_module_table_reservation extends \Backend
 {
     /**
      * Get all table categories and return them as array

@@ -30,7 +30,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_table_reservation_settings extends Backend
+class tl_table_reservation_settings extends \Backend
 {
 
     /**
@@ -49,17 +49,17 @@ class tl_table_reservation_settings extends Backend
      */
     public function checkConfig()
     {
-        $objConfig = Database::getInstance()->prepare("SELECT * FROM tl_table_reservation_settings")->execute();
+        $objConfig = \Database::getInstance()->prepare("SELECT * FROM tl_table_reservation_settings")->execute();
 
         if (Input::get('key')) {
             return;
         }
 
-        if (!$objConfig->numRows && !Input::get('act')) {
+        if (!$objConfig->numRows && !\Input::get('act')) {
             $this->redirect($this->addToUrl('act=create'));
         }
 
-        if (!Input::get('id') && !Input::get('act')) {
+        if (!\Input::get('id') && !\Input::get('act')) {
             $this->redirect($this->addToUrl('act=edit&id=' . $objConfig->id));
         }
     }
@@ -74,7 +74,7 @@ class tl_table_reservation_settings extends Backend
      */
     public function convertAbsoluteLinks($strContent)
     {
-        return str_replace('src="' . Environment::get('base'), 'src="', $strContent);
+        return str_replace('src="' . \Environment::get('base'), 'src="', $strContent);
     }
 
 

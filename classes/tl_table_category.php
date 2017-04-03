@@ -30,7 +30,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_table_category extends Backend
+class tl_table_category extends \Backend
 {
     /**
      * Changes appearance of Toggle-Buttons.
@@ -48,8 +48,8 @@ class tl_table_category extends Backend
     {
         $this->import('BackendUser', 'User');
 
-        if (strlen(Input::get('tid'))) {
-            $this->toggleVisibility(Input::get('tid'), (Input::get('state') == 0));
+        if (strlen(\Input::get('tid'))) {
+            $this->toggleVisibility(\Input::get('tid'), (\Input::get('state') == 0));
             $this->redirect($this->getReferer());
         }
 
@@ -58,7 +58,7 @@ class tl_table_category extends Backend
             return '';
         }
 
-        $href .= '&amp;id=' . Input::get('id') . '&amp;tid=' . $row['id'] . '&amp;state=' . $row[''];
+        $href .= '&amp;id=' . \Input::get('id') . '&amp;tid=' . $row['id'] . '&amp;state=' . $row[''];
 
         if (!$row['published']) {
             $icon = 'invisible.gif';
