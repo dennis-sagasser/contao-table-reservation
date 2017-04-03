@@ -83,7 +83,7 @@ $GLOBALS['TL_LANG']['tl_table_reservation_settings']['default_html_text'] = '<p>
     Telefon: {{reservation::phone}}<br>
     E-Mail: {{reservation::email}}<br>
     Datum und Uhrzeit: {{reservation::arrival}}<br>
-    Sitzplätze: {{reservation::seats}}<br>
+    Personen: {{reservation::seats}}<br>
     Bemerkungen: {{reservation::remarks}}<br><br>
     Mit freundlichen Grüßen<br>
     Die Reservierung<br><br>
