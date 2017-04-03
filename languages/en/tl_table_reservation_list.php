@@ -57,3 +57,15 @@ $GLOBALS['TL_LANG']['tl_table_reservation_list']['deleteConfirm'] = 'Really remo
  */
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['reservation_legend'] = 'Reservation data';
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['guest_legend']       = 'Guest data';
+
+/**
+ * Filter
+ */
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['timeSlot']  = 'Time slot';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['all']       = 'All reservations';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['future']    = 'Future reservations';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['past']      = 'Expired reservations';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['today']     = 'Today';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['thisWeek']  = 'This week';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['thisMonth'] = 'This month';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['thisYear']  = 'This year';

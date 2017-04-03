@@ -43,16 +43,19 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = [
             ]
         ],
         'onload_callback' => [
-            ['tl_table_reservation_list', 'formatDates']
+            ['tl_table_reservation_list', 'formatDates'],
+            ['tl_table_reservation_list', 'applyFilter'],
         ]
     ],
     // List
     'list'     => [
         'sorting'    => [
-            'mode'        => 2,
-            'panelLayout' => 'filter;search,sort,limit',
-            'fields'      => ['id ASC'],
-            'filter'      => [['arrival > ?', time()]]
+            'mode'           => 2,
+            'panelLayout'    => 'filter,custom_filters;search,sort,limit',
+            'fields'         => ['id ASC'],
+            'panel_callback' => [
+                'custom_filters' => ['tl_table_reservation_list', 'generateFilter'],
+            ],
         ],
         'label'      => [
             'fields'         => ['arrival', 'seats', 'firstname', 'lastname'],

@@ -57,3 +57,15 @@ $GLOBALS['TL_LANG']['tl_table_reservation_list']['deleteConfirm'] = 'Soll die Re
  */
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['reservation_legend'] = 'Reservierungsdaten';
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['guest_legend']       = 'Gastdaten';
+
+/**
+ * Filter
+ */
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['timeSlot']  = 'Zeitraum';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['all']       = 'Alle Reservierungen';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['future']    = 'Zukünftige Reservierungen';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['past']      = 'Abgelaufene Reservierungen';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['today']     = 'Heute';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['thisWeek']  = 'Aktuelle Woche';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['thisMonth'] = 'Aktueller Monat';
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['thisYear']  = 'Aktuelles Jahr';
