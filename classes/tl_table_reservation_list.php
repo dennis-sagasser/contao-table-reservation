@@ -62,7 +62,6 @@ class tl_table_reservation_list extends \Backend
         $objWidgetFilter->id       = 'table_filter';
         $objWidgetFilter->name     = 'table_filter';
         $objWidgetFilter->value    = $strFilterValue;
-        $objWidgetFilter->style    = 'width: 200px';
         $objWidgetFilter->options  = [
             ['value' => 'table_filter', 'label' => $GLOBALS['TL_LANG']['tl_table_reservation_list']['timeSlot']],
             ['value' => 'table_filter', 'label' => '---'],
@@ -80,7 +79,7 @@ class tl_table_reservation_list extends \Backend
         $strWidgetCheckbox .= $objWidgetFilter->generate();
         $strWidgetCheckbox .= $objWidgetFilter->generateLabel();
 
-        $strBuffer = '<div class="tl_filter tl_subpanel">' . $strWidgetCheckbox;
+        $strBuffer = '<div class="tl_filter tl_subpanel" style="padding-left:4px">' . $strWidgetCheckbox;
 
         return $strBuffer . '</div>';
     }
