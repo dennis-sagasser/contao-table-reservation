@@ -35,7 +35,7 @@
  */
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['arrival']    = ['Date and time', 'Please enter date and time for reservation.'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['departure']  = ['Departure', 'Please select date and time for reservation.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats']      = ['Seats', 'Please select number of persons and table category.'];
+$GLOBALS['TL_LANG']['tl_table_reservation_list']['seats']      = ['Persons', 'Please select number of persons and table category.'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['count']      = ['Number of persons', 'Please select number of persons.'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['category']   = ['Table category', 'Please select table category.'];
 $GLOBALS['TL_LANG']['tl_table_reservation_list']['salutation'] = ['Salutation', 'Please select gender.'];
