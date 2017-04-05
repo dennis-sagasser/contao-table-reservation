@@ -83,7 +83,7 @@ $GLOBALS['TL_LANG']['tl_table_reservation_settings']['default_html_text'] = '{{r
     Telephone: {{reservation::phone}}<br>
     E-mail: {{reservation::email}}<br>
     Date and time: {{reservation::arrival}}<br>
-    Seats: {{reservation::seats}}<br>
+    Persons: {{reservation::seats}}<br>
     Remarks: {{reservation::remarks}}<br><br>
     With kindest regards<br>
     The Reservation Department<br><br>
