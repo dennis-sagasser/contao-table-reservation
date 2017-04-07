@@ -298,13 +298,20 @@ class ModuleTableReservation extends \Module
      * Sends a confirmation mail to the user
      *
      */
-    public
-    function send()
+    public function send()
     {
+        if (intval($this->table_showNotification) > 0 && intval($this->table_ncNotification) > 0) {
+            $objNotification = \NotificationCenter\Model\Notification::findByPk(intval($this->table_ncNotification));
+            if (null !== $objNotification) {
+                $objNotification->send([]);
+            }
+            return;
+        }
+
         $objSettings = $this->Database->prepare("SELECT * FROM tl_table_reservation_settings")->limit(1)->execute();
 
         if ($objSettings->numRows < 1) {
-            return '';
+            return;
         }
 
         // Overwrite the SMTP configuration
@@ -357,8 +364,8 @@ class ModuleTableReservation extends \Module
         }
 
         // Replace insert tags
-        $strHtml = $this->replaceInsertTags($objSettings->content, false);
-        $strText = $this->replaceInsertTags($objSettings->text, false);
+        $strHtml = $this->replaceInsertTags($objSettings->content);
+        $strText = $this->replaceInsertTags($objSettings->text);
 
         // Convert relative URLs
         if ($objSettings->externalImages) {
@@ -419,8 +426,14 @@ class ModuleTableReservation extends \Module
      * @param string $css CSS
      *
      */
-    protected
-    function sendConfirmation(\Email $objEmail, \Database\Result $objSettings, $strRecipient, $strText, $strHtml, $css = null)
+    protected function sendConfirmation(
+        \Email $objEmail,
+        \Database\Result $objSettings,
+        $strRecipient,
+        $strText,
+        $strHtml,
+        $css = null
+    )
     {
         $arrRecipients['email'] = $strRecipient;
 
@@ -471,8 +484,7 @@ class ModuleTableReservation extends \Module
      * @param array $arrModuleParams Module parameter array
      *
      */
-    protected
-    function compileAvailabilityCheck(
+    protected function compileAvailabilityCheck(
         \Widget $objWidgetArrival,
         \Widget $objWidgetTimeSlots = null,
         \Widget $objWidgetCheckboxes,
