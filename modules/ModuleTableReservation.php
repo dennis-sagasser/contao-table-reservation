@@ -64,45 +64,31 @@ class ModuleTableReservation extends \Module
 
         $this->loadLanguageFile('tl_table_reservation');
 
-        $arrModuleParams = $this->Database->prepare("
-            SELECT 
-                table_categories, 
-                table_dateTimeFormat , 
-                table_timeFormat, 
-                table_openingHours, 
-                table_leadTime,
-                table_showTimeSlots
-            FROM tl_module 
-            WHERE id=?")
-            ->limit(1)
-            ->execute($this->id)
-            ->fetchAssoc();
-
         // Initialize form fields
         $objWidgetArrival                = new \FormCalendarField();
         $objWidgetArrival->dateImage     = true;
         $objWidgetArrival->id            = 'arrival';
-        $objWidgetArrival->label         = empty($arrModuleParams['table_showTimeSlots']) ?
+        $objWidgetArrival->label         = empty($this->table_showTimeSlots) ?
             $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDateTime'] :
             $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDate'];
         $objWidgetArrival->name          = 'arrival';
         $objWidgetArrival->mandatory     = true;
-        $objWidgetArrival->rgxp          = empty($arrModuleParams['table_showTimeSlots']) ? 'datim' : 'date';
+        $objWidgetArrival->rgxp          = empty($this->table_showTimeSlots) ? 'datim' : 'date';
         $objWidgetArrival->dateDirection = 'geToday';
         $objWidgetArrival->draggable     = false;
-        $objWidgetArrival->dateFormat    = empty($arrModuleParams['table_showTimeSlots']) ?
-            $arrModuleParams['table_dateTimeFormat'] : \Config::get('dateFormat');
+        $objWidgetArrival->dateFormat    = empty($this->table_showTimeSlots) ?
+            $this->table_dateTimeFormat : \Config::get('dateFormat');
         $objWidgetArrival->value         = \Input::post('arrival');
 
         $this->Template->objWidgetArrival = $objWidgetArrival;
 
-        if (!empty($arrModuleParams['table_showTimeSlots'])) {
-            $arrTimeSlots       = unserialize($arrModuleParams['table_openingHours']);
+        if (!empty($this->table_showTimeSlots)) {
+            $arrTimeSlots       = unserialize($this->table_openingHours);
             $arrTimeSlotOptions = [['value' => '', 'label' => '-']];
 
             foreach ($arrTimeSlots as $arrTimeSlot) {
-                $strTimeFormat = empty($arrModuleParams['table_timeFormat']) ?
-                    \Config::get('timeFormat') : $arrModuleParams['table_timeFormat'];
+                $strTimeFormat = empty($this->table_timeFormat) ?
+                    \Config::get('timeFormat') : $this->table_timeFormat;
 
                 $strLabel = sprintf(
                     '%s - %s',
@@ -174,8 +160,7 @@ class ModuleTableReservation extends \Module
             $this->compileAvailabilityCheck(
                 $objWidgetArrival,
                 $objWidgetTimeSlots,
-                $objWidgetCheckboxes,
-                $arrModuleParams
+                $objWidgetCheckboxes
             );
         }
 
@@ -481,21 +466,19 @@ class ModuleTableReservation extends \Module
      * @param \Widget $objWidgetArrival Reservation time input
      * @param \Widget $objWidgetTimeSlots Timeslots | null
      * @param \Widget $objWidgetCheckboxes Table categories checkboxes
-     * @param array $arrModuleParams Module parameter array
      *
      */
     protected function compileAvailabilityCheck(
         \Widget $objWidgetArrival,
         \Widget $objWidgetTimeSlots = null,
-        \Widget $objWidgetCheckboxes,
-        $arrModuleParams
+        \Widget $objWidgetCheckboxes
     )
     {
         $objWidgetArrival->validate();
         $objWidgetCheckboxes->validate();
 
-        $strTimeFormat = empty($arrModuleParams['table_timeFormat']) ?
-            \Config::get('timeFormat') : $arrModuleParams['table_timeFormat'];
+        $strTimeFormat = empty($this->table_timeFormat) ?
+            \Config::get('timeFormat') : $this->table_timeFormat;
 
         if (!empty($objWidgetTimeSlots)) {
             if (\Input::post('timeslots') === '') {
@@ -516,7 +499,7 @@ class ModuleTableReservation extends \Module
         $intArrivalDateTime = $objArrivalDate->tstamp;
         $strArrivalDate     = date("Y-m-d", $objArrivalDate->tstamp);
 
-        $arrLeadTime             = unserialize($arrModuleParams['table_leadTime']);
+        $arrLeadTime             = unserialize($this->table_leadTime);
         $strLeadTime             = sprintf("+ %s %s", $arrLeadTime['value'], $arrLeadTime['unit']);
         $intValidReservationTime = strtotime($strLeadTime, time());
         $strValidReservationTime = date($strTimeFormat, $intValidReservationTime);
@@ -529,7 +512,7 @@ class ModuleTableReservation extends \Module
             return;
         }
 
-        $arrOpeningHours      = unserialize($arrModuleParams['table_openingHours']);
+        $arrOpeningHours      = unserialize($this->table_openingHours);
         $intArrivalTime       = strtotime($objArrivalDate->time, 0);
         $intDepartureDateTime = strtotime($strDepartureTime, $objArrivalDate->dayBegin);
 
@@ -630,7 +613,7 @@ class ModuleTableReservation extends \Module
             $strReserveNowUrl                 = $this->addToUrl('FORM_PAGE=page2');
             $this->Template->strReserveNowUrl = $strReserveNowUrl;
 
-            $strArrival  = date($arrModuleParams['table_dateTimeFormat'], $intArrivalDateTime);
+            $strArrival  = date($this->table_dateTimeFormat, $intArrivalDateTime);
             $strDateTime = empty($objWidgetTimeSlots) ? $strArrival :
                 sprintf('%s - %s', $strArrival, $strDepartureTime);
 
