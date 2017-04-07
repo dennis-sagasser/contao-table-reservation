@@ -33,6 +33,24 @@ namespace Contao;
 class tl_module_table_reservation extends \Backend
 {
     /**
+     * Get notification choices
+     *
+     * @return array $arrChoices Array of notifications
+     */
+    public function getNotificationChoices()
+    {
+
+        $arrChoices       = array();
+        $objNotifications = \Database::getInstance()->execute("SELECT id,title FROM tl_nc_notification WHERE type='core_form' ORDER BY title");
+
+        while ($objNotifications->next()) {
+            $arrChoices[$objNotifications->id] = $objNotifications->title;
+        }
+
+        return $arrChoices;
+    }
+
+    /**
      * Get all table categories and return them as array
      *
      * @return array Array of table categories
@@ -66,8 +84,15 @@ class tl_module_table_reservation extends \Backend
      * @param object $dc Data container object
      *
      */
-    public function showJsLibraryHint($dc)
+    public function showHints($dc)
     {
+        if (!in_array('notification_center', $this->Config->getActiveModules())) {
+            $strMessage = &$GLOBALS['TL_LANG']['tl_module']['installInfo'];
+
+            $GLOBALS['TL_DCA']['tl_module']['fields']['table_showNotification']['eval']['disabled'] = true;
+            $GLOBALS['TL_DCA']['tl_module']['fields']['table_showNotification']['label']            = $strMessage;
+        }
+
         if ($_POST || \Input::get('act') != 'edit') {
             return;
         }

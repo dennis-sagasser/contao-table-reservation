@@ -19,18 +19,19 @@
 /**
  * Callbacks
  */
-$GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = ['tl_module_table_reservation', 'showJsLibraryHint'];
-
+$GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = ['tl_module_table_reservation', 'showHints'];
 $GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = ['tl_table_reservation_list', 'formatDates'];
 
 /**
  * Palettes
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['table_reservation'] = '{title_legend},name,headline,type;{config_legend},table_dateTimeFormat,table_timeFormat,table_openingHours,table_showTimeSlots,table_leadTime,table_categories;{redirect_legend},jumpTo;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][]    = 'table_showNotification';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['table_reservation'] = '{title_legend},name,headline,type;{config_legend},table_dateTimeFormat,table_timeFormat,table_openingHours,table_showTimeSlots,table_leadTime,table_categories,table_showNotification;{redirect_legend},jumpTo;{expert_legend:hide},guests,cssID,space';
 
 /**
  * Subpalettes
  */
+$GLOBALS['TL_DCA']['tl_module']['subpalettes']['table_showNotification'] = 'table_ncNotification';
 
 /**
  * Fields
@@ -136,6 +137,25 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['table_categories'] = [
     'exclude'          => true,
     'inputType'        => 'checkbox',
     'options_callback' => ['tl_module_table_reservation', 'getTableCategories'],
-    'eval'             => ['mandatory' => true, 'multiple' => true],
+    'eval'             => ['mandatory' => true, 'multiple' => true, 'tl_class' => 'w50'],
     'sql'              => "blob NULL"
+];
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['table_showNotification'] = [
+    'label'     => &$GLOBALS['TL_LANG']['tl_module']['showNotification'],
+    'exclude'   => false,
+    'inputType' => 'checkbox',
+    'eval'      => ['mandatory' => false, 'isBoolean' => true, 'submitOnChange' => true, 'tl_class' => 'w50'],
+    'sql'       => "char(1) NOT NULL default ''"
+];
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['table_ncNotification'] = [
+    'label'            => &$GLOBALS['TL_LANG']['tl_module']['ncNotification'],
+    'exclude'          => true,
+    'inputType'        => 'select',
+    'options_callback' => ['tl_module_table_reservation', 'getNotificationChoices'],
+    'eval'             => ['includeBlankOption' => true, 'chosen' => true, 'tl_class' => 'w50', 'helpwizard' => true],
+    'sql'              => "int(10) unsigned NOT NULL default '0'",
+    'relation'         => ['type' => 'hasOne', 'load' => 'lazy', 'table' => 'tl_ncNotification'],
+    'explanation'      => 'helpInsertTags',
 ];
