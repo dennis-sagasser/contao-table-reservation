@@ -184,23 +184,21 @@ class ModuleTableReservation extends \Module
 
             $this->Template->objWidgetSalutation = $objWidgetSalutation;
 
-            $objWidgetFirstName            = new \FormTextField();
-            $objWidgetFirstName->id        = 'firstname';
-            $objWidgetFirstName->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFirstname'];
-            $objWidgetFirstName->name      = 'firstname';
-            $objWidgetFirstName->mandatory = true;
-            $objWidgetFirstName->rgxp      = 'alpha';
-            $objWidgetFirstName->value     = \Input::post('firstname');
+            $objWidgetFirstName        = new \FormTextField();
+            $objWidgetFirstName->id    = 'firstname';
+            $objWidgetFirstName->label = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFirstname'];
+            $objWidgetFirstName->name  = 'firstname';
+            $objWidgetFirstName->rgxp  = 'alpha';
+            $objWidgetFirstName->value = \Input::post('firstname');
 
             $this->Template->objWidgetFirstName = $objWidgetFirstName;
 
-            $objWidgetLastName            = new \FormTextField();
-            $objWidgetLastName->id        = 'lastname';
-            $objWidgetLastName->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formLastname'];
-            $objWidgetLastName->name      = 'lastname';
-            $objWidgetLastName->mandatory = true;
-            $objWidgetLastName->rgxp      = 'alpha';
-            $objWidgetLastName->value     = \Input::post('lastname');
+            $objWidgetLastName        = new \FormTextField();
+            $objWidgetLastName->id    = 'lastname';
+            $objWidgetLastName->label = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formLastname'];
+            $objWidgetLastName->name  = 'lastname';
+            $objWidgetLastName->rgxp  = 'alpha';
+            $objWidgetLastName->value = \Input::post('lastname');
 
             $this->Template->objWidgetLastName = $objWidgetLastName;
 

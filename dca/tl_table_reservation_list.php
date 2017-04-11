@@ -181,7 +181,6 @@ $GLOBALS['TL_DCA']['tl_table_reservation_list'] = [
             'eval'      => [
                 'rgxp'      => 'alpha',
                 'tl_class'  => 'w50',
-                'mandatory' => true,
             ],
         ],
         'firstname' => [
