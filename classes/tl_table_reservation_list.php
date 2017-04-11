@@ -208,12 +208,14 @@ class tl_table_reservation_list extends \Backend
         $objArrivalDate   = new \Date($row['arrival']);
 
         return sprintf(
-            '<em>%s</em> <b>|</b> %s: %s <b>|</b> %s %s',
+            '<em>%s</em> <b>|</b> %s: %s <b>|</b> %s %s %s',
             $objArrivalDate->datim,
             $GLOBALS['TL_LANG']['tl_table_reservation_list']['seats'][0],
             $strCountCategory,
             $row['firstname'],
-            $row['lastname']
+            $row['lastname'],
+            (empty($row['firstname']) && empty($row['lastname'])) ?
+                $GLOBALS['TL_LANG']['MSC'][$row['gender']] : ''
         );
     }
 

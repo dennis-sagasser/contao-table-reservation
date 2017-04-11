@@ -52,10 +52,10 @@ class HooksFrontend extends \Frontend
                 return $strSalutation;
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'firstname') {
-                return \Input::post('firstname');
+                return \Input::post('firstname') ? \Input::post('firstname') : '-';
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'lastname') {
-                return \Input::post('lastname');
+                return \Input::post('lastname') ? \Input::post('lastname') : '-';
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'email') {
                 return \Input::post('email');
