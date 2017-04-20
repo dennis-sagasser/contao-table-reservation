@@ -485,6 +485,7 @@ class ModuleTableReservation extends \Module
         $objSlotNames   = new \tl_table_occupancy;
         $objArrivalDate = new \Date(strtotime(\Input::post('arrival')));
         $strArrivalDate = $objArrivalDate::parse("Y-m-d", $objArrivalDate->tstamp);
+        $strSlotColumns = '';
 
         if (!empty($objWidgetTimeSlots)) {
             if (\Input::post('timeslots') === '') {
@@ -501,6 +502,8 @@ class ModuleTableReservation extends \Module
             $objArrivalDate       = new \Date(strtotime($strPostArrival));
             $intArrivalDateTime   = $objArrivalDate->tstamp;
             $intDepartureDateTime = strtotime($strDepartureTime);
+            $strSlotColumns       = implode(',', $objSlotNames->getTimeSlotNames());
+
         } else {
             $intArrivalDateTime = $objArrivalDate->tstamp;
 
@@ -558,8 +561,8 @@ class ModuleTableReservation extends \Module
                       o.countMorning,
                       o.countNoon,
                       o.countEvening,
-                      " . implode(',', $objSlotNames->getTimeSlotNames()) . ",
                       t.id
+                      " . $strSlotColumns . "
                       FROM tl_table_occupancy o, tl_table_category t
                       WHERE o.date = ?
                           AND o.pid = ?
