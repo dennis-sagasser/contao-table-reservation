@@ -215,7 +215,7 @@ class tl_table_reservation_list extends \Backend
             $row['firstname'],
             $row['lastname'],
             (empty($row['firstname']) && empty($row['lastname'])) ?
-                $GLOBALS['TL_LANG']['MSC'][$row['gender']] : ''
+                $row['email'] : ''
         );
     }
 

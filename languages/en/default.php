@@ -71,4 +71,5 @@ $GLOBALS['TL_LANG']['MSC']['table_reservation']['tableCategory']                
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reserveNow']                     = 'Make a reservation now »';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['backToStart']                    = '« back to home';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSir']                        = 'Dear Mr.';
-$GLOBALS['TL_LANG']['MSC']['table_reservation']['dearMadame']                     = 'Dear Mrs.';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['dearMadam']                      = 'Dear Mrs.';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSirOrMadam']                 = 'Dear sir or madam';

@@ -177,12 +177,11 @@ class ModuleTableReservation extends \Module
             $this->Template->arrSeats    = $this->objSession->get('seats');
             $this->Template->objSession  = $this->objSession;
 
-            $objWidgetSalutation            = new \FormRadioButton();
-            $objWidgetSalutation->id        = 'salutation';
-            $objWidgetSalutation->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSalutation'];
-            $objWidgetSalutation->name      = 'salutation';
-            $objWidgetSalutation->mandatory = true;
-            $objWidgetSalutation->options   = [
+            $objWidgetSalutation          = new \FormRadioButton();
+            $objWidgetSalutation->id      = 'salutation';
+            $objWidgetSalutation->label   = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSalutation'];
+            $objWidgetSalutation->name    = 'salutation';
+            $objWidgetSalutation->options = [
                 ['value' => 'male', 'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formMale']],
                 ['value' => 'female', 'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFemale']]
             ];
