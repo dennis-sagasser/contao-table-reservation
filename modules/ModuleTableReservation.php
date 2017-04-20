@@ -83,7 +83,13 @@ class ModuleTableReservation extends \Module
         $this->Template->objWidgetArrival = $objWidgetArrival;
 
         if (!empty($this->table_showTimeSlots)) {
-            $arrTimeSlots       = unserialize($this->table_openingHours);
+            $arrTimeSlots = $this->Database->prepare("
+                SELECT name, fromTime, toTime 
+                FROM tl_table_reservation_slots 
+                WHERE published='1'
+                GROUP BY fromTime, toTime
+                ")->execute()->fetchAllAssoc();
+
             $arrTimeSlotOptions = [['value' => '', 'label' => '-']];
 
             foreach ($arrTimeSlots as $arrTimeSlot) {
@@ -92,11 +98,11 @@ class ModuleTableReservation extends \Module
 
                 $strLabel = sprintf(
                     '%s - %s',
-                    date($strTimeFormat, $arrTimeSlot['openFrom']),
-                    date($strTimeFormat, $arrTimeSlot['openTo'])
+                    date($strTimeFormat, $arrTimeSlot['fromTime']),
+                    date($strTimeFormat, $arrTimeSlot['toTime'])
                 );
 
-                $arrTimeSlotOptions[] = ['value' => $strLabel, 'label' => $strLabel];
+                $arrTimeSlotOptions[] = ['value' => $strLabel . " - " . $arrTimeSlot['name'], 'label' => $strLabel];
             }
 
             $objWidgetTimeSlots            = new \FormSelectMenu();
@@ -107,7 +113,6 @@ class ModuleTableReservation extends \Module
             $objWidgetTimeSlots->chosen    = true;
             $objWidgetTimeSlots->mandatory = true;
             $objWidgetTimeSlots->value     = \Input::post('timeslots');
-
 
             $this->Template->objWidgetTimeSlots = $objWidgetTimeSlots;
 
@@ -478,6 +483,10 @@ class ModuleTableReservation extends \Module
         $strTimeFormat = empty($this->table_timeFormat) ?
             \Config::get('timeFormat') : $this->table_timeFormat;
 
+        $objSlotNames   = new \tl_table_occupancy;
+        $objArrivalDate = new \Date(strtotime(\Input::post('arrival')));
+        $strArrivalDate = $objArrivalDate::parse("Y-m-d", $objArrivalDate->tstamp);
+
         if (!empty($objWidgetTimeSlots)) {
             if (\Input::post('timeslots') === '') {
                 $objWidgetTimeSlots->addError($GLOBALS['TL_LANG']['MSC']['table_reservation']['timeSlotError']);
@@ -485,54 +494,52 @@ class ModuleTableReservation extends \Module
                 return;
             }
 
-            $arrTimeSlot      = explode(' - ', \Input::post('timeslots'));
-            $strArrivalTime   = $arrTimeSlot[0];
-            $strDepartureTime = $arrTimeSlot[1];
-            $strPostArrival   = sprintf('%s %s', \Input::post('arrival'), $strArrivalTime);
-            $objArrivalDate   = new \Date(strtotime($strPostArrival));
+            $arrTimeSlot          = explode(' - ', \Input::post('timeslots'));
+            $strArrivalTime       = $arrTimeSlot[0];
+            $strDepartureTime     = $arrTimeSlot[1];
+            $strCount             = $arrTimeSlot[2];
+            $strPostArrival       = sprintf('%s %s', \Input::post('arrival'), $strArrivalTime);
+            $objArrivalDate       = new \Date(strtotime($strPostArrival));
+            $intArrivalDateTime   = $objArrivalDate->tstamp;
+            $intDepartureDateTime = strtotime($strDepartureTime);
         } else {
-            $objArrivalDate = new \Date(strtotime(\Input::post('arrival')));
-        }
+            $intArrivalDateTime = $objArrivalDate->tstamp;
 
-        $intArrivalDateTime = $objArrivalDate->tstamp;
-        $strArrivalDate     = date("Y-m-d", $objArrivalDate->tstamp);
+            $arrLeadTime             = unserialize($this->table_leadTime);
+            $strLeadTime             = sprintf("+ %s %s", $arrLeadTime['value'], $arrLeadTime['unit']);
+            $intValidReservationTime = strtotime($strLeadTime, time());
+            $strValidReservationTime = date($strTimeFormat, $intValidReservationTime);
 
-        $arrLeadTime             = unserialize($this->table_leadTime);
-        $strLeadTime             = sprintf("+ %s %s", $arrLeadTime['value'], $arrLeadTime['unit']);
-        $intValidReservationTime = strtotime($strLeadTime, time());
-        $strValidReservationTime = date($strTimeFormat, $intValidReservationTime);
+            if (($intValidReservationTime > $intArrivalDateTime)) {
+                $objWidgetArrival->addError(sprintf($GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationTooLate'],
+                    $strValidReservationTime));
 
+                return;
+            }
 
-        if (($intValidReservationTime > $intArrivalDateTime)) {
-            $objWidgetArrival->addError(sprintf($GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationTooLate'],
-                $strValidReservationTime));
+            $arrOpeningHours = unserialize($this->table_openingHours);
+            $intArrivalTime  = strtotime($objArrivalDate->time, 0);
 
-            return;
-        }
+            foreach ($arrOpeningHours as $arrOpeningHour) {
 
-        $arrOpeningHours      = unserialize($this->table_openingHours);
-        $intArrivalTime       = strtotime($objArrivalDate->time, 0);
-        $intDepartureDateTime = strtotime($strDepartureTime, $objArrivalDate->dayBegin);
+                if (($intArrivalTime >= $arrOpeningHour['openFrom']) &&
+                    ($intArrivalTime <= $arrOpeningHour['openTo']) &&
+                    ($arrOpeningHour['weekDay'] === strftime('%A', $objArrivalDate->tstamp))
+                ) {
+                    $strCount = $arrOpeningHour['dayTime'];
+                }
+            }
 
-        foreach ($arrOpeningHours as $arrOpeningHour) {
+            if (empty($strCount)) {
+                $objWidgetArrival->addError($GLOBALS['TL_LANG']['MSC']['table_reservation']['closed']);
 
-            if (($intArrivalTime >= $arrOpeningHour['openFrom']) &&
-                ($intArrivalTime <= $arrOpeningHour['openTo']) &&
-                ($arrOpeningHour['weekDay'] === strftime('%A', $objArrivalDate->tstamp))
-            ) {
-                $strCount = $arrOpeningHour['dayTime'];
+                return;
             }
         }
 
-
-        if (empty($strCount)) {
-            $objWidgetArrival->addError($GLOBALS['TL_LANG']['MSC']['table_reservation']['closed']);
-
-            return;
-        }
-
         $arrPostTableCategory = is_array(\Input::post('tableCategory')) ?
-            \Input::post('tableCategory') : [\Input::post('tableCategory')];
+            \Input::post('tableCategory') :
+            [\Input::post('tableCategory')];
 
         $arrTableCategories = [];
         $arrCountSeats      = [];
@@ -543,28 +550,28 @@ class ModuleTableReservation extends \Module
                 $objWidgetCheckboxes->addError($GLOBALS['TL_LANG']['MSC']['table_reservation']['countError']) :
                 $arrResultRow = $this->Database->prepare("
                     SELECT
-                      tmp1.countMorning,
-                      tmp1.countNoon,
-                      tmp1.countEvening,
+                      tmp1.*,
                       tmp2.tablecategory
                     FROM
                       (SELECT
-                      o.pid,
+                      pid,
                       o.date,
                       o.countMorning,
                       o.countNoon,
                       o.countEvening,
+                      " . implode(',', $objSlotNames->getTimeSlotNames()) . ",
                       t.id
                       FROM tl_table_occupancy o, tl_table_category t
-                      WHERE date = ?
-                          AND pid = ?
+                      WHERE o.date = ?
+                          AND o.pid = ?
                           AND o.pid = t.id) tmp1
                       RIGHT JOIN
                         (SELECT DISTINCT tablecategory
                         FROM tl_table_category t, tl_table_occupancy o
                         WHERE t.id = o.pid
                              AND t.id = ?) tmp2 ON tmp1.pid = tmp1.id")
-                    ->execute($strArrivalDate, $intTableCategory, $intTableCategory)->fetchAssoc();
+                    ->execute($strArrivalDate, $intTableCategory, $intTableCategory)
+                    ->fetchAssoc();
 
             if (empty($arrResultRow[$strCount])) {
                 $objWidgetCheckboxes->addError(

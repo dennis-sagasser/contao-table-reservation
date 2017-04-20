@@ -137,7 +137,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['table_categories'] = [
     'exclude'          => true,
     'inputType'        => 'checkbox',
     'options_callback' => ['tl_module_table_reservation', 'getTableCategories'],
-    'eval'             => ['mandatory' => true, 'multiple' => true, 'tl_class' => 'w50'],
+    'eval'             => ['mandatory' => true, 'multiple' => true, 'tl_class' => 'w50 clr'],
     'sql'              => "blob NULL"
 ];
 

@@ -33,6 +33,7 @@
 $GLOBALS['TL_LANG']['MOD']['table_reservation']      = ['Sitzplatzreservierung', ''];
 $GLOBALS['TL_LANG']['MOD']['table_config']           = ['Einstellungen', 'Allgemeine Einstellungen'];
 $GLOBALS['TL_LANG']['MOD']['table_categories']       = ['Tischkategorien', 'Tischkategorien verwalten'];
+$GLOBALS['TL_LANG']['MOD']['table_timeslots']        = ['Zeitfenster', 'Verwaltung von Zeitfenstern für das Reservierungsmodul'];
 $GLOBALS['TL_LANG']['MOD']['table_reservation_list'] = ['Reservierungsliste', 'Reservierungsliste einsehen'];
 $GLOBALS['TL_LANG']['FMD']['seat_reservation']       = ['Sitzplatzreservierung', ''];
 $GLOBALS['TL_LANG']['FMD']['table_reservation']      = ['Reservierungsformular', 'Stellt ein Formular für Sitzplatzreservierungen bereit.'];

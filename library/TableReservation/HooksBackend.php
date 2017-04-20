@@ -47,6 +47,25 @@ namespace Contao;
 class HooksBackend extends \Backend
 {
     /**
+     * Loads the time slot DCA fields dynamically.
+     *
+     * @param string $strName Name of DCA Table
+     *
+     */
+    public function myLoadDataContainer($strName)
+    {
+        if ($strName === 'tl_table_occupancy' && $this->Database->tableExists('tl_table_reservation_slots')) {
+            $arrSlotNames = $this->Database->prepare("
+                SELECT name FROM tl_table_reservation_slots
+                ")->execute()->fetchEach('name');
+
+            foreach ($arrSlotNames as $strSlotName) {
+                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['sql'] = 'smallint(3) unsigned NULL';
+            }
+        }
+    }
+
+    /**
      * Parses the backend template and replaces the back link
      *
      * @param string $strBuffer Content of the parsed back end template

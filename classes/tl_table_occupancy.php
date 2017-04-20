@@ -31,12 +31,31 @@ namespace Contao;
 class tl_table_occupancy extends \Backend
 {
     /**
+     * @var object $objModuleModel Module model object
+     */
+    protected $objModuleModel = null;
+
+    /**
      * Parent call of the constructor.
      *
      */
     public function __construct()
     {
         parent::__construct();
+
+        $this->objModuleModel = \ModuleModel::findByType('table_reservation');
+    }
+
+    /**
+     * Returns array of time slot names.
+     *
+     * @return array
+     */
+    public function getTimeSlotNames()
+    {
+        return $this->Database->prepare("
+                SELECT name FROM tl_table_reservation_slots WHERE published='1'
+                ")->execute()->fetchEach('name');
     }
 
     /**
@@ -50,41 +69,63 @@ class tl_table_occupancy extends \Backend
     {
 
         $intYear        = \Input::get('intYear');
-        $intCurrentYear = isset($intYear) ? \Input::get('intYear') : (int)\Date::parse('Y');
+        $intCurrentYear = isset($intYear) ?
+            \Input::get('intYear') :
+            (int)\Date::parse('Y');
 
-        $strHtmlYearCalendar = '<div><table class="calendarWidget">';
-        $strHtmlYearCalendar .= '<caption><h3><a href=' . \Environment::get('requestUri') . '&intYear=' . ($intCurrentYear - 1) . '>«</a>&nbsp;' . $GLOBALS['TL_LANG']['tl_table_occupancy']['year'][0] . '&nbsp;' . $intCurrentYear . '&nbsp;<a href=' . \Environment::get('uri') . '&intYear=' . ($intCurrentYear + 1) . '>»</a></h3></caption>';
+        $strBuffer = '<div><table class="calendarWidget">';
+        $strBuffer .= '<caption><h3>';
+        $strBuffer .= '<a href=' . \Environment::get('requestUri') . '&intYear=' . ($intCurrentYear - 1) . '>«</a>';
+        $strBuffer .= '&nbsp;' . $GLOBALS['TL_LANG']['tl_table_occupancy']['year'][0];
+        $strBuffer .= '&nbsp;' . $intCurrentYear . '&nbsp;';
+        $strBuffer .= '<a href=' . \Environment::get('uri') . '&intYear=' . ($intCurrentYear + 1) . '>»</a>';
+        $strBuffer .= '</h3></caption>';
 
         $intCurrentMonth = 0;
-        $intParentId     = $dc->activeRecord->pid;
+        $intParentId     = intval($dc->activeRecord->pid);
 
-        $strMorningSrc = 'system/modules/table_reservation/assets/images/sunrise16.png';
-        $strNoonSrc    = 'system/modules/table_reservation/assets/images/sun16.png';
-        $strEveningSrc = 'system/modules/table_reservation/assets/images/moon16.png';
+        $strDayTimesRow = '';
 
-        $strMorningAlt = $GLOBALS['TL_LANG']['tl_table_occupancy']['morningAlt'];
-        $strNoonAlt    = $GLOBALS['TL_LANG']['tl_table_occupancy']['noonAlt'];
-        $strEveningAlt = $GLOBALS['TL_LANG']['tl_table_occupancy']['eveningAlt'];
+        if (!empty($this->objModuleModel->table_showTimeSlots)) {
+            foreach ($this->getTimeSlotNames() as $strSlotName) {
+                $strDayTimesRow .= '<div style="height: 18px;display:table;vertical-align: middle">';
+                $strDayTimesRow .= $strSlotName;
+                $strDayTimesRow .= '</div>';
+            }
 
-        $strMorningAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['morningTitle'] . '"';
-        $strNoonAltAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['noonTitle'] . '"';
-        $strEveningAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['eveningTitle'] . '"';
+        } else {
+            $strMorningSrc = 'system/modules/table_reservation/assets/images/sunrise16.png';
+            $strNoonSrc    = 'system/modules/table_reservation/assets/images/sun16.png';
+            $strEveningSrc = 'system/modules/table_reservation/assets/images/moon16.png';
+
+            $strMorningAlt = $GLOBALS['TL_LANG']['tl_table_occupancy']['morningAlt'];
+            $strNoonAlt    = $GLOBALS['TL_LANG']['tl_table_occupancy']['noonAlt'];
+            $strEveningAlt = $GLOBALS['TL_LANG']['tl_table_occupancy']['eveningAlt'];
+
+            $strMorningAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['morningTitle'] . '"';
+            $strNoonAltAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['noonTitle'] . '"';
+            $strEveningAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['eveningTitle'] . '"';
+
+            $strDayTimesRow .= \Image::getHtml($strMorningSrc, $strMorningAlt, $strMorningAttr);
+            $strDayTimesRow .= \Image::getHtml($strNoonSrc, $strNoonAlt, $strNoonAltAttr);
+            $strDayTimesRow .= \Image::getHtml($strEveningSrc, $strEveningAlt, $strEveningAttr);
+
+        }
 
         while ($intCurrentMonth < 12) {
             $strMonthNameShort = $GLOBALS['TL_LANG']['MONTHS_SHORT'][$intCurrentMonth];
-            $strHtmlYearCalendar .= '<tr>';
-            $strHtmlYearCalendar .= '<td class="shortMonthColumn"><div class="shortMonthName">' . $strMonthNameShort . '</div><br>';
-            $strHtmlYearCalendar .= \Image::getHtml($strMorningSrc, $strMorningAlt, $strMorningAttr);
-            $strHtmlYearCalendar .= \Image::getHtml($strNoonSrc, $strNoonAlt, $strNoonAltAttr);
-            $strHtmlYearCalendar .= \Image::getHtml($strEveningSrc, $strEveningAlt, $strEveningAttr);
-            $strHtmlYearCalendar .= $this->datesMonth(++$intCurrentMonth, $intCurrentYear, $intParentId);
-            $strHtmlYearCalendar .= '</td>';
-            $strHtmlYearCalendar .= '</tr>';
+            $strBuffer         .= '<tr>';
+            $strBuffer         .= '<td class="shortMonthColumn">';
+            $strBuffer         .= '<div class="shortMonthName">' . $strMonthNameShort . '</div><br>';
+            $strBuffer         .= $strDayTimesRow;
+            $strBuffer         .= $this->datesMonth(++$intCurrentMonth, $intCurrentYear, $intParentId);
+            $strBuffer         .= '</td>';
+            $strBuffer         .= '</tr>';
         }
 
-        $strHtmlYearCalendar .= '</table></div>';
+        $strBuffer .= '</table></div>';
 
-        return $strHtmlYearCalendar;
+        return $strBuffer;
     }
 
     /**
@@ -106,74 +147,177 @@ class tl_table_occupancy extends \Backend
             $strCurrentDay  = str_pad($i, 2, "0", STR_PAD_LEFT);
             $strCurrentDate = $intYear . '-' . $strCurrentMonth . '-' . $strCurrentDay;
 
-            $objDbSelectResult = $this->Database->prepare("   
+            $objWidgetDate           = new \FormTextField();
+            $objWidgetDate->value    = $strCurrentDate;
+            $objWidgetDate->name     = $strCurrentDate . '[date]';
+            $objWidgetDate->disabled = $strCurrentDate === date('Y-m-d') ? '' : 'disabled';
+            $objWidgetDate->style    = 'display:none';
+
+            $strTimeSlots = '';
+
+            if (!empty($this->objModuleModel->table_showTimeSlots)) {
+                $objCounts = $this->Database->prepare("   
+                SELECT  " . implode(',', $this->getTimeSlotNames()) . "
+                FROM    tl_table_occupancy 
+                WHERE   date=? 
+                AND     pid=?")
+                    ->execute($strCurrentDate, $intParentId);
+
+                foreach ($this->getTimeSlotNames() as $slotName) {
+
+                    $objWidgetSlot            = new \FormTextField();
+                    $objWidgetSlot->id        = 'count' . $slotName . '_' . $strCurrentDate;
+                    $objWidgetSlot->class     = empty($objCounts->countSlot) ? 'emptyInput' : 'filledInput';
+                    $objWidgetSlot->value     = $objCounts->$slotName;
+                    $objWidgetSlot->name      = $strCurrentDate . '[' . $slotName . ']';
+                    $objWidgetSlot->maxlength = 2;
+                    $objWidgetSlot->disabled  = ($strCurrentDate === date('Y-m-d')) ? false : true;
+                    $strTimeSlots             .= $objWidgetSlot->generate();
+                }
+            } else {
+                $objCounts = $this->Database->prepare("   
                 SELECT  countMorning, countNoon, countEvening
                 FROM    tl_table_occupancy 
                 WHERE   date=? 
                 AND     pid=?")
-                ->execute($strCurrentDate, $intParentId);
+                    ->execute($strCurrentDate, $intParentId);
 
-            $mktime          = mktime(0, 0, 0, $intMonth, $i, $intYear);
-            $intWeekDay      = date("w", $mktime);
+                $objWidgetMorning            = new \FormTextField();
+                $objWidgetMorning->id        = 'countMorning_' . $strCurrentDate;
+                $objWidgetMorning->class     = empty($objCounts->countMorning) ? 'emptyInput' : 'filledInput';
+                $objWidgetMorning->value     = $objCounts->countMorning;
+                $objWidgetMorning->name      = $strCurrentDate . '[countMorning]';
+                $objWidgetMorning->maxlength = 2;
+                $objWidgetMorning->disabled  = ($strCurrentDate === date('Y-m-d')) ? false : true;
+
+                $objWidgetNoon            = new \FormTextField();
+                $objWidgetNoon->id        = 'countNoon_' . $strCurrentDate;
+                $objWidgetNoon->class     = empty($objCounts->countNoon) ? 'emptyInput' : 'filledInput';
+                $objWidgetNoon->value     = $objCounts->countNoon;
+                $objWidgetNoon->name      = $strCurrentDate . '[countNoon]';
+                $objWidgetNoon->maxlength = 2;
+                $objWidgetNoon->disabled  = ($strCurrentDate === date('Y-m-d')) ? false : true;
+
+                $objWidgetEvening            = new \FormTextField();
+                $objWidgetEvening->id        = 'countEvening_' . $strCurrentDate;
+                $objWidgetEvening->class     = empty($objCounts->countEvening) ? 'emptyInput' : 'filledInput';
+                $objWidgetEvening->value     = $objCounts->countEvening;
+                $objWidgetEvening->name      = $strCurrentDate . '[countEvening]';
+                $objWidgetEvening->maxlength = 2;
+                $objWidgetEvening->disabled  = ($strCurrentDate === date('Y-m-d')) ? false : true;
+            }
+
+            $intMktime       = mktime(0, 0, 0, $intMonth, $i, $intYear);
+            $intWeekDay      = date("w", $intMktime);
             $strWeekDayShort = $GLOBALS['TL_LANG']['DAYS_SHORT'][$intWeekDay];
 
-            $strHtmlYearCalendar .= '<td id="' . $strCurrentDate . '" class="tdCalendarDay">';
-            $strHtmlYearCalendar .= '<div class="toggleInputDiv ' . ($strCurrentDate === date('Y-m-d') ? 'active' : '') . '"><div class="dayOfWeek">' . $strWeekDayShort . '</div>';
-            $strHtmlYearCalendar .= '<div class="dayOfMonth">' . $i . '</div></div>
-                <input id="ctrl_date_' . $strCurrentDate . '" type="hidden" value="' . $strCurrentDate . '" name="' . $strCurrentDate . '[date]" ' . ($strCurrentDate === date('Y-m-d') ? '' : 'disabled') . '>    
-                <input id="ctrl_countMorning_' . $strCurrentDate . '" type="text" value="' . $objDbSelectResult->countMorning . '" name="' . $strCurrentDate . '[countMorning]" maxlength="2" ' . ($strCurrentDate === date('Y-m-d') ? '' : 'disabled') . ' class="' . ($classInput = ($objDbSelectResult->countMorning < 1) ? 'emptyInput' : 'filledInput') . '">
-                <input id="ctrl_countNoon_' . $strCurrentDate . '" type="text" value="' . $objDbSelectResult->countNoon . '" name="' . $strCurrentDate . '[countNoon]" maxlength="6" ' . ($strCurrentDate === date('Y-m-d') ? '' : 'disabled') . ' class="' . ($classInput = ($objDbSelectResult->countNoon < 1) ? 'emptyInput' : 'filledInput') . '">
-                <input id="ctrl_countEvening_' . $strCurrentDate . '" type="text" value="' . $objDbSelectResult->countEvening . '" name="' . $strCurrentDate . '[countEvening]" maxlength="2" ' . ($strCurrentDate === date('Y-m-d') ? '' : 'disabled') . ' class="' . ($classInput = ($objDbSelectResult->countEvening < 1) ? 'emptyInput' : 'filledInput') . '"></td>
-            ';
+            $strBuffer .= '<td id="' . $strCurrentDate . '" class="tdCalendarDay">';
+            $strBuffer .= '<div class="toggleInputDiv ';
+            $strBuffer .= ($strCurrentDate === date('Y-m-d') ? 'active' : '') . '">';
+            $strBuffer .= '<div class="dayOfWeek">' . $strWeekDayShort . '</div>';
+            $strBuffer .= '<div class="dayOfMonth">' . $i . '</div></div>';
+
+            $strBuffer .= $objWidgetDate->generate();
+            $strBuffer .= !empty($this->objModuleModel->table_showTimeSlots) ?
+                $strTimeSlots :
+                $objWidgetMorning->generate() . $objWidgetNoon->generate() . $objWidgetEvening->generate();
 
             if (\Input::post('FORM_SUBMIT') == 'tl_table_occupancy') {
-
-                if (\Input::post('showPeriodOptions') && $mktime >= strtotime(\Input::post('startDate')) && $mktime <= strtotime(\Input::post('endDate'))) {
-
-                    $postDate                 = array();
-                    $postDate['date']         = $strCurrentDate;
-                    $postDate['countMorning'] = \Input::post('countMorning');
-                    $postDate['countNoon']    = \Input::post('countNoon');
-                    $postDate['countEvening'] = \Input::post('countEvening');
-
-                } else {
-
-                    $postDate = \Input::post($strCurrentDate);
-
-                }
-
-                if ($postDate['date'] !== null && $objDbSelectResult->numRows > 0) {
-
-                    $objDbResult = $this->Database->prepare("
-                        UPDATE  tl_table_occupancy
-                        SET     pid=?, tstamp=?, date=?, countMorning=?, countNoon=?, countEvening=?
-                        WHERE   date=? 
-                        AND     pid=?")
-                        ->execute($intParentId,
-                            time(),
-                            $strCurrentDate,
-                            $postDate['countMorning'],
-                            $postDate['countNoon'],
-                            $postDate['countEvening'],
-                            $postDate['date'],
-                            $intParentId);
-                }
-
-                if ($postDate['date'] !== null && $objDbSelectResult->numRows < 1) {
-
-                    $objDbResult = $this->Database->prepare("
-                        INSERT INTO tl_table_occupancy (pid, tstamp, date, countMorning, countNoon, countEvening)
-                        VALUES(?,?,?,?,?,?)")
-                        ->execute($intParentId,
-                            time(),
-                            $strCurrentDate,
-                            $postDate['countMorning'],
-                            $postDate['countNoon'],
-                            $postDate['countEvening']);
-                }
+                $this->saveData($intMktime, $strCurrentDate, $objCounts, $intParentId);
             }
         }
-        return $strHtmlYearCalendar;
+        return $strBuffer;
+    }
+
+    /**
+     * Stores the calendar form data in the database.
+     *
+     * @param int $intMktime Timestamp begin of current day
+     * @param string $strCurrentDate Current date string in SQL format
+     * @param object $objCounts Counts of seats for current day
+     * @param int $intParentId Id of the parent category
+     *
+     */
+    public function saveData($intMktime, $strCurrentDate, $objCounts, $intParentId)
+    {
+        $arrPostDate           = [];
+        $arrPostDate['pid']    = $intParentId;
+        $arrPostDate['tstamp'] = time();
+
+        if (\Input::post('showPeriodOptions') &&
+            $intMktime >= strtotime(\Input::post('startDate')) &&
+            $intMktime <= strtotime(\Input::post('endDate'))
+        ) {
+            $arrPostDate['date'] = $strCurrentDate;
+            if (!empty($this->objModuleModel->table_showTimeSlots)) {
+                foreach ($this->getTimeSlotNames() as $strSlotName) {
+                    $arrPostDate[$strSlotName] = \Input::post($strSlotName);
+                }
+            } else {
+                $arrPostDate['countMorning'] = \Input::post('countMorning');
+                $arrPostDate['countNoon']    = \Input::post('countNoon');
+                $arrPostDate['countEvening'] = \Input::post('countEvening');
+            }
+        } else {
+            $mixedPostDate = \Input::post($strCurrentDate);
+            if (is_array($mixedPostDate)) {
+                $arrPostDate = array_merge($mixedPostDate, $arrPostDate);
+            }
+        }
+
+        if ($arrPostDate['date'] !== null && $objCounts->numRows > 0) {
+            $objUpdate = $this->Database->prepare("
+                UPDATE tl_table_occupancy
+                %s 
+                WHERE date=? 
+                AND pid=?")
+                ->set($arrPostDate)
+                ->execute($strCurrentDate, $intParentId);
+        }
+
+        if ($arrPostDate['date'] !== null && $objCounts->numRows < 1) {
+            $objInsert = $this->Database->prepare("INSERT INTO tl_table_occupancy %s")
+                ->set($arrPostDate)
+                ->execute();
+        }
+    }
+
+    /**
+     * Loads DCA fields according to the time slot option.
+     *
+     */
+    public function loadFields()
+    {
+        if (!empty($this->objModuleModel->table_showTimeSlots)) {
+            unset($GLOBALS['TL_DCA']['tl_table_occupancy']['fields']['countMorning']);
+            unset($GLOBALS['TL_DCA']['tl_table_occupancy']['fields']['countNoon']);
+            unset($GLOBALS['TL_DCA']['tl_table_occupancy']['fields']['countEvening']);
+
+
+            foreach ($this->getTimeSlotNames() as $strSlotName) {
+
+                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['label']     = [
+                    sprintf($GLOBALS['TL_LANG']['tl_table_occupancy']['countTimeSlot'][0], $strSlotName),
+                    sprintf($GLOBALS['TL_LANG']['tl_table_occupancy']['countTimeSlot'][1], $strSlotName)
+                ];
+                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['default']   = 0;
+                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['inputType'] = 'text';
+                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['search']    = true;
+                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['sorting']   = true;
+                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['filter']    = true;
+                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['eval']      = [
+                    'rgxp'     => 'digit',
+                    'tl_class' => 'w50'
+                ];
+
+            }
+
+            $GLOBALS['TL_DCA']['tl_table_occupancy']['subpalettes']['showPeriodOptions'] = str_replace(
+                'countEvening',
+                'countEvening,' . implode(',', $this->getTimeSlotNames()),
+                $GLOBALS['TL_DCA']['tl_table_occupancy']['subpalettes']['showPeriodOptions']
+            );
+        }
     }
 
     /**
@@ -233,8 +377,51 @@ class tl_table_occupancy extends \Backend
      */
     public function showCalendar($arrRow)
     {
-        return '<div><span style="color:#b3b3b3;">' . $GLOBALS['TL_LANG']['tl_table_occupancy']['countMorning'][0] . ': </span>[' . ($arrRow['countMorning'] > 0 ? $arrRow['countMorning'] : '<span style="color:#cc3333;">' . $arrRow['countMorning'] . '</span>') . '] <b>|</b> '
-            . '<span style="color:#b3b3b3;">' . $GLOBALS['TL_LANG']['tl_table_occupancy']['countNoon'][0] . ': </span>[' . ($arrRow['countNoon'] > 0 ? $arrRow['countNoon'] : '<span style="color:#cc3333;">' . $arrRow['countNoon'] . '</span>') . '] <b>|</b> '
-            . '<span style="color:#b3b3b3;">' . $GLOBALS['TL_LANG']['tl_table_occupancy']['countEvening'][0] . ': </span>[' . ($arrRow['countEvening'] > 0 ? $arrRow['countEvening'] : '<span style="color:#cc3333;">' . $arrRow['countEvening'] . '</span>') . ']</div>';
+        $strBuffer = '';
+
+        if (!empty($this->objModuleModel->table_showTimeSlots)) {
+            $strBuffer .= '<div>';
+            $intCount  = 0;
+
+            foreach ($this->getTimeSlotNames() as $strSlotName) {
+                $strBuffer .= '<span style="color:#b3b3b3;">';
+                $strBuffer .= sprintf($GLOBALS['TL_LANG']['tl_table_occupancy']['countTimeSlot'][0], $strSlotName);
+                $strBuffer .= ': </span>[';
+                $strBuffer .= (!empty($arrRow[$strSlotName]) ?
+                        $arrRow[$strSlotName] :
+                        '<span style="color:#cc3333;">0</span>') . ']';
+                $intCount++;
+                $strBuffer .= ($intCount === count($this->getTimeSlotNames())) ? '' : ' <b>|</b> ';
+
+            }
+            $strBuffer .= '</div>';
+
+            return $strBuffer;
+        }
+
+        $strBuffer .= '<div>';
+        $strBuffer .= '<span style="color:#b3b3b3;">';
+        $strBuffer .= $GLOBALS['TL_LANG']['tl_table_occupancy']['countMorning'][0];
+        $strBuffer .= ': </span>[';
+        $strBuffer .= (!empty($arrRow['countMorning']) ?
+            $arrRow['countMorning'] :
+            '<span style="color:#cc3333;">0</span>');
+        $strBuffer .= '] <b>|</b> ';
+        $strBuffer .= '<span style="color:#b3b3b3;">';
+        $strBuffer .= $GLOBALS['TL_LANG']['tl_table_occupancy']['countNoon'][0];
+        $strBuffer .= ': </span>[';
+        $strBuffer .= (!empty($arrRow['countNoon']) ?
+            $arrRow['countNoon'] :
+            '<span style="color:#cc3333;">0</span>');
+        $strBuffer .= '] <b>|</b> ';
+        $strBuffer .= '<span style="color:#b3b3b3;">';
+        $strBuffer .= $GLOBALS['TL_LANG']['tl_table_occupancy']['countEvening'][0];
+        $strBuffer .= ': </span>[';
+        $strBuffer .= (!empty($arrRow['countEvening']) ?
+            $arrRow['countEvening'] :
+            '<span style="color:#cc3333;">0</span>');
+        $strBuffer .= ']</div>';
+
+        return $strBuffer;
     }
 }
