@@ -40,6 +40,7 @@ $GLOBALS['TL_LANG']['tl_table_occupancy']['endDate']           = ['End date', 'P
 $GLOBALS['TL_LANG']['tl_table_occupancy']['countMorning']      = ['Seats morning', 'The number of available seats in the morning.'];
 $GLOBALS['TL_LANG']['tl_table_occupancy']['countNoon']         = ['Seats noon', 'The number of available seats at noon.'];
 $GLOBALS['TL_LANG']['tl_table_occupancy']['countEvening']      = ['Seats evening', 'The number of available seats in the evening.'];
+$GLOBALS['TL_LANG']['tl_table_occupancy']['countTimeSlot']     = ['Seats %s', 'The number of available seats in time slot %s.'];
 $GLOBALS['TL_LANG']['tl_table_occupancy']['year']              = ['Year', ''];
 $GLOBALS['TL_LANG']['tl_table_occupancy']['morningAlt']        = 'Morning';
 $GLOBALS['TL_LANG']['tl_table_occupancy']['morningTitle']      = 'Morning';

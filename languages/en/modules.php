@@ -33,6 +33,7 @@
 $GLOBALS['TL_LANG']['MOD']['table_reservation']      = ['Table Reservation', ''];
 $GLOBALS['TL_LANG']['MOD']['table_config']           = ['Settings', 'General settings'];
 $GLOBALS['TL_LANG']['MOD']['table_categories']       = ['Table categories', 'Manage table categoriesn'];
+$GLOBALS['TL_LANG']['MOD']['table_timeslots']        = ['Time slots', 'Manages the time slots for the reservation module'];
 $GLOBALS['TL_LANG']['MOD']['table_reservation_list'] = ['Reservation list', 'View reservation list'];
 $GLOBALS['TL_LANG']['FMD']['seat_reservation']       = ['Table Reservation', ''];
 $GLOBALS['TL_LANG']['FMD']['table_reservation']      = ['Reservation form', 'Provides a form to reserve seats.'];
