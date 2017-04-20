@@ -46,10 +46,20 @@ class HooksFrontend extends \Frontend
 
         if ($arrSplit[0] == 'reservation') {
             if (isset($arrSplit[1]) && $arrSplit[1] == 'salutation') {
-                $strSalutation = (\Input::post('salutation') === 'male') ?
-                    $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSir'] . ' ' . \Input::post('lastname') :
-                    $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearMadame'] . ' ' . \Input::post('lastname');
-                return $strSalutation;
+                if (\Input::post('salutation') === 'male') {
+                    $strSalutation = $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSir'] . ' ' .
+                        \Input::post('lastname');
+                    return $strSalutation;
+                }
+                if (\Input::post('salutation') === 'female') {
+                    $strSalutation = $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearMadam'] . ' ' .
+                        \Input::post('lastname');
+                    return $strSalutation;
+                }
+                if (empty(\Input::post('salutation'))) {
+                    $strSalutation = $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSirOrMadam'];
+                    return $strSalutation;
+                }
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'firstname') {
                 return \Input::post('firstname') ? \Input::post('firstname') : '-';
