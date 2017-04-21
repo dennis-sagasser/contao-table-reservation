@@ -19,7 +19,7 @@
 namespace Contao;
 
 /**
- * Class tl_table_reservation_slots
+ * Class tl_table_slots
  *
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -30,7 +30,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_table_reservation_slots extends \Backend
+class tl_table_slots extends \Backend
 {
 
     /**
@@ -158,7 +158,7 @@ class tl_table_reservation_slots extends \Backend
         }
 
         // Check permissions AFTER checking the tid, so hacking attempts are logged
-        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_table_reservation_slots::published', 'alexf')) {
+        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_table_slots::published', 'alexf')) {
             return '';
         }
 
@@ -183,24 +183,24 @@ class tl_table_reservation_slots extends \Backend
     function toggleVisibility($intId, $blnPublished)
     {
         // Check permissions to publish
-        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_table_reservation_slots::published', 'alexf')) {
-            $this->log('Not enough permissions to show/hide record ID "' . $intId . '"', 'tl_table_reservation_slots toggleVisibility', TL_ERROR);
+        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_table_slots::published', 'alexf')) {
+            $this->log('Not enough permissions to show/hide record ID "' . $intId . '"', 'tl_table_slots toggleVisibility', TL_ERROR);
             $this->redirect('contao/main.php?act=error');
         }
 
-        $this->createInitialVersion('tl_table_reservation_slots', $intId);
+        $this->createInitialVersion('tl_table_slots', $intId);
 
         // Trigger the save_callback
-        if (is_array($GLOBALS['TL_DCA']['tl_table_reservation_slots']['fields']['published']['save_callback'])) {
-            foreach ($GLOBALS['TL_DCA']['tl_table_reservation_slots']['fields']['published']['save_callback'] as $callback) {
+        if (is_array($GLOBALS['TL_DCA']['tl_table_slots']['fields']['published']['save_callback'])) {
+            foreach ($GLOBALS['TL_DCA']['tl_table_slots']['fields']['published']['save_callback'] as $callback) {
                 $this->import($callback[0]);
                 $blnPublished = $this->$callback[0]->$callback[1]($blnPublished, $this);
             }
         }
 
         // Update the database
-        $this->Database->prepare("UPDATE tl_table_reservation_slots SET tstamp=" . time() . ", published='" . ($blnPublished ? '' : '1') . "' WHERE id=?")
+        $this->Database->prepare("UPDATE tl_table_slots SET tstamp=" . time() . ", published='" . ($blnPublished ? '' : '1') . "' WHERE id=?")
             ->execute($intId);
-        $this->createNewVersion('tl_table_reservation_slots', $intId);
+        $this->createNewVersion('tl_table_slots', $intId);
     }
 }

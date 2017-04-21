@@ -31,9 +31,9 @@
  */
 
 /**
- * Table tl_table_reservation_slots
+ * Table tl_table_slots
  */
-$GLOBALS['TL_DCA']['tl_table_reservation_slots'] = [
+$GLOBALS['TL_DCA']['tl_table_slots'] = [
     // Config
     'config'   => [
         'dataContainer'     => 'Table',
@@ -43,13 +43,13 @@ $GLOBALS['TL_DCA']['tl_table_reservation_slots'] = [
             ]
         ],
         'onload_callback'   => [
-            ['tl_table_reservation_list', 'formatDates'],
+            ['tl_table_list', 'formatDates'],
         ],
         'onsubmit_callback' => [
-            ['tl_table_reservation_slots', 'editTimeSlot'],
+            ['tl_table_slots', 'editTimeSlot'],
         ],
         'ondelete_callback' => [
-            ['tl_table_reservation_slots', 'deleteTimeSlot'],
+            ['tl_table_slots', 'deleteTimeSlot'],
         ],
     ],
     // List
@@ -66,21 +66,21 @@ $GLOBALS['TL_DCA']['tl_table_reservation_slots'] = [
         ],
         'operations' => [
             'edit'   => [
-                'label' => &$GLOBALS['TL_LANG']['tl_table_reservation_slots']['edit'],
+                'label' => &$GLOBALS['TL_LANG']['tl_table_slots']['edit'],
                 'href'  => 'act=edit',
                 'icon'  => 'edit.gif'
             ],
             'delete' => [
-                'label'      => &$GLOBALS['TL_LANG']['tl_table_reservation_slots']['delete'],
+                'label'      => &$GLOBALS['TL_LANG']['tl_table_slots']['delete'],
                 'href'       => 'act=delete',
                 'icon'       => 'delete.gif',
-                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['tl_table_reservation_slots']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
+                'attributes' => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['tl_table_slots']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"',
             ],
             'toggle' => [
-                'label'           => &$GLOBALS['TL_LANG']['tl_table_reservation_slots']['toggle'],
+                'label'           => &$GLOBALS['TL_LANG']['tl_table_slots']['toggle'],
                 'icon'            => 'visible.gif',
                 'attributes'      => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
-                'button_callback' => array('tl_table_reservation_slots', 'toggleIcon')
+                'button_callback' => ['tl_table_slots', 'toggleIcon']
             ],
         ]
     ],
@@ -99,7 +99,7 @@ $GLOBALS['TL_DCA']['tl_table_reservation_slots'] = [
             'sql'       => "int(10) unsigned NOT NULL",
         ],
         'name'      => [
-            'label'         => &$GLOBALS['TL_LANG']['tl_table_reservation_slots']['name'],
+            'label'         => &$GLOBALS['TL_LANG']['tl_table_slots']['name'],
             'sql'           => "varchar(16) NOT NULL default ''",
             'flag'          => 1,
             'search'        => true,
@@ -115,12 +115,12 @@ $GLOBALS['TL_DCA']['tl_table_reservation_slots'] = [
                 'tl_class'          => 'w50',
                 'unique'            => true,
             ],
-            'load_callback' => [['tl_table_reservation_slots', 'cacheTableName']],
-            'save_callback' => [['tl_table_reservation_slots', 'prepareSqlColumnName']],
+            'load_callback' => [['tl_table_slots', 'cacheTableName']],
+            'save_callback' => [['tl_table_slots', 'prepareSqlColumnName']],
 
         ],
         'fromTime'  => [
-            'label'         => &$GLOBALS['TL_LANG']['tl_table_reservation_slots']['fromTime'],
+            'label'         => &$GLOBALS['TL_LANG']['tl_table_slots']['fromTime'],
             'sql'           => "int(10) unsigned NOT NULL default '0'",
             'default'       => mktime(0, 0, 0),
             'search'        => true,
@@ -135,11 +135,11 @@ $GLOBALS['TL_DCA']['tl_table_reservation_slots'] = [
                 'tl_class'   => 'w50 wizard clr'
             ],
             'save_callback' => [
-                ['tl_table_reservation_slots', 'saveFromTime']
+                ['tl_table_slots', 'saveFromTime']
             ],
         ],
         'toTime'    => [
-            'label'         => &$GLOBALS['TL_LANG']['tl_table_reservation_slots']['toTime'],
+            'label'         => &$GLOBALS['TL_LANG']['tl_table_slots']['toTime'],
             'sql'           => "int(10) unsigned NOT NULL default '0'",
             'default'       => mktime(23, 59, 59),
             'search'        => true,
@@ -154,11 +154,11 @@ $GLOBALS['TL_DCA']['tl_table_reservation_slots'] = [
                 'tl_class'   => 'w50 wizard'
             ],
             'save_callback' => [
-                ['tl_table_reservation_slots', 'saveToTime']
+                ['tl_table_slots', 'saveToTime']
             ],
         ],
         'published' => [
-            'label'     => &$GLOBALS['TL_LANG']['tl_table_reservation_slots']['published'],
+            'label'     => &$GLOBALS['TL_LANG']['tl_table_slots']['published'],
             'sql'       => "char(1) NOT NULL default ''",
             'filter'    => true,
             'flag'      => 2,

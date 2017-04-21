@@ -40,7 +40,7 @@ class tl_module_table_reservation extends \Backend
     public function getNotificationChoices()
     {
 
-        $arrChoices       = array();
+        $arrChoices       = [];
         $objNotifications = \Database::getInstance()->execute("SELECT id,title FROM tl_nc_notification WHERE type='core_form' ORDER BY title");
 
         while ($objNotifications->next()) {

@@ -54,9 +54,9 @@ class HooksBackend extends \Backend
      */
     public function myLoadDataContainer($strName)
     {
-        if ($strName === 'tl_table_occupancy' && $this->Database->tableExists('tl_table_reservation_slots')) {
+        if ($strName === 'tl_table_occupancy' && $this->Database->tableExists('tl_table_slots')) {
             $arrSlotNames = $this->Database->prepare("
-                SELECT name FROM tl_table_reservation_slots
+                SELECT name FROM tl_table_slots
                 ")->execute()->fetchEach('name');
 
             foreach ($arrSlotNames as $strSlotName) {

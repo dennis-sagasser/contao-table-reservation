@@ -19,7 +19,7 @@
 namespace Contao;
 
 /**
- * Class tl_table_reservation_settings
+ * Class tl_table_settings
  *
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -30,7 +30,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_table_reservation_settings extends \Backend
+class tl_table_settings extends \Backend
 {
 
     /**
@@ -49,7 +49,7 @@ class tl_table_reservation_settings extends \Backend
      */
     public function checkConfig()
     {
-        $objConfig = \Database::getInstance()->prepare("SELECT * FROM tl_table_reservation_settings")->execute();
+        $objConfig = \Database::getInstance()->prepare("SELECT * FROM tl_table_settings")->execute();
 
         if (Input::get('key')) {
             return;

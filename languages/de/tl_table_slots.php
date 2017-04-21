@@ -33,19 +33,19 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_table_reservation_slots']['name']      = ['Name', 'Bitte geben Sie eine Namen für das Zeitfenster an.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_slots']['fromTime']  = ['Von', 'Bitte wählen Sie die gewünschte Personenanzahl und Kategorie aus.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_slots']['toTime']    = ['Bis', 'Bitte wählen Sie die gewünschte Personenanzahl aus.'];
-$GLOBALS['TL_LANG']['tl_table_reservation_slots']['published'] = ['Zeitfenster veröffentlichen', 'Bestimmen Sie, ob das Zeitfenster aktiv sein soll.'];
+$GLOBALS['TL_LANG']['tl_table_slots']['name']      = ['Name', 'Bitte geben Sie eine Namen für das Zeitfenster an.'];
+$GLOBALS['TL_LANG']['tl_table_slots']['fromTime']  = ['Von', 'Bitte wählen Sie die gewünschte Personenanzahl und Kategorie aus.'];
+$GLOBALS['TL_LANG']['tl_table_slots']['toTime']    = ['Bis', 'Bitte wählen Sie die gewünschte Personenanzahl aus.'];
+$GLOBALS['TL_LANG']['tl_table_slots']['published'] = ['Zeitfenster veröffentlichen', 'Bestimmen Sie, ob das Zeitfenster aktiv sein soll.'];
 
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_table_reservation_slots']['new']           = ['Create time slot', 'Create a new time slot'];
-$GLOBALS['TL_LANG']['tl_table_reservation_slots']['edit']          = ['Edit time slot', 'Edit time slot #%s'];
-$GLOBALS['TL_LANG']['tl_table_reservation_slots']['delete']        = ['Delete time slot', 'Delete time slot #%s'];
-$GLOBALS['TL_LANG']['tl_table_reservation_slots']['toggle']        = ['Toggle time slot activation', 'Toggle the activation for time slot #%s'];
-$GLOBALS['TL_LANG']['tl_table_reservation_slots']['deleteConfirm'] = 'Really remove time slot #%s?';
+$GLOBALS['TL_LANG']['tl_table_slots']['new']           = ['Zeitfenster anlegen', 'Ein neues Zeitfenster erstellen'];
+$GLOBALS['TL_LANG']['tl_table_slots']['edit']          = ['Zeitfenster bearbeiten', 'Zeitfenster #%s bearbeiten'];
+$GLOBALS['TL_LANG']['tl_table_slots']['delete']        = ['Zeitfenster löschen', 'Zeitfenster #%s löschen'];
+$GLOBALS['TL_LANG']['tl_table_slots']['toggle']        = ['Veröffentlichung umschalten', 'Veröffentlichung für Zeitfenster #%s festlegen'];
+$GLOBALS['TL_LANG']['tl_table_slots']['deleteConfirm'] = 'Soll das Zeitfenster #%s wirklich gelöscht werden?';
 
 /**
  * Legends

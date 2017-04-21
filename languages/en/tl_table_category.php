@@ -53,7 +53,7 @@ $GLOBALS['TL_LANG']['tl_table_category']['publish_legend']        = 'Publish';
 /**
  * Buttons
  */
-$GLOBALS['TL_LANG']['tl_table_category']['new']           = ['Create table category', 'Crate a new table category'];
+$GLOBALS['TL_LANG']['tl_table_category']['new']           = ['Create table category', 'Create a new table category'];
 $GLOBALS['TL_LANG']['tl_table_category']['edit']          = ['Edit', 'Edit table category ID %s'];
 $GLOBALS['TL_LANG']['tl_table_category']['copy']          = ['Copy', 'Copy table category ID %s'];
 $GLOBALS['TL_LANG']['tl_table_category']['delete']        = ['Delete', 'Remove table category ID %s'];

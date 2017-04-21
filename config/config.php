@@ -16,26 +16,26 @@
  * @link        https://contao.org
  */
 
-$GLOBALS['BE_MOD']['table_reservation'] = array(
-    'table_config'           => array(
-        'tables' => array('tl_table_reservation_settings'),
+$GLOBALS['BE_MOD']['table_reservation'] = [
+    'table_config'     => [
+        'tables' => ['tl_table_settings'],
         'icon'   => 'system/modules/table_reservation/assets/images/settings16.png',
-    ),
-    'table_categories'       => array(
-        'tables'     => array('tl_table_category', 'tl_table_occupancy'),
+    ],
+    'table_categories' => [
+        'tables'     => ['tl_table_category', 'tl_table_occupancy'],
         'icon'       => 'system/modules/table_reservation/assets/images/table16.png',
         'stylesheet' => 'system/modules/table_reservation/assets/css/layout.min.css',
         'javascript' => 'system/modules/table_reservation/assets/js/datepicker.js'
-    ),
-    'table_timeslots'        => array(
-        'tables' => array('tl_table_reservation_slots'),
-        'icon'   => 'system/modules/table_reservation/assets/images/reservation_slots16.png',
-    ),
-    'table_reservation_list' => array(
-        'tables' => array('tl_table_reservation_list'),
-        'icon'   => 'system/modules/table_reservation/assets/images/reservation_list16.png',
-    ),
-);
+    ],
+    'table_timeslots'  => [
+        'tables' => ['tl_table_slots'],
+        'icon'   => 'system/modules/table_reservation/assets/images/slots16.png',
+    ],
+    'table_list'       => [
+        'tables' => ['tl_table_list'],
+        'icon'   => 'system/modules/table_reservation/assets/images/list16.png',
+    ],
+];
 
 $GLOBALS['FE_MOD']['seat_reservation']['table_reservation'] = 'ModuleTableReservation';
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = ['HooksFrontend', 'myReplaceInsertTags'];
