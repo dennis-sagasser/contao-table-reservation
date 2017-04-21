@@ -1,5 +1,9 @@
 <!-- indexer::stop -->
-<?php $GLOBALS['TL_CSS']['table_reservation'] = 'system/modules/table_reservation/assets/css/bootstrap-button.min.css'; ?>
+<?php if (TL_MODE === 'FE'): ?>
+    <?php $GLOBALS['TL_CSS']['table_reservation'] =
+        'system/modules/table_reservation/assets/css/bootstrap-button.min.css';
+    ?>
+<?php endif; ?>
 
 <div class="<?= $this->class; ?> block"<?= $this->cssID; ?>
     <?php if ($this->style): ?> style="<?= $this->style; ?>"
@@ -50,8 +54,10 @@
 <form action="<?= $this->action; ?>" id="availability" method="post"
       enctype="application/x-www-form-urlencoded">
     <div class="formbody">
-        <input type="hidden" name="FORM_SUBMIT" value="form_availability_submit"/>
-        <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}"/>
+        <?php if (TL_MODE === 'FE'): ?>
+            <input type="hidden" name="FORM_SUBMIT" value="form_availability_submit"/>
+            <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}"/>
+        <?php endif; ?>
         <?= $this->objWidgetArrival ? $this->objWidgetArrival->generateLabel() : ''; ?>
         <?= $this->objWidgetArrival ? $this->objWidgetArrival->generateWithError() : ''; ?><br>
 
