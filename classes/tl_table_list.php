@@ -19,7 +19,7 @@
 namespace Contao;
 
 /**
- * Class tl_table_reservation_list
+ * Class tl_table_list
  *
  * Provide miscellaneous methods that are used by the data configuration array.
  *
@@ -30,7 +30,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_table_reservation_list extends \Backend
+class tl_table_list extends \Backend
 {
 
     /**
@@ -54,8 +54,8 @@ class tl_table_reservation_list extends \Backend
         }
 
         $objSession     = \Session::getInstance()->getData();
-        $strFilterValue = isset($objSession['filter']['tl_table_reservation_list']['table_filter']) ?
-            $objSession['filter']['tl_table_reservation_list']['table_filter'] :
+        $strFilterValue = isset($objSession['filter']['tl_table_list']['table_filter']) ?
+            $objSession['filter']['tl_table_list']['table_filter'] :
             'future';
 
         $objWidgetFilter           = new \SelectMenu();
@@ -63,15 +63,15 @@ class tl_table_reservation_list extends \Backend
         $objWidgetFilter->name     = 'table_filter';
         $objWidgetFilter->value    = $strFilterValue;
         $objWidgetFilter->options  = [
-            ['value' => 'table_filter', 'label' => $GLOBALS['TL_LANG']['tl_table_reservation_list']['timeSlot']],
+            ['value' => 'table_filter', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['timeSlot']],
             ['value' => 'table_filter', 'label' => '---'],
-            ['value' => 'all', 'label' => $GLOBALS['TL_LANG']['tl_table_reservation_list']['all']],
-            ['value' => 'future', 'label' => $GLOBALS['TL_LANG']['tl_table_reservation_list']['future']],
-            ['value' => 'past', 'label' => $GLOBALS['TL_LANG']['tl_table_reservation_list']['past']],
-            ['value' => 'today', 'label' => $GLOBALS['TL_LANG']['tl_table_reservation_list']['today']],
-            ['value' => 'thisWeek', 'label' => $GLOBALS['TL_LANG']['tl_table_reservation_list']['thisWeek']],
-            ['value' => 'thisMonth', 'label' => $GLOBALS['TL_LANG']['tl_table_reservation_list']['thisMonth']],
-            ['value' => 'thisYear', 'label' => $GLOBALS['TL_LANG']['tl_table_reservation_list']['thisYear']],
+            ['value' => 'all', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['all']],
+            ['value' => 'future', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['future']],
+            ['value' => 'past', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['past']],
+            ['value' => 'today', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['today']],
+            ['value' => 'thisWeek', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['thisWeek']],
+            ['value' => 'thisMonth', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['thisMonth']],
+            ['value' => 'thisYear', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['thisYear']],
         ];
         $objWidgetFilter->onchange = "this.form.submit()";
 
@@ -102,23 +102,23 @@ class tl_table_reservation_list extends \Backend
             log_message(\Input::post($key), 'debug.log');
             // Reset the filter
             if ($key == \Input::post($key)) {
-                $objSession['filter']['tl_table_reservation_list'][$key] = 'future';
+                $objSession['filter']['tl_table_list'][$key] = 'future';
             } // Apply the filter
             else {
-                $objSession['filter']['tl_table_reservation_list'][$key] = \Input::post($key);
+                $objSession['filter']['tl_table_list'][$key] = \Input::post($key);
             }
         }
 
         \Session::getInstance()->setData($objSession);
 
-        if (\Input::get('id') > 0 || !isset($objSession['filter']['tl_table_reservation_list'])) {
+        if (\Input::get('id') > 0 || !isset($objSession['filter']['tl_table_list'])) {
             return;
         }
 
         $objDate = new \Date(time());
 
         // Filter reservations
-        foreach ($objSession['filter']['tl_table_reservation_list'] as $key => $value) {
+        foreach ($objSession['filter']['tl_table_list'] as $key => $value) {
             if (substr($key, 0, 6) != 'table_') {
                 continue;
             }
@@ -127,49 +127,49 @@ class tl_table_reservation_list extends \Backend
                 case 'future':
                     $arrReservations = \Database::getInstance()->prepare("
                         SELECT id 
-                        FROM tl_table_reservation_list 
+                        FROM tl_table_list 
                         WHERE arrival > ?")
                         ->execute($objDate->tstamp)->fetchEach('id');
                     break;
                 case 'today':
                     $arrReservations = \Database::getInstance()->prepare("
                         SELECT id 
-                        FROM tl_table_reservation_list 
+                        FROM tl_table_list 
                         WHERE arrival BETWEEN ? AND ?")
                         ->execute($objDate->dayBegin, $objDate->dayEnd)->fetchEach('id');
                     break;
                 case 'thisWeek':
                     $arrReservations = \Database::getInstance()->prepare("
                         SELECT id 
-                        FROM tl_table_reservation_list 
+                        FROM tl_table_list 
                         WHERE arrival BETWEEN ? AND ?")
                         ->execute($objDate->getWeekBegin(1), $objDate->getWeekEnd(0))->fetchEach('id');
                     break;
                 case 'thisMonth':
                     $arrReservations = \Database::getInstance()->prepare("
                         SELECT id 
-                        FROM tl_table_reservation_list 
+                        FROM tl_table_list 
                         WHERE arrival BETWEEN ? AND ?")
                         ->execute($objDate->monthBegin, $objDate->monthEnd)->fetchEach('id');
                     break;
                 case 'thisYear':
                     $arrReservations = \Database::getInstance()->prepare("
                         SELECT id 
-                        FROM tl_table_reservation_list 
+                        FROM tl_table_list 
                         WHERE arrival BETWEEN ? AND ?")
                         ->execute($objDate->yearBegin, $objDate->yearEnd)->fetchEach('id');
                     break;
                 case 'past':
                     $arrReservations = \Database::getInstance()->prepare("
                         SELECT id 
-                        FROM tl_table_reservation_list 
+                        FROM tl_table_list 
                         WHERE arrival < ?")
                         ->execute($objDate->tstamp)->fetchEach('id');
                     break;
                 default:
                     $arrReservations = \Database::getInstance()->prepare("
                         SELECT id 
-                        FROM tl_table_reservation_list ")
+                        FROM tl_table_list ")
                         ->execute()->fetchEach('id');
                     break;
             }
@@ -178,7 +178,7 @@ class tl_table_reservation_list extends \Backend
         if (is_array($arrReservations) && empty($arrReservations)) {
             $arrReservations = [0];
         }
-        $GLOBALS['TL_DCA']['tl_table_reservation_list']['list']['sorting']['root'] = $arrReservations;
+        $GLOBALS['TL_DCA']['tl_table_list']['list']['sorting']['root'] = $arrReservations;
     }
 
     /**
@@ -210,7 +210,7 @@ class tl_table_reservation_list extends \Backend
         return sprintf(
             '<em>%s</em> <b>|</b> %s: %s <b>|</b> %s %s %s',
             $objArrivalDate->datim,
-            $GLOBALS['TL_LANG']['tl_table_reservation_list']['seats'][0],
+            $GLOBALS['TL_LANG']['tl_table_list']['seats'][0],
             $strCountCategory,
             $row['firstname'],
             $row['lastname'],

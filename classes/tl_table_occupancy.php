@@ -54,7 +54,7 @@ class tl_table_occupancy extends \Backend
     public function getTimeSlotNames()
     {
         return $this->Database->prepare("
-                SELECT name FROM tl_table_reservation_slots WHERE published='1'
+                SELECT name FROM tl_table_slots WHERE published='1'
                 ")->execute()->fetchEach('name');
     }
 

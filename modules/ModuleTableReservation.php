@@ -85,7 +85,7 @@ class ModuleTableReservation extends \Module
         if (!empty($this->table_showTimeSlots)) {
             $arrTimeSlots = $this->Database->prepare("
                 SELECT name, fromTime, toTime 
-                FROM tl_table_reservation_slots 
+                FROM tl_table_slots 
                 WHERE published='1'
                 GROUP BY fromTime, toTime
                 ")->execute()->fetchAllAssoc();
@@ -295,7 +295,7 @@ class ModuleTableReservation extends \Module
             return;
         }
 
-        $objSettings = $this->Database->prepare("SELECT * FROM tl_table_reservation_settings")->limit(1)->execute();
+        $objSettings = $this->Database->prepare("SELECT * FROM tl_table_settings")->limit(1)->execute();
 
         if ($objSettings->numRows < 1) {
             return;
@@ -712,7 +712,7 @@ class ModuleTableReservation extends \Module
             }
 
             $objInsertReservation = $this->Database->prepare("
-                    INSERT INTO tl_table_reservation_list
+                    INSERT INTO tl_table_list
                     (tstamp, arrival, departure, seats, gender, lastname, firstname, phone, email, remarks)
                     VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
                 ->execute(
