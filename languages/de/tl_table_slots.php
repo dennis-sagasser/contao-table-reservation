@@ -33,9 +33,10 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_table_slots']['name']      = ['Name', 'Bitte geben Sie eine Namen für das Zeitfenster an.'];
-$GLOBALS['TL_LANG']['tl_table_slots']['fromTime']  = ['Von', 'Bitte wählen Sie die gewünschte Personenanzahl und Kategorie aus.'];
-$GLOBALS['TL_LANG']['tl_table_slots']['toTime']    = ['Bis', 'Bitte wählen Sie die gewünschte Personenanzahl aus.'];
+$GLOBALS['TL_LANG']['tl_table_slots']['title']     = ['Titel', 'Bitte geben Sie den Anzeigenamen für das Zeitfenster an.'];
+$GLOBALS['TL_LANG']['tl_table_slots']['name']      = ['Name', 'Bitte geben Sie einen Feldnamen für das Zeitfenster an.'];
+$GLOBALS['TL_LANG']['tl_table_slots']['fromTime']  = ['Von', 'Bitte geben Sie die Startzeit des Zeitfensters an.'];
+$GLOBALS['TL_LANG']['tl_table_slots']['toTime']    = ['Bis', 'Bitte geben Sie die Endzeit des Zeitfensters an.'];
 $GLOBALS['TL_LANG']['tl_table_slots']['published'] = ['Zeitfenster veröffentlichen', 'Bestimmen Sie, ob das Zeitfenster aktiv sein soll.'];
 
 /**

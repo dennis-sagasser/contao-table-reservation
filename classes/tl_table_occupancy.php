@@ -47,6 +47,18 @@ class tl_table_occupancy extends \Backend
     }
 
     /**
+     * Returns array of time slot titles.
+     *
+     * @return array
+     */
+    public function getTimeSlotTitles()
+    {
+        return $this->Database->prepare("
+                SELECT title FROM tl_table_slots WHERE published='1'
+                ")->execute()->fetchEach('title');
+    }
+
+    /**
      * Returns array of time slot names.
      *
      * @return array
@@ -67,7 +79,6 @@ class tl_table_occupancy extends \Backend
      */
     public function generateCalendarWidget(\DataContainer $dc)
     {
-
         $intYear        = \Input::get('intYear');
         $intCurrentYear = isset($intYear) ?
             \Input::get('intYear') :
@@ -87,9 +98,9 @@ class tl_table_occupancy extends \Backend
         $strDayTimesRow = '';
 
         if (!empty($this->objModuleModel->table_showTimeSlots)) {
-            foreach ($this->getTimeSlotNames() as $strSlotName) {
-                $strDayTimesRow .= '<div style="height: 18px;display:table;vertical-align: middle">';
-                $strDayTimesRow .= $strSlotName;
+            foreach ($this->getTimeSlotTitles() as $strSlotTitle) {
+                $strDayTimesRow .= '<div style="height:18px;display:table;vertical-align:middle;white-space:nowrap">';
+                $strDayTimesRow .= $strSlotTitle;
                 $strDayTimesRow .= '</div>';
             }
 
@@ -155,7 +166,7 @@ class tl_table_occupancy extends \Backend
 
             $strTimeSlots = '';
 
-            if (!empty($this->objModuleModel->table_showTimeSlots)) {
+            if (!empty($this->objModuleModel->table_showTimeSlots && !empty($this->getTimeSlotNames()))) {
                 $objCounts = $this->Database->prepare("   
                 SELECT  " . implode(',', $this->getTimeSlotNames()) . "
                 FROM    tl_table_occupancy 
@@ -295,21 +306,21 @@ class tl_table_occupancy extends \Backend
 
 
             foreach ($this->getTimeSlotNames() as $strSlotName) {
-
-                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['label']     = [
-                    sprintf($GLOBALS['TL_LANG']['tl_table_occupancy']['countTimeSlot'][0], $strSlotName),
-                    sprintf($GLOBALS['TL_LANG']['tl_table_occupancy']['countTimeSlot'][1], $strSlotName)
-                ];
-                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['default']   = 0;
-                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['inputType'] = 'text';
-                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['search']    = true;
-                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['sorting']   = true;
-                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['filter']    = true;
-                $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['eval']      = [
-                    'rgxp'     => 'digit',
-                    'tl_class' => 'w50'
-                ];
-
+                foreach ($this->getTimeSlotTitles() as $strSlotTitle) {
+                    $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['label']     = [
+                        sprintf($GLOBALS['TL_LANG']['tl_table_occupancy']['countTimeSlot'][0], $strSlotTitle),
+                        sprintf($GLOBALS['TL_LANG']['tl_table_occupancy']['countTimeSlot'][1], $strSlotTitle)
+                    ];
+                    $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['default']   = 0;
+                    $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['inputType'] = 'text';
+                    $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['search']    = true;
+                    $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['sorting']   = true;
+                    $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['filter']    = true;
+                    $GLOBALS['TL_DCA']['tl_table_occupancy']['fields'][$strSlotName]['eval']      = [
+                        'rgxp'     => 'digit',
+                        'tl_class' => 'w50'
+                    ];
+                }
             }
 
             $GLOBALS['TL_DCA']['tl_table_occupancy']['subpalettes']['showPeriodOptions'] = str_replace(
@@ -380,23 +391,31 @@ class tl_table_occupancy extends \Backend
         $strBuffer = '';
 
         if (!empty($this->objModuleModel->table_showTimeSlots)) {
+            if (empty($this->getTimeSlotTitles())) {
+                return sprintf(
+                    '<span style="color:#cc3333;">%s</span>',
+                    $GLOBALS['TL_LANG']['tl_table_occupancy']['noTimeSlot'][0]
+                );
+            }
             $strBuffer .= '<div>';
             $intCount  = 0;
 
-            foreach ($this->getTimeSlotNames() as $strSlotName) {
-                $strBuffer .= '<span style="color:#b3b3b3;">';
-                $strBuffer .= sprintf($GLOBALS['TL_LANG']['tl_table_occupancy']['countTimeSlot'][0], $strSlotName);
-                $strBuffer .= ': </span>[';
-                $strBuffer .= (!empty($arrRow[$strSlotName]) ?
-                        $arrRow[$strSlotName] :
-                        '<span style="color:#cc3333;">0</span>') . ']';
-                $intCount++;
-                $strBuffer .= ($intCount === count($this->getTimeSlotNames())) ? '' : ' <b>|</b> ';
+            foreach ($this->getTimeSlotTitles() as $strSlotTitle) {
+                foreach ($this->getTimeSlotNames() as $strSlotName) {
+                    $strBuffer .= '<span style="color:#b3b3b3;">';
+                    $strBuffer .= sprintf($GLOBALS['TL_LANG']['tl_table_occupancy']['countTimeSlot'][0], $strSlotTitle);
+                    $strBuffer .= ': </span>[';
+                    $strBuffer .= (!empty($arrRow[$strSlotName]) ?
+                            $arrRow[$strSlotName] :
+                            '<span style="color:#cc3333;">0</span>') . ']';
+                    $intCount++;
+                    $strBuffer .= ($intCount === count($this->getTimeSlotNames())) ? '' : ' <b>|</b> ';
 
+                }
+                $strBuffer .= '</div>';
+
+                return $strBuffer;
             }
-            $strBuffer .= '</div>';
-
-            return $strBuffer;
         }
 
         $strBuffer .= '<div>';
