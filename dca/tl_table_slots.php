@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_table_slots'] = [
             'fields'      => ['name ASC'],
         ],
         'label'      => [
-            'fields'      => ['id', 'name', 'fromTime', 'toTime'],
+            'fields'      => ['id', 'title', 'name', 'fromTime', 'toTime'],
             'showColumns' => true,
         ],
         'operations' => [
@@ -86,7 +86,7 @@ $GLOBALS['TL_DCA']['tl_table_slots'] = [
     ],
     // Palettes
     'palettes' => [
-        'default' => 'name,fromTime,toTime,published'
+        'default' => 'title,name,fromTime,toTime,published'
     ],
     // Fields
     'fields'   => [
@@ -98,6 +98,22 @@ $GLOBALS['TL_DCA']['tl_table_slots'] = [
             'inputType' => 'text',
             'sql'       => "int(10) unsigned NOT NULL",
         ],
+        'title'     => [
+            'label'     => &$GLOBALS['TL_LANG']['tl_table_slots']['title'],
+            'sql'       => "varchar(64) NOT NULL default ''",
+            'flag'      => 1,
+            'search'    => true,
+            'sorting'   => true,
+            'filter'    => true,
+            'inputType' => 'text',
+            'eval'      => [
+                'minlength' => 5,
+                'maxlength' => 64,
+                'rgxp'      => 'extnd',
+                'mandatory' => true,
+                'tl_class'  => 'w50',
+            ],
+        ],
         'name'      => [
             'label'         => &$GLOBALS['TL_LANG']['tl_table_slots']['name'],
             'sql'           => "varchar(16) NOT NULL default ''",
@@ -108,7 +124,7 @@ $GLOBALS['TL_DCA']['tl_table_slots'] = [
             'inputType'     => 'text',
             'eval'          => [
                 'minlength'         => 5,
-                'maxlength'         => 16,
+                'maxlength'         => 64,
                 'spaceToUnderscore' => true,
                 'rgxp'              => 'fieldname',
                 'mandatory'         => true,
@@ -117,7 +133,6 @@ $GLOBALS['TL_DCA']['tl_table_slots'] = [
             ],
             'load_callback' => [['tl_table_slots', 'cacheTableName']],
             'save_callback' => [['tl_table_slots', 'prepareSqlColumnName']],
-
         ],
         'fromTime'  => [
             'label'         => &$GLOBALS['TL_LANG']['tl_table_slots']['fromTime'],
@@ -125,7 +140,6 @@ $GLOBALS['TL_DCA']['tl_table_slots'] = [
             'default'       => mktime(0, 0, 0),
             'search'        => true,
             'sorting'       => true,
-            'filter'        => true,
             'flag'          => 6,
             'inputType'     => 'text',
             'eval'          => [
@@ -144,7 +158,6 @@ $GLOBALS['TL_DCA']['tl_table_slots'] = [
             'default'       => mktime(23, 59, 59),
             'search'        => true,
             'sorting'       => true,
-            'filter'        => true,
             'flag'          => 6,
             'inputType'     => 'text',
             'eval'          => [

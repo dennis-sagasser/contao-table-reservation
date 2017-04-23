@@ -41,6 +41,7 @@ $GLOBALS['TL_LANG']['tl_table_occupancy']['countMorning']      = ['Sitzplätze M
 $GLOBALS['TL_LANG']['tl_table_occupancy']['countNoon']         = ['Sitzplätze Mittag', 'Die Anzahl der verfügbaren Sitplätze zu Mittag.'];
 $GLOBALS['TL_LANG']['tl_table_occupancy']['countEvening']      = ['Sitzplätze Abend', 'Die Anzahl der verfügbaren Sitplätze am Abend.'];
 $GLOBALS['TL_LANG']['tl_table_occupancy']['countTimeSlot']     = ['Sitzplätze %s', 'Die Anzahl der verfügbaren Sitplätze im Zeitfenster %s.'];
+$GLOBALS['TL_LANG']['tl_table_occupancy']['noTimeSlot']        = ['Kein Zeitfenster aktiv', ''];
 $GLOBALS['TL_LANG']['tl_table_occupancy']['year']              = ['Jahr', ''];
 $GLOBALS['TL_LANG']['tl_table_occupancy']['morningAlt']        = 'Vormittag';
 $GLOBALS['TL_LANG']['tl_table_occupancy']['morningTitle']      = 'Tageszeit Vormittag';
