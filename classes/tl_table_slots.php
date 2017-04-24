@@ -94,13 +94,15 @@ class tl_table_slots extends \Backend
      *
      * @param \DataContainer $dc Data Container object
      */
-    public function deleteTimeSlot(\DataContainer $dc)
+    public function deleteTimeSlot(\DataContainer $dc, $intUndoId)
     {
         if ($this->Input->get('act') == 'delete') {
-            $objAlter = $this->Database->prepare("
+            $objAlter  = $this->Database->prepare("
                 ALTER TABLE tl_table_occupancy
                 DROP COLUMN `" . $dc->activeRecord->name . "`
                 ")->execute();
+            $objDelete = $this->Database->prepare("DELETE FROM tl_undo WHERE id=?")
+                ->execute(intval($intUndoId));
         }
     }
 
