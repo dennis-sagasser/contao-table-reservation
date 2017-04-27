@@ -56,7 +56,7 @@ class HooksFrontend extends \Frontend
                         \Input::post('lastname');
                     return $strSalutation;
                 }
-                if (empty(\Input::post('salutation'))) {
+                if (!(\Input::post('salutation'))) {
                     $strSalutation = $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSirOrMadam'];
                     return $strSalutation;
                 }
