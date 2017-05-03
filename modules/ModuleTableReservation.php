@@ -502,7 +502,7 @@ class ModuleTableReservation extends \Module
             $objArrivalDate       = new \Date(strtotime($strPostArrival));
             $intArrivalDateTime   = $objArrivalDate->tstamp;
             $intDepartureDateTime = strtotime($strDepartureTime);
-            $strSlotColumns       = implode(',', $objSlotNames->getTimeSlotNames());
+            $strSlotColumns       = ',' . implode(',', $objSlotNames->getTimeSlotNames());
 
         } else {
             $intArrivalDateTime = $objArrivalDate->tstamp;
