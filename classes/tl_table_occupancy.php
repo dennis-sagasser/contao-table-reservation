@@ -16,7 +16,18 @@
  * @link        https://contao.org
  */
 
-namespace Contao;
+namespace ContaoTableReservation;
+
+use Contao\Backend;
+use Contao\ModuleModel;
+use Contao\DataContainer;
+use Contao\Date;
+use Contao\Environment;
+use Contao\FormTextField;
+use Contao\Input;
+use Contao\Image;
+use Contao\Database;
+use Contao\Controller;
 
 /**
  * Class tl_table_occupancy
@@ -28,7 +39,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_table_occupancy extends \Backend
+class tl_table_occupancy extends Backend
 {
     /**
      * @var object $objModuleModel Module model object
@@ -43,7 +54,7 @@ class tl_table_occupancy extends \Backend
     {
         parent::__construct();
 
-        $this->objModuleModel = \ModuleModel::findByType('table_reservation');
+        $this->objModuleModel = ModuleModel::findByType('table_reservation');
     }
 
     /**
@@ -53,9 +64,9 @@ class tl_table_occupancy extends \Backend
      */
     public function getTimeSlotTitles()
     {
-        return $this->Database->prepare("
-                SELECT title FROM tl_table_slots WHERE published='1'
-                ")->execute()->fetchEach('title');
+        return Database::getInstance()->prepare("
+            SELECT title FROM tl_table_slots WHERE published='1'
+            ")->execute()->fetchEach('title');
     }
 
     /**
@@ -65,31 +76,31 @@ class tl_table_occupancy extends \Backend
      */
     public function getTimeSlotNames()
     {
-        return $this->Database->prepare("
-                SELECT name FROM tl_table_slots WHERE published='1'
-                ")->execute()->fetchEach('name');
+        return Database::getInstance()->prepare("
+            SELECT name FROM tl_table_slots WHERE published='1'
+            ")->execute()->fetchEach('name');
     }
 
     /**
      * Generates a year calendar widget to edit number of seats for every day in year.
      *
-     * @param \DataContainer $dc Data container object
+     * @param DataContainer $dc Data container object
      *
      * @return string
      */
-    public function generateCalendarWidget(\DataContainer $dc)
+    public function generateCalendarWidget(DataContainer $dc)
     {
-        $intYear        = \Input::get('intYear');
+        $intYear        = Input::get('intYear');
         $intCurrentYear = isset($intYear) ?
-            \Input::get('intYear') :
-            (int)\Date::parse('Y');
+            Input::get('intYear') :
+            (int)Date::parse('Y');
 
         $strBuffer = '<div><table class="calendarWidget">';
         $strBuffer .= '<caption><h3>';
-        $strBuffer .= '<a href=' . \Environment::get('requestUri') . '&intYear=' . ($intCurrentYear - 1) . '>«</a>';
+        $strBuffer .= '<a href=' . Environment::get('requestUri') . '&intYear=' . ($intCurrentYear - 1) . '>«</a>';
         $strBuffer .= '&nbsp;' . $GLOBALS['TL_LANG']['tl_table_occupancy']['year'][0];
         $strBuffer .= '&nbsp;' . $intCurrentYear . '&nbsp;';
-        $strBuffer .= '<a href=' . \Environment::get('uri') . '&intYear=' . ($intCurrentYear + 1) . '>»</a>';
+        $strBuffer .= '<a href=' . Environment::get('uri') . '&intYear=' . ($intCurrentYear + 1) . '>»</a>';
         $strBuffer .= '</h3></caption>';
 
         $intCurrentMonth = 0;
@@ -117,9 +128,9 @@ class tl_table_occupancy extends \Backend
             $strNoonAltAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['noonTitle'] . '"';
             $strEveningAttr = 'title="' . $GLOBALS['TL_LANG']['tl_table_occupancy']['eveningTitle'] . '"';
 
-            $strDayTimesRow .= \Image::getHtml($strMorningSrc, $strMorningAlt, $strMorningAttr);
-            $strDayTimesRow .= \Image::getHtml($strNoonSrc, $strNoonAlt, $strNoonAltAttr);
-            $strDayTimesRow .= \Image::getHtml($strEveningSrc, $strEveningAlt, $strEveningAttr);
+            $strDayTimesRow .= Image::getHtml($strMorningSrc, $strMorningAlt, $strMorningAttr);
+            $strDayTimesRow .= Image::getHtml($strNoonSrc, $strNoonAlt, $strNoonAltAttr);
+            $strDayTimesRow .= Image::getHtml($strEveningSrc, $strEveningAlt, $strEveningAttr);
 
         }
 
@@ -150,6 +161,7 @@ class tl_table_occupancy extends \Backend
      */
     function datesMonth($intMonth, $intYear, $intParentId)
     {
+        $strBuffer           = '';
         $intCountDaysInMonth = cal_days_in_month(CAL_GREGORIAN, $intMonth, $intYear);
         $strCurrentMonth     = str_pad($intMonth, 2, "0", STR_PAD_LEFT);
 
@@ -158,16 +170,20 @@ class tl_table_occupancy extends \Backend
             $strCurrentDay  = str_pad($i, 2, "0", STR_PAD_LEFT);
             $strCurrentDate = $intYear . '-' . $strCurrentMonth . '-' . $strCurrentDay;
 
-            $objWidgetDate           = new \FormTextField();
-            $objWidgetDate->value    = $strCurrentDate;
-            $objWidgetDate->name     = $strCurrentDate . '[date]';
-            $objWidgetDate->disabled = $strCurrentDate === date('Y-m-d') ? '' : 'disabled';
-            $objWidgetDate->style    = 'display:none';
+            $objWidgetDate = new FormTextField(
+                [
+                    'value'    => $strCurrentDate,
+                    'name'     => $strCurrentDate . '[date]',
+                    'disabled' => $strCurrentDate === date('Y-m-d') ? '' : 'disabled',
+                    'style'    => 'display:none'
+                ]
+            );
 
-            $strTimeSlots = '';
+            $strTimeSlots      = '';
+            $strDayTimeWidgets = '';
 
             if (!empty($this->objModuleModel->table_showTimeSlots && !empty($this->getTimeSlotNames()))) {
-                $objCounts = $this->Database->prepare("   
+                $objCounts = Database::getInstance()->prepare("   
                 SELECT  " . implode(',', $this->getTimeSlotNames()) . "
                 FROM    tl_table_occupancy 
                 WHERE   date=? 
@@ -176,46 +192,59 @@ class tl_table_occupancy extends \Backend
 
                 foreach ($this->getTimeSlotNames() as $slotName) {
 
-                    $objWidgetSlot            = new \FormTextField();
-                    $objWidgetSlot->id        = 'count' . $slotName . '_' . $strCurrentDate;
-                    $objWidgetSlot->class     = empty($objCounts->countSlot) ? 'emptyInput' : 'filledInput';
-                    $objWidgetSlot->value     = $objCounts->$slotName;
-                    $objWidgetSlot->name      = $strCurrentDate . '[' . $slotName . ']';
-                    $objWidgetSlot->maxlength = 2;
-                    $objWidgetSlot->disabled  = ($strCurrentDate === date('Y-m-d')) ? false : true;
-                    $strTimeSlots             .= $objWidgetSlot->generate();
+                    $objWidgetSlot = new FormTextField(
+                        [
+                            'id'        => 'count' . $slotName . '_' . $strCurrentDate,
+                            'class'     => empty($objCounts->countSlot) ? 'emptyInput' : 'filledInput',
+                            'value'     => $objCounts->$slotName,
+                            'name'      => $strCurrentDate . '[' . $slotName . ']',
+                            'maxlength' => 2,
+                            'disabled'  => ($strCurrentDate === date('Y-m-d')) ? false : true,
+                        ]
+                    );
+                    $strTimeSlots  .= $objWidgetSlot->generate();
                 }
             } else {
-                $objCounts = $this->Database->prepare("   
-                SELECT  countMorning, countNoon, countEvening
-                FROM    tl_table_occupancy 
-                WHERE   date=? 
-                AND     pid=?")
+                $objCounts = Database::getInstance()->prepare("   
+                    SELECT  countMorning, countNoon, countEvening
+                    FROM    tl_table_occupancy 
+                    WHERE   date=? 
+                    AND     pid=?")
                     ->execute($strCurrentDate, $intParentId);
 
-                $objWidgetMorning            = new \FormTextField();
-                $objWidgetMorning->id        = 'countMorning_' . $strCurrentDate;
-                $objWidgetMorning->class     = empty($objCounts->countMorning) ? 'emptyInput' : 'filledInput';
-                $objWidgetMorning->value     = $objCounts->countMorning;
-                $objWidgetMorning->name      = $strCurrentDate . '[countMorning]';
-                $objWidgetMorning->maxlength = 2;
-                $objWidgetMorning->disabled  = ($strCurrentDate === date('Y-m-d')) ? false : true;
-
-                $objWidgetNoon            = new \FormTextField();
-                $objWidgetNoon->id        = 'countNoon_' . $strCurrentDate;
-                $objWidgetNoon->class     = empty($objCounts->countNoon) ? 'emptyInput' : 'filledInput';
-                $objWidgetNoon->value     = $objCounts->countNoon;
-                $objWidgetNoon->name      = $strCurrentDate . '[countNoon]';
-                $objWidgetNoon->maxlength = 2;
-                $objWidgetNoon->disabled  = ($strCurrentDate === date('Y-m-d')) ? false : true;
-
-                $objWidgetEvening            = new \FormTextField();
-                $objWidgetEvening->id        = 'countEvening_' . $strCurrentDate;
-                $objWidgetEvening->class     = empty($objCounts->countEvening) ? 'emptyInput' : 'filledInput';
-                $objWidgetEvening->value     = $objCounts->countEvening;
-                $objWidgetEvening->name      = $strCurrentDate . '[countEvening]';
-                $objWidgetEvening->maxlength = 2;
-                $objWidgetEvening->disabled  = ($strCurrentDate === date('Y-m-d')) ? false : true;
+                $objWidgetMorning  = new FormTextField(
+                    [
+                        'id'        => 'countMorning_' . $strCurrentDate,
+                        'class'     => empty($objCounts->countMorning) ? 'emptyInput' : 'filledInput',
+                        'value'     => $objCounts->countMorning,
+                        'name'      => $strCurrentDate . '[countMorning]',
+                        'maxlength' => 2,
+                        'disabled'  => ($strCurrentDate === date('Y-m-d')) ? false : true,
+                    ]
+                );
+                $objWidgetNoon     = new FormTextField(
+                    [
+                        'id'        => 'countNoon_' . $strCurrentDate,
+                        'class'     => empty($objCounts->countNoon) ? 'emptyInput' : 'filledInput',
+                        'value'     => $objCounts->countNoon,
+                        'name'      => $strCurrentDate . '[countNoon]',
+                        'maxlength' => 2,
+                        'disabled'  => ($strCurrentDate === date('Y-m-d')) ? false : true,
+                    ]
+                );
+                $objWidgetEvening  = new FormTextField(
+                    [
+                        'id'        => 'countEvening_' . $strCurrentDate,
+                        'class'     => empty($objCounts->countEvening) ? 'emptyInput' : 'filledInput',
+                        'value'     => $objCounts->countEvening,
+                        'name'      => $strCurrentDate . '[countEvening]',
+                        'maxlength' => 2,
+                        'disabled'  => ($strCurrentDate === date('Y-m-d')) ? false : true,
+                    ]
+                );
+                $strDayTimeWidgets = $objWidgetMorning->generate() .
+                    $objWidgetNoon->generate() .
+                    $objWidgetEvening->generate();
             }
 
             $intMktime       = mktime(0, 0, 0, $intMonth, $i, $intYear);
@@ -231,9 +260,9 @@ class tl_table_occupancy extends \Backend
             $strBuffer .= $objWidgetDate->generate();
             $strBuffer .= !empty($this->objModuleModel->table_showTimeSlots) ?
                 $strTimeSlots :
-                $objWidgetMorning->generate() . $objWidgetNoon->generate() . $objWidgetEvening->generate();
+                $strDayTimeWidgets;
 
-            if (\Input::post('FORM_SUBMIT') == 'tl_table_occupancy') {
+            if (Input::post('FORM_SUBMIT') == 'tl_table_occupancy') {
                 $this->saveData($intMktime, $strCurrentDate, $objCounts, $intParentId);
             }
         }
@@ -255,29 +284,29 @@ class tl_table_occupancy extends \Backend
         $arrPostDate['pid']    = $intParentId;
         $arrPostDate['tstamp'] = time();
 
-        if (\Input::post('showPeriodOptions') &&
-            $intMktime >= strtotime(\Input::post('startDate')) &&
-            $intMktime <= strtotime(\Input::post('endDate'))
+        if (Input::post('showPeriodOptions') &&
+            $intMktime >= strtotime(Input::post('startDate')) &&
+            $intMktime <= strtotime(Input::post('endDate'))
         ) {
             $arrPostDate['date'] = $strCurrentDate;
             if (!empty($this->objModuleModel->table_showTimeSlots)) {
                 foreach ($this->getTimeSlotNames() as $strSlotName) {
-                    $arrPostDate[$strSlotName] = \Input::post($strSlotName);
+                    $arrPostDate[$strSlotName] = Input::post($strSlotName);
                 }
             } else {
-                $arrPostDate['countMorning'] = \Input::post('countMorning');
-                $arrPostDate['countNoon']    = \Input::post('countNoon');
-                $arrPostDate['countEvening'] = \Input::post('countEvening');
+                $arrPostDate['countMorning'] = Input::post('countMorning');
+                $arrPostDate['countNoon']    = Input::post('countNoon');
+                $arrPostDate['countEvening'] = Input::post('countEvening');
             }
         } else {
-            $mixedPostDate = \Input::post($strCurrentDate);
+            $mixedPostDate = Input::post($strCurrentDate);
             if (is_array($mixedPostDate)) {
                 $arrPostDate = array_merge($mixedPostDate, $arrPostDate);
             }
         }
 
         if ($arrPostDate['date'] !== null && $objCounts->numRows > 0) {
-            $objUpdate = $this->Database->prepare("
+            Database::getInstance()->prepare("
                 UPDATE tl_table_occupancy
                 %s 
                 WHERE date=? 
@@ -287,7 +316,7 @@ class tl_table_occupancy extends \Backend
         }
 
         if ($arrPostDate['date'] !== null && $objCounts->numRows < 1) {
-            $objInsert = $this->Database->prepare("INSERT INTO tl_table_occupancy %s")
+            Database::getInstance()->prepare("INSERT INTO tl_table_occupancy %s")
                 ->set($arrPostDate)
                 ->execute();
         }
@@ -337,25 +366,29 @@ class tl_table_occupancy extends \Backend
      */
     public function checkDate()
     {
-        if (\Input::get('key') === 'reset') {
-            $intId       = \Input::get('id');
-            $objDbResult = \Database::getInstance()->prepare("
+        if (Input::get('key') === 'reset') {
+            $intId = Input::get('id');
+            Database::getInstance()->prepare("
             DELETE FROM tl_table_occupancy 
             WHERE       pid=?")
                 ->execute($intId);
         }
 
         $strCurrentDate = date('Y-m-d');
-        $intParentId    = \Input::get('pid');
-        $objDbResult    = \Database::getInstance()->prepare("
+        $intParentId    = Input::get('pid');
+        $objDbResult    = Database::getInstance()->prepare("
             SELECT  id 
             FROM    tl_table_occupancy 
             WHERE   date=? 
             AND     pid=?")
             ->execute($strCurrentDate, $intParentId);
 
-        if ($objDbResult->numRows && (\Input::get('act') === 'create')) {
-            $this->redirect($this->addToUrl('&table=tl_table_occupancy&act=edit&id=' . $objDbResult->id));
+        if ($objDbResult->numRows && (Input::get('act') === 'create')) {
+            Controller::redirect(
+                Controller::addToUrl(
+                    '&table=tl_table_occupancy&act=edit&id=' . $objDbResult->id
+                )
+            );
         }
     }
 

@@ -16,7 +16,16 @@
  * @link        https://contao.org
  */
 
-namespace Contao;
+namespace ContaoTableReservation;
+
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Input;
+use Contao\ModuleModel;
+use Contao\Message;
+use Contao\Database;
+use Contao\ModuleLoader;
+use Contao\System;
 
 /**
  * Class tl_module_table_reservation
@@ -30,7 +39,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_module_table_reservation extends \Backend
+class tl_module_table_reservation extends Backend
 {
     /**
      * Get notification choices
@@ -41,7 +50,7 @@ class tl_module_table_reservation extends \Backend
     {
 
         $arrChoices       = [];
-        $objNotifications = \Database::getInstance()->execute("SELECT id,title FROM tl_nc_notification WHERE type='core_form' ORDER BY title");
+        $objNotifications = Database::getInstance()->execute("SELECT id,title FROM tl_nc_notification WHERE type='core_form' ORDER BY title");
 
         while ($objNotifications->next()) {
             $arrChoices[$objNotifications->id] = $objNotifications->title;
@@ -57,20 +66,20 @@ class tl_module_table_reservation extends \Backend
      */
     public function getTableCategories()
     {
-        $this->import('BackendUser', 'User');
+        $objBackendUser = BackendUser::getInstance();
 
-        if (!$this->User->isAdmin) {
+        if (!$objBackendUser->isAdmin) {
             return [];
         }
 
         $arrTableCategories = [];
-        $objTableCategories = $this->Database->execute("
+        $objTableCategories = Database::getInstance()->execute("
             SELECT id, tablecategory 
             FROM tl_table_category 
             ORDER BY tablecategory");
 
         while ($objTableCategories->next()) {
-            if ($this->User->isAdmin) {
+            if ($objBackendUser->isAdmin) {
                 $arrTableCategories[$objTableCategories->id] = $objTableCategories->tablecategory;
             }
         }
@@ -86,18 +95,18 @@ class tl_module_table_reservation extends \Backend
      */
     public function showHints($dc)
     {
-        if (!in_array('notification_center', $this->Config->getActiveModules())) {
+        if (!in_array('notification_center', ModuleLoader::getActive())) {
             $strMessage = &$GLOBALS['TL_LANG']['tl_module']['installInfo'];
 
             $GLOBALS['TL_DCA']['tl_module']['fields']['table_showNotification']['eval']['disabled'] = true;
             $GLOBALS['TL_DCA']['tl_module']['fields']['table_showNotification']['label']            = $strMessage;
         }
 
-        if ($_POST || \Input::get('act') != 'edit') {
+        if ($_POST || Input::get('act') != 'edit') {
             return;
         }
 
-        $objModule = \ModuleModel::findByPk($dc->id);
+        $objModule = ModuleModel::findByPk($dc->id);
         if ($objModule === null) {
             echo 'null' . $dc->id;
             return;
@@ -105,7 +114,7 @@ class tl_module_table_reservation extends \Backend
 
         switch ($objModule->type) {
             case 'table_reservation':
-                \Message::addInfo($GLOBALS['TL_LANG']['tl_module']['info']);
+                Message::addInfo($GLOBALS['TL_LANG']['tl_module']['info']);
                 break;
         }
     }
@@ -136,7 +145,7 @@ class tl_module_table_reservation extends \Backend
      */
     public function getDayTimes()
     {
-        $this->loadLanguageFile('tl_table_occupancy');
+        System::loadLanguageFile('tl_table_occupancy');
 
         $arrDayTimes = [];
 

@@ -16,7 +16,15 @@
  * @link        https://contao.org
  */
 
-namespace Contao;
+namespace ContaoTableReservation;
+
+use Contao\Backend;
+use Contao\Input;
+use Contao\Session;
+use Contao\SelectMenu;
+use Contao\Date;
+use Contao\Database;
+use Contao\Config;
 
 /**
  * Class tl_table_list
@@ -30,7 +38,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_table_list extends \Backend
+class tl_table_list extends Backend
 {
 
     /**
@@ -49,35 +57,37 @@ class tl_table_list extends \Backend
      */
     public function generateFilter()
     {
-        if (\Input::get('id') > 0) {
+        if (Input::get('id') > 0) {
             return '';
         }
 
-        $objSession     = \Session::getInstance()->getData();
+        $objSession     = Session::getInstance()->getData();
         $strFilterValue = isset($objSession['filter']['tl_table_list']['table_filter']) ?
             $objSession['filter']['tl_table_list']['table_filter'] :
             'future';
 
-        $objWidgetFilter           = new \SelectMenu();
-        $objWidgetFilter->id       = 'table_filter';
-        $objWidgetFilter->name     = 'table_filter';
-        $objWidgetFilter->value    = $strFilterValue;
-        $objWidgetFilter->options  = [
-            ['value' => 'table_filter', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['timeSlot']],
-            ['value' => 'table_filter', 'label' => '---'],
-            ['value' => 'all', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['all']],
-            ['value' => 'future', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['future']],
-            ['value' => 'past', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['past']],
-            ['value' => 'today', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['today']],
-            ['value' => 'thisWeek', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['thisWeek']],
-            ['value' => 'thisMonth', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['thisMonth']],
-            ['value' => 'thisYear', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['thisYear']],
-        ];
-        $objWidgetFilter->onchange = "this.form.submit()";
+        $objWidgetFilter = new SelectMenu(
+            [
+                'id'       => 'table_filter',
+                'name'     => 'table_filter',
+                'value'    => $strFilterValue,
+                'options'  => [
+                    ['value' => 'table_filter', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['timeSlot']],
+                    ['value' => 'table_filter', 'label' => '---'],
+                    ['value' => 'all', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['all']],
+                    ['value' => 'future', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['future']],
+                    ['value' => 'past', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['past']],
+                    ['value' => 'today', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['today']],
+                    ['value' => 'thisWeek', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['thisWeek']],
+                    ['value' => 'thisMonth', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['thisMonth']],
+                    ['value' => 'thisYear', 'label' => $GLOBALS['TL_LANG']['tl_table_list']['thisYear']],
+                ],
+                'onchange' => "this.form.submit()"
+            ]
+        );
 
         $strWidgetCheckbox = '';
         $strWidgetCheckbox .= $objWidgetFilter->generate();
-        $strWidgetCheckbox .= $objWidgetFilter->generateLabel();
 
         $strBuffer = '<div class="tl_filter tl_subpanel" style="padding-left:4px">' . $strWidgetCheckbox;
 
@@ -91,7 +101,7 @@ class tl_table_list extends \Backend
      */
     public function applyFilter()
     {
-        $objSession = \Session::getInstance()->getData();
+        $objSession = Session::getInstance()->getData();
 
         // Store filter values in the session
         foreach ($_POST as $key => $value) {
@@ -99,23 +109,24 @@ class tl_table_list extends \Backend
                 continue;
             }
             log_message($key, 'debug.log');
-            log_message(\Input::post($key), 'debug.log');
+            log_message(Input::post($key), 'debug.log');
             // Reset the filter
-            if ($key == \Input::post($key)) {
+            if ($key == Input::post($key)) {
                 $objSession['filter']['tl_table_list'][$key] = 'future';
             } // Apply the filter
             else {
-                $objSession['filter']['tl_table_list'][$key] = \Input::post($key);
+                $objSession['filter']['tl_table_list'][$key] = Input::post($key);
             }
         }
 
-        \Session::getInstance()->setData($objSession);
+        Session::getInstance()->setData($objSession);
 
-        if (\Input::get('id') > 0 || !isset($objSession['filter']['tl_table_list'])) {
+        if (Input::get('id') > 0 || !isset($objSession['filter']['tl_table_list'])) {
             return;
         }
 
-        $objDate = new \Date(time());
+        $objDate         = new Date(time());
+        $arrReservations = [];
 
         // Filter reservations
         foreach ($objSession['filter']['tl_table_list'] as $key => $value) {
@@ -125,49 +136,49 @@ class tl_table_list extends \Backend
 
             switch ($value) {
                 case 'future':
-                    $arrReservations = \Database::getInstance()->prepare("
+                    $arrReservations = Database::getInstance()->prepare("
                         SELECT id 
                         FROM tl_table_list 
                         WHERE arrival > ?")
                         ->execute($objDate->tstamp)->fetchEach('id');
                     break;
                 case 'today':
-                    $arrReservations = \Database::getInstance()->prepare("
+                    $arrReservations = Database::getInstance()->prepare("
                         SELECT id 
                         FROM tl_table_list 
                         WHERE arrival BETWEEN ? AND ?")
                         ->execute($objDate->dayBegin, $objDate->dayEnd)->fetchEach('id');
                     break;
                 case 'thisWeek':
-                    $arrReservations = \Database::getInstance()->prepare("
+                    $arrReservations = Database::getInstance()->prepare("
                         SELECT id 
                         FROM tl_table_list 
                         WHERE arrival BETWEEN ? AND ?")
                         ->execute($objDate->getWeekBegin(1), $objDate->getWeekEnd(0))->fetchEach('id');
                     break;
                 case 'thisMonth':
-                    $arrReservations = \Database::getInstance()->prepare("
+                    $arrReservations = Database::getInstance()->prepare("
                         SELECT id 
                         FROM tl_table_list 
                         WHERE arrival BETWEEN ? AND ?")
                         ->execute($objDate->monthBegin, $objDate->monthEnd)->fetchEach('id');
                     break;
                 case 'thisYear':
-                    $arrReservations = \Database::getInstance()->prepare("
+                    $arrReservations = Database::getInstance()->prepare("
                         SELECT id 
                         FROM tl_table_list 
                         WHERE arrival BETWEEN ? AND ?")
                         ->execute($objDate->yearBegin, $objDate->yearEnd)->fetchEach('id');
                     break;
                 case 'past':
-                    $arrReservations = \Database::getInstance()->prepare("
+                    $arrReservations = Database::getInstance()->prepare("
                         SELECT id 
                         FROM tl_table_list 
                         WHERE arrival < ?")
                         ->execute($objDate->tstamp)->fetchEach('id');
                     break;
                 default:
-                    $arrReservations = \Database::getInstance()->prepare("
+                    $arrReservations = Database::getInstance()->prepare("
                         SELECT id 
                         FROM tl_table_list ")
                         ->execute()->fetchEach('id');
@@ -191,9 +202,10 @@ class tl_table_list extends \Backend
     public function listReservations($row)
     {
         $arrCountCategories = unserialize($row['seats']);
+        $array              = [];
 
         foreach ($arrCountCategories as $arrCountCategory) {
-            $objTableCategory = $this->Database->prepare("
+            $objTableCategory = Database::getinstance()->prepare("
                 SELECT DISTINCT tablecategory
                 FROM tl_table_category
                 WHERE id = ?")->execute(intval($arrCountCategory['category']))->row();
@@ -205,7 +217,7 @@ class tl_table_list extends \Backend
         }
 
         $strCountCategory = implode(', ', $array);
-        $objArrivalDate   = new \Date($row['arrival']);
+        $objArrivalDate   = new Date($row['arrival']);
 
         return sprintf(
             '<em>%s</em> <b>|</b> %s: %s <b>|</b> %s %s %s',
@@ -226,12 +238,14 @@ class tl_table_list extends \Backend
      */
     public function getCount()
     {
-        $arrMaxCount = $this->Database->prepare("
+        $arrMaxCount = Database::getinstance()->prepare("
             SELECT maxcount
             FROM tl_table_category 
             WHERE published = '1' 
             AND (? BETWEEN start AND stop OR (start = '' AND stop = '')) ")
             ->execute(time())->fetchAssoc();
+
+        $arrCount = [];
 
         for ($i = 1; $i <= intval($arrMaxCount['maxcount']); $i++) {
             $arrCount[$i] = $i;
@@ -247,13 +261,15 @@ class tl_table_list extends \Backend
      */
     public function getCatergory()
     {
-        $objCategories = $this->Database->prepare("
+        $objCategories = Database::getinstance()->prepare("
             SELECT id AS value, tablecategory AS label
             FROM tl_table_category 
             WHERE published = '1' 
             AND (? BETWEEN start AND stop OR (start = '' AND stop = '')) 
             ORDER BY tablecategory")
             ->execute(time());
+
+        $arrCategories = [];
 
         while ($objCategories->next()) {
             $arrCategories[$objCategories->value] = $objCategories->label;
@@ -268,7 +284,7 @@ class tl_table_list extends \Backend
      */
     public function formatDates()
     {
-        $arrModuleParams = $this->Database->prepare("
+        $arrModuleParams = Database::getinstance()->prepare("
             SELECT table_dateTimeFormat AS datimFormat, table_timeFormat AS timeFormat
             FROM tl_module 
             WHERE type='table_reservation'")
@@ -277,11 +293,11 @@ class tl_table_list extends \Backend
             ->fetchAssoc();
 
         if (!empty($arrModuleParams['datimFormat'])) {
-            \Config::set('datimFormat', $arrModuleParams['datimFormat']);
+            Config::set('datimFormat', $arrModuleParams['datimFormat']);
         }
 
         if (!empty($arrModuleParams['timeFormat'])) {
-            \Config::set('timeFormat', $arrModuleParams['timeFormat']);
+            Config::set('timeFormat', $arrModuleParams['timeFormat']);
         }
     }
 }

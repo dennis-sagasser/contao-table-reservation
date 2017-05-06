@@ -16,7 +16,11 @@
  * @link        https://contao.org
  */
 
-namespace Contao;
+namespace ContaoTableReservation;
+
+use Contao\Frontend;
+use Contao\Session;
+use Contao\Input;
 
 /**
  * Class HooksFrontend
@@ -30,7 +34,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class HooksFrontend extends \Frontend
+class HooksFrontend extends Frontend
 {
     /**
      * Replaces custom insert tags for the confirmation mail to the customer
@@ -46,35 +50,35 @@ class HooksFrontend extends \Frontend
 
         if ($arrSplit[0] == 'reservation') {
             if (isset($arrSplit[1]) && $arrSplit[1] == 'salutation') {
-                if (\Input::post('salutation') === 'male') {
+                if (Input::post('salutation') === 'male') {
                     $strSalutation = $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSir'] . ' ' .
-                        \Input::post('lastname');
+                        Input::post('lastname');
                     return $strSalutation;
                 }
-                if (\Input::post('salutation') === 'female') {
+                if (Input::post('salutation') === 'female') {
                     $strSalutation = $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearMadam'] . ' ' .
-                        \Input::post('lastname');
+                        Input::post('lastname');
                     return $strSalutation;
                 }
-                if (!(\Input::post('salutation'))) {
+                if (!(Input::post('salutation'))) {
                     $strSalutation = $GLOBALS['TL_LANG']['MSC']['table_reservation']['dearSirOrMadam'];
                     return $strSalutation;
                 }
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'firstname') {
-                return \Input::post('firstname') ? \Input::post('firstname') : '-';
+                return Input::post('firstname') ? Input::post('firstname') : '-';
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'lastname') {
-                return \Input::post('lastname') ? \Input::post('lastname') : '-';
+                return Input::post('lastname') ? Input::post('lastname') : '-';
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'email') {
-                return \Input::post('email');
+                return Input::post('email');
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'phone') {
-                return \Input::post('phone') ? \Input::post('phone') : '-';
+                return Input::post('phone') ? Input::post('phone') : '-';
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'remarks') {
-                return \Input::post('remarks') ? \Input::post('remarks') : '-';
+                return Input::post('remarks') ? Input::post('remarks') : '-';
             }
             if (isset($arrSplit[1]) && $arrSplit[1] == 'arrival') {
                 return $objSession->get('arrival');

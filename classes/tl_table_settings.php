@@ -16,7 +16,13 @@
  * @link        https://contao.org
  */
 
-namespace Contao;
+namespace ContaoTableReservation;
+
+use Contao\Backend;
+use Contao\Input;
+use Contao\Controller;
+use Contao\Database;
+use Contao\Environment;
 
 /**
  * Class tl_table_settings
@@ -30,7 +36,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_table_settings extends \Backend
+class tl_table_settings extends Backend
 {
 
     /**
@@ -49,18 +55,20 @@ class tl_table_settings extends \Backend
      */
     public function checkConfig()
     {
-        $objConfig = \Database::getInstance()->prepare("SELECT * FROM tl_table_settings")->execute();
+        $objConfig = Database::getInstance()
+            ->prepare("SELECT * FROM tl_table_settings")
+            ->execute();
 
         if (Input::get('key')) {
             return;
         }
 
-        if (!$objConfig->numRows && !\Input::get('act')) {
-            $this->redirect($this->addToUrl('act=create'));
+        if (!$objConfig->numRows && !Input::get('act')) {
+            Controller::redirect(Controller::addToUrl('act=create'));
         }
 
-        if (!\Input::get('id') && !\Input::get('act')) {
-            $this->redirect($this->addToUrl('act=edit&id=' . $objConfig->id));
+        if (!Input::get('id') && !Input::get('act')) {
+            Controller::redirect(Controller::addToUrl('act=edit&id=' . $objConfig->id));
         }
     }
 
@@ -74,7 +82,7 @@ class tl_table_settings extends \Backend
      */
     public function convertAbsoluteLinks($strContent)
     {
-        return str_replace('src="' . \Environment::get('base'), 'src="', $strContent);
+        return str_replace('src="' . Environment::get('base'), 'src="', $strContent);
     }
 
 
@@ -87,7 +95,7 @@ class tl_table_settings extends \Backend
      */
     public function convertRelativeLinks($strContent)
     {
-        return $this->convertRelativeUrls($strContent);
+        return Controller::convertRelativeUrls($strContent);
     }
 
     /**
@@ -97,6 +105,6 @@ class tl_table_settings extends \Backend
      */
     public function getMailTemplates()
     {
-        return $this->getTemplateGroup('mail_');
+        return Controller::getTemplateGroup('mail_');
     }
 }
