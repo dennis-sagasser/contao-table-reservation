@@ -22,11 +22,11 @@ Features
 + Specify whether the table category is displayed in the frontend module
 + Publish the table category only in a certain period of time
 + Choose between conventional opening hours or time slots for reservation process
-+ Create time slots to customize the annual calendar
++ Create/edit time slots to customize the annual calendar
 + View and edit the table occupancy in an annual calendar
 + Edit occupancy each day or specify a time span
-+ Reservation process with overview display showing table categories and prices
-+ Configure the confirmation mail (optional use Notification Center)
++ Reservation process with overview display showing table categories and number of persons
++ Configure the confirmation mail (optionally use Notification Center)
 + Use additional insert tags to customize the confirmation text
 + Specify subject, HTML or plain text and attachments for the confirmation
 + Optionally send email via SMTP and set sender and/or sender address
