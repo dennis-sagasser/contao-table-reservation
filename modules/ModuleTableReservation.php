@@ -16,7 +16,31 @@
  * @link        https://contao.org
  */
 
-namespace Contao;
+namespace ContaoTableReservation;
+
+use Contao\Module;
+use Contao\Session;
+use Contao\Config;
+use Contao\System;
+use Contao\Input;
+use Contao\FormSelectMenu;
+use Contao\FormSubmit;
+use Contao\FormCheckBox;
+use Contao\FormRadioButton;
+use Contao\FormTextField;
+use Contao\FormTextArea;
+use Contao\FormCaptcha;
+use Contao\StringUtil;
+use Contao\FilesModel;
+use Contao\Validator;
+use Contao\Message;
+use Contao\Database;
+use Contao\Email;
+use Contao\BackendTemplate;
+use Contao\Widget;
+use Contao\Date;
+use Contao\FrontendTemplate;
+use Contao\Controller;
 
 /**
  * Class ModuleTableReservation
@@ -30,8 +54,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-
-class ModuleTableReservation extends \Module
+class ModuleTableReservation extends Module
 {
     /**
      * @var string $strTemplate Template
@@ -39,7 +62,7 @@ class ModuleTableReservation extends \Module
     protected $strTemplate = 'mod_table_reservation_form';
 
     /**
-     * @var \Session $objSession Session object
+     * @var Session $objSession Session object
      */
     protected $objSession = null;
 
@@ -59,10 +82,10 @@ class ModuleTableReservation extends \Module
      */
     protected function compile()
     {
-        $this->objSession           = \Session::getInstance();
+        $this->objSession           = Session::getInstance();
         $this->Template->objSession = $this->objSession;
 
-        $this->loadLanguageFile('tl_table_reservation');
+        System::loadLanguageFile('tl_table_reservation');
 
         // Initialize form fields
         $objWidgetArrival                = new \FormCalendarField();
@@ -77,8 +100,8 @@ class ModuleTableReservation extends \Module
         $objWidgetArrival->dateDirection = 'geToday';
         $objWidgetArrival->draggable     = false;
         $objWidgetArrival->dateFormat    = empty($this->table_showTimeSlots) ?
-            $this->table_dateTimeFormat : \Config::get('dateFormat');
-        $objWidgetArrival->value         = \Input::post('arrival');
+            $this->table_dateTimeFormat : Config::get('dateFormat');
+        $objWidgetArrival->value         = Input::post('arrival');
 
         $this->Template->objWidgetArrival = $objWidgetArrival;
 
@@ -94,7 +117,7 @@ class ModuleTableReservation extends \Module
 
             foreach ($arrTimeSlots as $arrTimeSlot) {
                 $strTimeFormat = empty($this->table_timeFormat) ?
-                    \Config::get('timeFormat') : $this->table_timeFormat;
+                    Config::getInstance()->get('timeFormat') : $this->table_timeFormat;
 
                 $strLabel = sprintf(
                     '%s - %s',
@@ -105,27 +128,33 @@ class ModuleTableReservation extends \Module
                 $arrTimeSlotOptions[] = ['value' => $strLabel . " - " . $arrTimeSlot['name'], 'label' => $strLabel];
             }
 
-            $objWidgetTimeSlots            = new \FormSelectMenu();
-            $objWidgetTimeSlots->id        = 'timeslots';
-            $objWidgetTimeSlots->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formTimeSlots'];
-            $objWidgetTimeSlots->name      = 'timeslots';
-            $objWidgetTimeSlots->options   = $arrTimeSlotOptions;
-            $objWidgetTimeSlots->chosen    = true;
-            $objWidgetTimeSlots->mandatory = true;
-            $objWidgetTimeSlots->value     = \Input::post('timeslots');
+            $objWidgetTimeSlots = new FormSelectMenu(
+                [
+                    'id'        => 'timeslots',
+                    'label'     => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formTimeSlots'],
+                    'name'      => 'timeslots',
+                    'options'   => $arrTimeSlotOptions,
+                    'chosen'    => true,
+                    'mandatory' => true,
+                    'value'     => Input::post('timeslots')
+                ]
+            );
 
             $this->Template->objWidgetTimeSlots = $objWidgetTimeSlots;
 
         }
 
-        $objWidgetSubmit         = new \FormSubmit();
-        $objWidgetSubmit->id     = 'submit';
-        $objWidgetSubmit->class  = 'btn btn-default';
-        $objWidgetSubmit->slabel = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSubmit'];
+        $objWidgetSubmit = new FormSubmit(
+            [
+                'id'     => 'submit',
+                'class'  => 'btn btn-default',
+                'slabel' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSubmit'],
+            ]
+        );
 
         $this->Template->objWidgetSubmit = $objWidgetSubmit;
 
-        $objCategorySettings = $this->Database->prepare("
+        $objCategorySettings = Database::getInstance()->prepare("
             SELECT id AS value, tablecategory AS label, maxcount
             FROM tl_table_category 
             WHERE published = '1' 
@@ -140,28 +169,35 @@ class ModuleTableReservation extends \Module
             for ($i = 0; $i <= $objCategorySettings->maxcount; $i++) {
                 $arrSelectOptions[$i] = ['value' => $i, 'label' => $i];
             }
-            $objSelectMenu          = new \FormSelectMenu();
-            $objSelectMenu->id      = $objCategorySettings->value;
-            $objSelectMenu->label   = $GLOBALS['TL_LANG']['MSC']['table_reservation']['count'] . ' ' . $objCategorySettings->label;
-            $objSelectMenu->name    = $objCategorySettings->value;
-            $objSelectMenu->options = $arrSelectOptions;
+            $objSelectMenu = new FormSelectMenu(
+                [
+                    'id'      => $objCategorySettings->value,
+                    'label'   => $GLOBALS['TL_LANG']['MSC']['table_reservation']['count'] . ' ' .
+                        $objCategorySettings->label,
+                    'name'    => $objCategorySettings->value,
+                    'options' => $arrSelectOptions,
+                ]
+            );
 
             $arrSelect[] = $objSelectMenu;
         }
 
         $this->Template->arrSelects = $arrSelect;
 
-        $objWidgetCheckboxes            = new \FormCheckBox();
-        $objWidgetCheckboxes->id        = 'tableCategory';
-        $objWidgetCheckboxes->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formTableCategory'];
-        $objWidgetCheckboxes->name      = 'tableCategory';
-        $objWidgetCheckboxes->mandatory = true;
-        $objWidgetCheckboxes->options   = $objCategorySettings->fetchAllAssoc();
-        $objWidgetCheckboxes->value     = \Input::post('tableCategory');
+        $objWidgetCheckboxes = new FormCheckBox(
+            [
+                'id'        => 'tableCategory',
+                'label'     => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formTableCategory'],
+                'name'      => 'tableCategory',
+                'options'   => $objCategorySettings->fetchAllAssoc(),
+                'mandatory' => true,
+                'value'     => Input::post('tableCategory')
+            ]
+        );
 
         $this->Template->objWidgetCheckboxes = $objWidgetCheckboxes;
 
-        if (\Input::post('FORM_SUBMIT') === 'form_availability_submit') {
+        if (Input::post('FORM_SUBMIT') === 'form_availability_submit') {
             $this->compileAvailabilityCheck(
                 $objWidgetArrival,
                 $objWidgetTimeSlots,
@@ -169,105 +205,134 @@ class ModuleTableReservation extends \Module
             );
         }
 
-        if (\Input::get('FORM_PAGE') === 'page2' && $this->objSession->get('seats')) {
+        if (Input::get('FORM_PAGE') === 'page2' && $this->objSession->get('seats')) {
 
             $this->strTemplate           = 'mod_table_reservation_form_page2';
-            $this->Template              = new \FrontendTemplate($this->strTemplate);
+            $this->Template              = new FrontendTemplate($this->strTemplate);
             $this->Template->infoMessage = $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationPossible'];
             $this->Template->arrSeats    = $this->objSession->get('seats');
             $this->Template->objSession  = $this->objSession;
 
-            $objWidgetSalutation          = new \FormRadioButton();
-            $objWidgetSalutation->id      = 'salutation';
-            $objWidgetSalutation->label   = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSalutation'];
-            $objWidgetSalutation->name    = 'salutation';
-            $objWidgetSalutation->options = [
-                ['value' => 'male', 'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formMale']],
-                ['value' => 'female', 'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFemale']]
-            ];
+            $objWidgetSalutation = new FormRadioButton(
+                [
+                    'id'      => 'salutation',
+                    'label'   => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSalutation'],
+                    'name'    => 'salutation',
+                    'options' => [
+                        ['value' => 'male', 'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formMale']],
+                        ['value' => 'female', 'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFemale']]
+                    ]
+                ]
+            );
 
             $this->Template->objWidgetSalutation = $objWidgetSalutation;
 
-            $objWidgetFirstName        = new \FormTextField();
-            $objWidgetFirstName->id    = 'firstname';
-            $objWidgetFirstName->label = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFirstname'];
-            $objWidgetFirstName->name  = 'firstname';
-            $objWidgetFirstName->rgxp  = 'alpha';
-            $objWidgetFirstName->value = \Input::post('firstname');
+            $objWidgetFirstName = new FormTextField(
+                [
+                    'id'    => 'firstname',
+                    'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFirstname'],
+                    'name'  => 'firstname',
+                    'rgxp'  => 'alpha',
+                    'value' => Input::post('firstname')
+                ]
+            );
 
             $this->Template->objWidgetFirstName = $objWidgetFirstName;
 
-            $objWidgetLastName        = new \FormTextField();
-            $objWidgetLastName->id    = 'lastname';
-            $objWidgetLastName->label = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formLastname'];
-            $objWidgetLastName->name  = 'lastname';
-            $objWidgetLastName->rgxp  = 'alpha';
-            $objWidgetLastName->value = \Input::post('lastname');
+            $objWidgetLastName = new FormTextField(
+                [
+                    'id'    => 'lastname',
+                    'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formLastname'],
+                    'name'  => 'lastname',
+                    'rgxp'  => 'alpha',
+                    'value' => Input::post('lastname')
+                ]
+            );
 
             $this->Template->objWidgetLastName = $objWidgetLastName;
 
 
-            $objWidgetEmail            = new \FormTextField();
-            $objWidgetEmail->id        = 'email';
-            $objWidgetEmail->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formEmail'];
-            $objWidgetEmail->name      = 'email';
-            $objWidgetEmail->mandatory = true;
-            $objWidgetEmail->rgxp      = 'email';
-            $objWidgetEmail->value     = \Input::post('email');
+            $objWidgetEmail = new FormTextField(
+                [
+                    'id'        => 'email',
+                    'label'     => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formEmail'],
+                    'name'      => 'email',
+                    'mandatory' => true,
+                    'rgxp'      => 'email',
+                    'value'     => Input::post('email')
+                ]
+            );
 
             $this->Template->objWidgetEmail = $objWidgetEmail;
 
-            $objWidgetPhone            = new \FormTextField();
-            $objWidgetPhone->id        = 'phone';
-            $objWidgetPhone->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formPhone'];
-            $objWidgetPhone->name      = 'phone';
-            $objWidgetPhone->mandatory = false;
-            $objWidgetPhone->rgxp      = 'phone';
-            $objWidgetPhone->value     = \Input::post('phone');
+            $objWidgetPhone = new FormTextField(
+                [
+                    'id'        => 'phone',
+                    'label'     => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formPhone'],
+                    'name'      => 'phone',
+                    'mandatory' => false,
+                    'rgxp'      => 'phone',
+                    'value'     => Input::post('phone')
+                ]
+            );
 
             $this->Template->objWidgetPhone = $objWidgetPhone;
 
-            $objWidgetRemarks            = new \FormTextArea();
-            $objWidgetRemarks->id        = 'remarks';
-            $objWidgetRemarks->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formRemarks'];
-            $objWidgetRemarks->name      = 'remarks';
-            $objWidgetRemarks->mandatory = false;
-            $objWidgetRemarks->value     = \Input::post('remarks');
+            $objWidgetRemarks = new FormTextArea(
+                [
+                    'id'        => 'remarks',
+                    'label'     => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formRemarks'],
+                    'name'      => 'remarks',
+                    'mandatory' => false,
+                    'value'     => Input::post('remarks')
+                ]
+            );
 
             $this->Template->objWidgetRemarks = $objWidgetRemarks;
 
-            $objWidgetCaptcha            = new \FormCaptcha();
-            $objWidgetCaptcha->id        = 'captcha';
-            $objWidgetCaptcha->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formCaptcha'];
-            $objWidgetCaptcha->name      = 'captcha';
-            $objWidgetCaptcha->mandatory = true;
-            $objWidgetCaptcha->value     = \Input::post('captcha');
+            $objWidgetCaptcha = new FormCaptcha(
+                [
+                    'id'        => 'captcha',
+                    'label'     => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formCaptcha'],
+                    'name'      => 'captcha',
+                    'mandatory' => true,
+                    'value'     => Input::post('captcha')
+                ]
+            );
 
             $this->Template->objWidgetCaptcha = $objWidgetCaptcha;
 
 
-            $objWidgetConfirmation            = new \FormCheckBox();
-            $objWidgetConfirmation->id        = 'confirmation';
-            $objWidgetConfirmation->label     = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formConfirmation'];
-            $objWidgetConfirmation->name      = 'confirmation';
-            $objWidgetConfirmation->mandatory = true;
-            $objWidgetConfirmation->options   = [[
-                'value' => '1',
-                'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formConfirmationText']
-            ]];
-            $objWidgetConfirmation->value     = \Input::post('confirmation');
+            $objWidgetConfirmation = new FormCheckBox(
+                [
+                    'id'        => 'confirmation',
+                    'label'     => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formConfirmation'],
+                    'name'      => 'confirmation',
+                    'mandatory' => true,
+                    'value'     => Input::post('confirmation'),
+                    'options'   => [
+                        [
+                            'value' => '1',
+                            'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formConfirmationText']
+                        ]
+                    ]
+                ]
+            );
 
             $this->Template->objWidgetConfirmation = $objWidgetConfirmation;
 
-            $objWidgetSubmit        = new \FormSubmit();
-            $objWidgetSubmit->id    = 'submit';
-            $objWidgetSubmit->class = 'btn btn-success';
-            $objWidgetSubmit->label = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSubmit'];
+            $objWidgetSubmit = new FormSubmit(
+                [
+                    'id'    => 'submit',
+                    'class' => 'btn btn-success',
+                    'label' => $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSubmit'],
+                ]
+            );
 
             $this->Template->objWidgetSubmit = $objWidgetSubmit;
         }
 
-        if (\Input::post('FORM_SUBMIT') === 'form_reservation_submit' && $this->objSession->get('seats')) {
+        if (Input::post('FORM_SUBMIT') === 'form_reservation_submit' && $this->objSession->get('seats')) {
             $this->compileReservationCheck(
                 $objWidgetSalutation,
                 $objWidgetFirstName,
@@ -295,7 +360,7 @@ class ModuleTableReservation extends \Module
             return;
         }
 
-        $objSettings = $this->Database->prepare("SELECT * FROM tl_table_settings")->limit(1)->execute();
+        $objSettings = Database::getInstance()->prepare("SELECT * FROM tl_table_settings")->limit(1)->execute();
 
         if ($objSettings->numRows < 1) {
             return;
@@ -303,25 +368,25 @@ class ModuleTableReservation extends \Module
 
         // Overwrite the SMTP configuration
         if ($objSettings->useSMTP) {
-            \Config::set('useSMTP', true);
-            \Config::set('smtpHost', $objSettings->smtpHost);
-            \Config::set('smtpUser', $objSettings->smtpUser);
-            \Config::set('smtpPass', $objSettings->smtpPass);
-            \Config::set('smtpEnc', $objSettings->smtpEnc);
-            \Config::set('smtpPort', $objSettings->smtpPort);
+            Config::set('useSMTP', true);
+            Config::set('smtpHost', $objSettings->smtpHost);
+            Config::set('smtpUser', $objSettings->smtpUser);
+            Config::set('smtpPass', $objSettings->smtpPass);
+            Config::set('smtpEnc', $objSettings->smtpEnc);
+            Config::set('smtpPort', $objSettings->smtpPort);
         }
 
         // Add default sender address
         if ($objSettings->sender == '') {
-            list($objSettings->senderName, $objSettings->sender) = \StringUtil::splitFriendlyEmail(
-                \Config::get('adminEmail')
+            list($objSettings->senderName, $objSettings->sender) = StringUtil::splitFriendlyEmail(
+                Config::get('adminEmail')
             );
         }
 
         // Add default Bcc
         if ($objSettings->bCc == '') {
-            list($objSettings->senderName, $objSettings->bCc) = \StringUtil::splitFriendlyEmail(
-                \Config::get('adminEmail')
+            list($objSettings->senderName, $objSettings->bCc) = StringUtil::splitFriendlyEmail(
+                Config::get('adminEmail')
             );
         }
 
@@ -333,12 +398,12 @@ class ModuleTableReservation extends \Module
             $files = deserialize($objSettings->files);
 
             if (!empty($files) && is_array($files)) {
-                $objFiles = \FilesModel::findMultipleByUuids($files);
+                $objFiles = FilesModel::findMultipleByUuids($files);
 
                 if ($objFiles === null) {
-                    if (!\Validator::isUuid($files[0])) {
+                    if (!Validator::isUuid($files[0])) {
                         $blnAttachmentsFormatError = true;
-                        \Message::addError($GLOBALS['TL_LANG']['ERR']['version2format']);
+                        Message::addError($GLOBALS['TL_LANG']['ERR']['version2format']);
                     }
                 } else {
                     while ($objFiles->next()) {
@@ -356,29 +421,29 @@ class ModuleTableReservation extends \Module
 
         // Convert relative URLs
         if ($objSettings->externalImages) {
-            $strHtml = $this->convertRelativeUrls($strHtml);
+            $strHtml = Controller::convertRelativeUrls($strHtml);
         }
 
         // Send newsletter
         if (!$blnAttachmentsFormatError) {
             // Send newsletter
             $objEmail = $this->generateEmailObject($objSettings, $arrAttachments);
-            $this->sendConfirmation($objEmail, $objSettings, \Input::post('email'), $strText, $strHtml);
+            $this->sendConfirmation($objEmail, $objSettings, Input::post('email'), $strText, $strHtml);
         }
     }
 
     /**
      * Generate the e-mail object and return it
      *
-     * @param \Database\Result $objSettings Database result
+     * @param Database\Result $objSettings Database result
      * @param array $arrAttachments E-mail attachments
      *
-     * @return \Email
+     * @return Email
      */
     protected
-    function generateEmailObject(\Database\Result $objSettings, $arrAttachments)
+    function generateEmailObject(Database\Result $objSettings, $arrAttachments)
     {
-        $objEmail = new \Email();
+        $objEmail = new Email();
 
         $objEmail->from    = $objSettings->sender;
         $objEmail->subject = $objSettings->subject;
@@ -405,8 +470,8 @@ class ModuleTableReservation extends \Module
     /**
      * Compile the confirmation and send it
      *
-     * @param \Email $objEmail E-mail object
-     * @param \Database\Result $objSettings Database result
+     * @param Email $objEmail E-mail object
+     * @param Database\Result $objSettings Database result
      * @param string $strRecipient Recipient
      * @param string $strText Plain text
      * @param string $strHtml HTML text
@@ -414,8 +479,8 @@ class ModuleTableReservation extends \Module
      *
      */
     protected function sendConfirmation(
-        \Email $objEmail,
-        \Database\Result $objSettings,
+        Email $objEmail,
+        Database\Result $objSettings,
         $strRecipient,
         $strText,
         $strHtml,
@@ -425,7 +490,7 @@ class ModuleTableReservation extends \Module
         $arrRecipients['email'] = $strRecipient;
 
         // Prepare the text content
-        $objEmail->text = \StringUtil::parseSimpleTokens($strText, $arrRecipients);
+        $objEmail->text = StringUtil::parseSimpleTokens($strText, $arrRecipients);
 
         // Add the HTML content
         if (!$objSettings->sendText) {
@@ -434,13 +499,13 @@ class ModuleTableReservation extends \Module
                 $objSettings->template = 'mail_default';
             }
 
-            /** @var \BackendTemplate|object $objTemplate */
-            $objTemplate = new \BackendTemplate($objSettings->template);
+            /** @var BackendTemplate|object $objTemplate */
+            $objTemplate = new BackendTemplate($objSettings->template);
             $objTemplate->setData($objSettings->row());
 
             $objTemplate->title     = $objSettings->subject;
-            $objTemplate->body      = \StringUtil::parseSimpleTokens($strHtml, $arrRecipients);
-            $objTemplate->charset   = \Config::get('characterSet');
+            $objTemplate->body      = StringUtil::parseSimpleTokens($strHtml, $arrRecipients);
+            $objTemplate->charset   = Config::get('characterSet');
             $objTemplate->css       = $css; // Backwards compatibility
             $objTemplate->recipient = $arrRecipients['email'];
 
@@ -465,41 +530,44 @@ class ModuleTableReservation extends \Module
     /**
      * Check submitted availability form and display result
      *
-     * @param \Widget $objWidgetArrival Reservation time input
-     * @param \Widget $objWidgetTimeSlots Timeslots | null
-     * @param \Widget $objWidgetCheckboxes Table categories checkboxes
+     * @param Widget $objWidgetArrival Reservation time input
+     * @param Widget $objWidgetTimeSlots Timeslots | null
+     * @param Widget $objWidgetCheckboxes Table categories checkboxes
      *
      */
     protected function compileAvailabilityCheck(
-        \Widget $objWidgetArrival,
-        \Widget $objWidgetTimeSlots = null,
-        \Widget $objWidgetCheckboxes
+        Widget $objWidgetArrival,
+        Widget $objWidgetTimeSlots = null,
+        Widget $objWidgetCheckboxes
     )
     {
         $objWidgetArrival->validate();
         $objWidgetCheckboxes->validate();
 
         $strTimeFormat = empty($this->table_timeFormat) ?
-            \Config::get('timeFormat') : $this->table_timeFormat;
+            Config::get('timeFormat') : $this->table_timeFormat;
 
         $objSlotNames   = new \tl_table_occupancy;
-        $objArrivalDate = new \Date(strtotime(\Input::post('arrival')));
-        $strArrivalDate = $objArrivalDate::parse("Y-m-d", $objArrivalDate->tstamp);
-        $strSlotColumns = '';
+        $objArrivalDate = new Date(strtotime(Input::post('arrival')));
+
+        $strArrivalDate       = $objArrivalDate::parse("Y-m-d", $objArrivalDate->tstamp);
+        $strSlotColumns       = '';
+        $strDepartureTime     = '';
+        $intDepartureDateTime = 0;
 
         if (!empty($objWidgetTimeSlots)) {
-            if (\Input::post('timeslots') === '') {
+            if (Input::post('timeslots') === '') {
                 $objWidgetTimeSlots->addError($GLOBALS['TL_LANG']['MSC']['table_reservation']['timeSlotError']);
 
                 return;
             }
 
-            $arrTimeSlot          = explode(' - ', \Input::post('timeslots'));
+            $arrTimeSlot          = explode(' - ', Input::post('timeslots'));
             $strArrivalTime       = $arrTimeSlot[0];
             $strDepartureTime     = $arrTimeSlot[1];
             $strCount             = $arrTimeSlot[2];
-            $strPostArrival       = sprintf('%s %s', \Input::post('arrival'), $strArrivalTime);
-            $objArrivalDate       = new \Date(strtotime($strPostArrival));
+            $strPostArrival       = sprintf('%s %s', Input::post('arrival'), $strArrivalTime);
+            $objArrivalDate       = new Date(strtotime($strPostArrival));
             $intArrivalDateTime   = $objArrivalDate->tstamp;
             $intDepartureDateTime = strtotime($strDepartureTime);
             $strSlotColumns       = ',' . implode(',', $objSlotNames->getTimeSlotNames());
@@ -539,18 +607,18 @@ class ModuleTableReservation extends \Module
             }
         }
 
-        $arrPostTableCategory = is_array(\Input::post('tableCategory')) ?
-            \Input::post('tableCategory') :
-            [\Input::post('tableCategory')];
+        $arrPostTableCategory = is_array(Input::post('tableCategory')) ?
+            Input::post('tableCategory') :
+            [Input::post('tableCategory')];
 
         $arrTableCategories = [];
         $arrCountSeats      = [];
         $arrSeats           = [];
 
         foreach ($arrPostTableCategory as $intTableCategory) {
-            (intval(\Input::post($intTableCategory)) < 1) ?
+            (intval(Input::post($intTableCategory)) < 1) ?
                 $objWidgetCheckboxes->addError($GLOBALS['TL_LANG']['MSC']['table_reservation']['countError']) :
-                $arrResultRow = $this->Database->prepare("
+                $arrResultRow = Database::getInstance()->prepare("
                     SELECT
                       tmp1.*,
                       tmp2.tablecategory
@@ -585,7 +653,7 @@ class ModuleTableReservation extends \Module
                 return;
             }
 
-            if (intval(\Input::post($intTableCategory)) > intval($arrResultRow[$strCount])) {
+            if (intval(Input::post($intTableCategory)) > intval($arrResultRow[$strCount])) {
                 $objWidgetCheckboxes->addError(
                     sprintf(
                         $GLOBALS['TL_LANG']['MSC']['table_reservation']['maxCountError'],
@@ -597,14 +665,14 @@ class ModuleTableReservation extends \Module
             }
 
             $arrSeats[] = [
-                'count'        => intval(\Input::post($intTableCategory)),
+                'count'        => intval(Input::post($intTableCategory)),
                 'category'     => $intTableCategory,
                 'categoryName' => $arrResultRow['tablecategory']
             ];
 
             $arrTableCategories[] = $intTableCategory;
             $arrCountSeats[]      = [
-                "intCount"     => intval(\Input::post($intTableCategory)),
+                "intCount"     => intval(Input::post($intTableCategory)),
                 "strTimeOfDay" => $strCount
             ];
 
@@ -617,7 +685,7 @@ class ModuleTableReservation extends \Module
             $this->Template->infoMessage = $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationPossible'];
             $this->Template->arrSeats    = $arrSeats;
 
-            $strReserveNowUrl                 = $this->addToUrl('FORM_PAGE=page2');
+            $strReserveNowUrl                 = Controller::addToUrl('FORM_PAGE=page2');
             $this->Template->strReserveNowUrl = $strReserveNowUrl;
 
             $strArrival  = date($this->table_dateTimeFormat, $intArrivalDateTime);
@@ -637,25 +705,25 @@ class ModuleTableReservation extends \Module
     /**
      * Check submitted reservation form and display result
      *
-     * @param \Widget $objWidgetSalutation Salutation radio button
-     * @param \Widget $objWidgetFirstName Firstname input
-     * @param \Widget $objWidgetLastName Lastname input
-     * @param \Widget $objWidgetEmail Email input
-     * @param \Widget $objWidgetPhone Phone input
-     * @param \Widget $objWidgetRemarks Remarks textarea
-     * @param \Widget $objWidgetCaptcha captcha input
-     * @param \Widget $objWidgetConfirmation Confirmation checkbox
+     * @param Widget $objWidgetSalutation Salutation radio button
+     * @param Widget $objWidgetFirstName Firstname input
+     * @param Widget $objWidgetLastName Lastname input
+     * @param Widget $objWidgetEmail Email input
+     * @param Widget $objWidgetPhone Phone input
+     * @param Widget $objWidgetRemarks Remarks textarea
+     * @param Widget $objWidgetCaptcha captcha input
+     * @param Widget $objWidgetConfirmation Confirmation checkbox
      *
      */
     protected function compileReservationCheck(
-        \Widget $objWidgetSalutation,
-        \Widget $objWidgetFirstName,
-        \Widget $objWidgetLastName,
-        \Widget $objWidgetEmail,
-        \Widget $objWidgetPhone,
-        \Widget $objWidgetRemarks,
-        \Widget $objWidgetCaptcha,
-        \Widget $objWidgetConfirmation
+        Widget $objWidgetSalutation,
+        Widget $objWidgetFirstName,
+        Widget $objWidgetLastName,
+        Widget $objWidgetEmail,
+        Widget $objWidgetPhone,
+        Widget $objWidgetRemarks,
+        Widget $objWidgetCaptcha,
+        Widget $objWidgetConfirmation
     )
     {
         $objWidgetSalutation->validate();
@@ -684,22 +752,19 @@ class ModuleTableReservation extends \Module
 
             foreach ($arrCategoriesCount as $intTableCategory => $arrCount) {
 
-// todo: escape dynamic column name
-//                $arrSet[$arrCount["strTimeOfDay"]] = sprintf("%s-%d", $arrCount["strTimeOfDay"], $arrCount['intCount']);
                 $strColumnCount = $arrCount["strTimeOfDay"];
 
-                $objSetTableCount = $this->Database->prepare("
-                            UPDATE tl_table_occupancy
-                            SET $strColumnCount = $strColumnCount - ?
-                            WHERE pid = ?
-                            AND date = ?
-                            AND $strColumnCount > 0")
-//                    ->set($arrSet)
+                Database::getInstance()->prepare("
+                    UPDATE tl_table_occupancy
+                    SET $strColumnCount = $strColumnCount - ?
+                    WHERE pid = ?
+                    AND date = ?
+                    AND $strColumnCount > 0")
                     ->execute($arrCount["intCount"], $intTableCategory, $strCurrentDate);
             }
 
             $this->strTemplate           = 'mod_table_reservation_form_success';
-            $this->Template              = new \FrontendTemplate($this->strTemplate);
+            $this->Template              = new FrontendTemplate($this->strTemplate);
             $this->Template->infoMessage = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSuccess'];
             $this->send();
 
@@ -711,21 +776,21 @@ class ModuleTableReservation extends \Module
                 $arrSeatsCategory[] = $arrSeat;
             }
 
-            $objInsertReservation = $this->Database->prepare("
-                    INSERT INTO tl_table_list
-                    (tstamp, arrival, departure, seats, gender, lastname, firstname, phone, email, remarks)
-                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+            Database::getInstance()->prepare("
+                INSERT INTO tl_table_list
+                (tstamp, arrival, departure, seats, gender, lastname, firstname, phone, email, remarks)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
                 ->execute(
                     time(),
                     $this->objSession->get('tstampArrival'),
                     $this->objSession->get('tstampDeparture'),
                     $arrSeatsCategory,
-                    \Input::post('salutation'),
-                    \Input::post('lastname'),
-                    \Input::post('firstname'),
-                    \Input::post('phone'),
-                    \Input::post('email'),
-                    \Input::post('remarks'));
+                    Input::post('salutation'),
+                    Input::post('lastname'),
+                    Input::post('firstname'),
+                    Input::post('phone'),
+                    Input::post('email'),
+                    Input::post('remarks'));
 
             $this->objSession->remove('tstampArrival');
             $this->objSession->remove('tstampDeparture');

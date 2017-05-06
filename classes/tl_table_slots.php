@@ -16,7 +16,18 @@
  * @link        https://contao.org
  */
 
-namespace Contao;
+namespace ContaoTableReservation;
+
+use Contao\Backend;
+use Contao\DataContainer;
+use Contao\Input;
+use Contao\Session;
+use Contao\Database;
+use Contao\BackendUser;
+use Contao\Controller;
+use Contao\System;
+use Contao\Versions;
+use Contao\Image;
 
 /**
  * Class tl_table_slots
@@ -30,7 +41,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_table_slots extends \Backend
+class tl_table_slots extends Backend
 {
 
     /**
@@ -51,7 +62,7 @@ class tl_table_slots extends \Backend
      */
     public function cacheTableName($varValue)
     {
-        $this->Session->set('tl_table.name', $varValue);
+        Session::getInstance()->set('tl_table.name', $varValue);
         return $varValue;
     }
 
@@ -62,7 +73,7 @@ class tl_table_slots extends \Backend
      */
     public function saveFromTime()
     {
-        return strtotime(\Input::post('fromTime'));
+        return strtotime(Input::post('fromTime'));
     }
 
     /**
@@ -72,9 +83,9 @@ class tl_table_slots extends \Backend
      */
     public function saveToTime()
     {
-        return \Input::post('toTime') === '00:00' ?
-            strtotime(\Input::post('toTime')) - 60 :
-            strtotime(\Input::post('toTime'));
+        return Input::post('toTime') === '00:00' ?
+            strtotime(Input::post('toTime')) - 60 :
+            strtotime(Input::post('toTime'));
     }
 
     /**
@@ -92,16 +103,17 @@ class tl_table_slots extends \Backend
     /**
      * Deletes column in in the occupancy calendar according to time slot.
      *
-     * @param \DataContainer $dc Data Container object
+     * @param DataContainer $dc Data Container object
+     * @param int $intUndoId Id of the undo object
      */
-    public function deleteTimeSlot(\DataContainer $dc, $intUndoId)
+    public function deleteTimeSlot(DataContainer $dc, $intUndoId)
     {
-        if ($this->Input->get('act') == 'delete') {
-            $objAlter  = $this->Database->prepare("
+        if (Input::get('act') == 'delete') {
+            Database::getInstance()->prepare("
                 ALTER TABLE tl_table_occupancy
                 DROP COLUMN `" . $dc->activeRecord->name . "`
                 ")->execute();
-            $objDelete = $this->Database->prepare("DELETE FROM tl_undo WHERE id=?")
+            Database::getInstance()->prepare("DELETE FROM tl_undo WHERE id=?")
                 ->execute(intval($intUndoId));
         }
     }
@@ -109,29 +121,29 @@ class tl_table_slots extends \Backend
     /**
      * Alters column in in the occupancy calendar according to time slot.
      *
-     * @param \DataContainer $dc Data Container object
+     * @param DataContainer $dc Data Container object
      */
-    public function editTimeSlot(\DataContainer $dc)
+    public function editTimeSlot(DataContainer $dc)
     {
-        if ($this->Input->get('act') == 'edit') {
-            $boolColumnExists = $this->Database->fieldExists(
-                $this->Session->get('tl_table.name'),
+        if (Input::get('act') == 'edit') {
+            $boolColumnExists = Database::getInstance()->fieldExists(
+                Session::getInstance()->get('tl_table.name'),
                 'tl_table_occupancy'
             );
 
             if (!$boolColumnExists) {
-                $objAlter = $this->Database->prepare("
-                ALTER TABLE tl_table_occupancy
-                ADD COLUMN `" . $dc->activeRecord->name . "` SMALLINT(3) UNSIGNED NULL
+                Database::getInstance()->prepare("
+                    ALTER TABLE tl_table_occupancy
+                    ADD COLUMN `" . $dc->activeRecord->name . "` SMALLINT(3) UNSIGNED NULL
                 ")->execute();
             }
 
-            if ($boolColumnExists && ($this->Session->get('tl_table.name') !== $dc->activeRecord->name)) {
-                $objAlter = $this->Database->prepare("
-                ALTER TABLE tl_table_occupancy
-                CHANGE COLUMN 
-                `" . $this->Session->get('tl_table.name') . "` `" . $dc->activeRecord->name . "` 
-                SMALLINT(3) UNSIGNED NULL
+            if ($boolColumnExists && (Session::getInstance()->get('tl_table.name') !== $dc->activeRecord->name)) {
+                Database::getInstance()->prepare("
+                    ALTER TABLE tl_table_occupancy
+                    CHANGE COLUMN 
+                    `" . Session::getInstance()->get('tl_table.name') . "` `" . $dc->activeRecord->name . "` 
+                    SMALLINT(3) UNSIGNED NULL
                 ")->execute();
             }
         }
@@ -149,28 +161,37 @@ class tl_table_slots extends \Backend
      *
      * @return string
      */
-    public
-    function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+    public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
     {
-        $this->import('BackendUser', 'User');
+        $objBackendUser = BackendUser::getInstance();
 
-        if (strlen(\Input::get('tid'))) {
-            $this->toggleVisibility(\Input::get('tid'), (\Input::get('state') == 0));
-            $this->redirect($this->getReferer());
+        if (strlen(Input::get('tid'))) {
+            $this->toggleVisibility(
+                Input::get('tid'),
+                (Input::get('state') == 0),
+                $objBackendUser
+            );
+            Controller::redirect(System::getReferer());
         }
 
         // Check permissions AFTER checking the tid, so hacking attempts are logged
-        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_table_slots::published', 'alexf')) {
+        if (!$objBackendUser->isAdmin && !$objBackendUser->hasAccess('tl_table_slots::published', ['alexf'])) {
             return '';
         }
 
-        $href .= '&amp;id=' . \Input::get('id') . '&amp;tid=' . $row['id'] . '&amp;state=' . $row[''];
+        $href .= '&amp;id=' . Input::get('id') . '&amp;tid=' . $row['id'] . '&amp;state=' . $row[''];
 
         if (!$row['published']) {
             $icon = 'invisible.gif';
         }
 
-        return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
+        return sprintf(
+            '<a href=%s title=%s%s>%s</a>',
+            Controller::addToUrl($href),
+            specialchars($title),
+            $attributes,
+            Image::getHtml($icon, $label)
+        );
     }
 
     /**
@@ -178,31 +199,43 @@ class tl_table_slots extends \Backend
      *
      * @param integer $intId ID
      * @param boolean $blnPublished Published
+     * @param object $objBackendUser Backend user object
      *
-     * @return null
      */
-    public
-    function toggleVisibility($intId, $blnPublished)
+    public function toggleVisibility($intId, $blnPublished, $objBackendUser)
     {
         // Check permissions to publish
-        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_table_slots::published', 'alexf')) {
-            $this->log('Not enough permissions to show/hide record ID "' . $intId . '"', 'tl_table_slots toggleVisibility', TL_ERROR);
-            $this->redirect('contao/main.php?act=error');
+        if (!$objBackendUser->isAdmin && !$objBackendUser->hasAccess('tl_table_slots::published', 'alexf')) {
+            System::log(
+                'Not enough permissions to show/hide record ID "' . $intId . '"',
+                'tl_table_slots toggleVisibility',
+                TL_ERROR
+            );
+            Controller::redirect('contao/main.php?act=error');
         }
 
-        $this->createInitialVersion('tl_table_slots', $intId);
+        $objVersions = new Versions('tl_table_slots', $intId);
+        $objVersions->initialize();
 
         // Trigger the save_callback
         if (is_array($GLOBALS['TL_DCA']['tl_table_slots']['fields']['published']['save_callback'])) {
             foreach ($GLOBALS['TL_DCA']['tl_table_slots']['fields']['published']['save_callback'] as $callback) {
-                $this->import($callback[0]);
+                System::importStatic($callback[0]);
                 $blnPublished = $this->$callback[0]->$callback[1]($blnPublished, $this);
             }
         }
 
         // Update the database
-        $this->Database->prepare("UPDATE tl_table_slots SET tstamp=" . time() . ", published='" . ($blnPublished ? '' : '1') . "' WHERE id=?")
+        $arrSet              = [];
+        $arrSet['tstamp']    = time();
+        $arrSet['published'] = $blnPublished ? '' : '1';
+
+        Database::getInstance()
+            ->prepare("UPDATE tl_table_slots %s WHERE id=?")
+            ->set($arrSet)
             ->execute($intId);
-        $this->createNewVersion('tl_table_slots', $intId);
+
+        $objVersions = new Versions('tl_table_slots', $intId);
+        $objVersions->create();
     }
 }

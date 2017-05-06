@@ -16,7 +16,16 @@
  * @link        https://contao.org
  */
 
-namespace Contao;
+namespace ContaoTableReservation;
+
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Input;
+use Contao\System;
+use Contao\Controller;
+use Contao\Versions;
+use Contao\Image;
+use Contao\Database;
 
 /**
  * Class tl_table_category
@@ -30,7 +39,7 @@ namespace Contao;
  * @license   http://www.gnu.org/licenses/lgpl-3.0.html LGPL
  * @link      https://contao.org
  */
-class tl_table_category extends \Backend
+class tl_table_category extends Backend
 {
     /**
      * Changes appearance of Toggle-Buttons.
@@ -46,25 +55,35 @@ class tl_table_category extends \Backend
      */
     public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
     {
-        $this->import('BackendUser', 'User');
+        $objBackendUser = BackendUser::getInstance();
 
-        if (strlen(\Input::get('tid'))) {
-            $this->toggleVisibility(\Input::get('tid'), (\Input::get('state') == 0));
-            $this->redirect($this->getReferer());
+        if (strlen(Input::get('tid'))) {
+            $this->toggleVisibility(
+                Input::get('tid'),
+                (Input::get('state') == 0),
+                $objBackendUser
+            );
+            Controller::redirect(System::getReferer());
         }
 
         // Check permissions AFTER checking the tid, so hacking attempts are logged
-        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_table_category::published', 'alexf')) {
+        if (!$objBackendUser->isAdmin && !$objBackendUser->hasAccess('tl_table_category::published', ['alexf'])) {
             return '';
         }
 
-        $href .= '&amp;id=' . \Input::get('id') . '&amp;tid=' . $row['id'] . '&amp;state=' . $row[''];
+        $href .= '&amp;id=' . Input::get('id') . '&amp;tid=' . $row['id'] . '&amp;state=' . $row[''];
 
         if (!$row['published']) {
             $icon = 'invisible.gif';
         }
 
-        return '<a href="' . $this->addToUrl($href) . '" title="' . specialchars($title) . '"' . $attributes . '>' . $this->generateImage($icon, $label) . '</a> ';
+        return sprintf(
+            '<a href=%s title=%s%s>%s</a>',
+            Controller::addToUrl($href),
+            specialchars($title),
+            $attributes,
+            Image::getHtml($icon, $label)
+            );
     }
 
     /**
@@ -72,31 +91,44 @@ class tl_table_category extends \Backend
      *
      * @param integer $intId ID
      * @param boolean $blnPublished Published
+     * @param object $objBackendUser Backend user object
      *
-     * @return null
      */
-    public function toggleVisibility($intId, $blnPublished)
+    public function toggleVisibility($intId, $blnPublished, $objBackendUser)
     {
         // Check permissions to publish
-        if (!$this->User->isAdmin && !$this->User->hasAccess('tl_table_category::published', 'alexf')) {
-            $this->log('Not enough permissions to show/hide record ID "' . $intId . '"', 'tl_table_category toggleVisibility', TL_ERROR);
-            $this->redirect('contao/main.php?act=error');
+        if (!$objBackendUser->isAdmin && !$objBackendUser->hasAccess('tl_table_category::published', 'alexf')) {
+            System::log(
+                'Not enough permissions to show/hide record ID "' . $intId . '"',
+                'tl_table_category toggleVisibility',
+                TL_ERROR
+            );
+            Controller::redirect('contao/main.php?act=error');
         }
 
-        $this->createInitialVersion('tl_table_category', $intId);
+        $objVersions = new Versions('tl_table_category', $intId);
+        $objVersions->initialize();
 
         // Trigger the save_callback
         if (is_array($GLOBALS['TL_DCA']['tl_table_category']['fields']['published']['save_callback'])) {
             foreach ($GLOBALS['TL_DCA']['tl_table_category']['fields']['published']['save_callback'] as $callback) {
-                $this->import($callback[0]);
+                System::importStatic($callback[0]);
                 $blnPublished = $this->$callback[0]->$callback[1]($blnPublished, $this);
             }
         }
 
         // Update the database
-        $this->Database->prepare("UPDATE tl_table_category SET tstamp=" . time() . ", published='" . ($blnPublished ? '' : '1') . "' WHERE id=?")
+        $arrSet              = [];
+        $arrSet['tstamp']    = time();
+        $arrSet['published'] = $blnPublished ? '' : '1';
+
+        Database::getInstance()
+            ->prepare("UPDATE tl_table_category %s WHERE id=?")
+            ->set($arrSet)
             ->execute($intId);
-        $this->createNewVersion('tl_table_category', $intId);
+
+        $objVersions = new Versions('tl_table_category', $intId);
+        $objVersions->create();
     }
 }    
 

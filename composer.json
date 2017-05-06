@@ -1,0 +1,40 @@
+{
+  "name": "dennis-sagasser/table-reservation",
+  "description": "Manage table categories with annual calendar in backend and offer reservations in frontend",
+  "keywords": [
+    "seat reservation,table reservation,seats,reservation,table categories"
+  ],
+  "type": "contao-module",
+  "license": "LGPL-3.0+",
+  "authors": [
+    {
+      "name": "Dennis Sagasser",
+      "homepage": "https://github.com/dennis-sagasser",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/dennis-sagasser/contao-table-reservation/issues",
+    "source": "https://github.com/dennis-sagasser/contao-table-reservation"
+  },
+  "require": {
+    "php": ">=5.6",
+    "contao/core-bundle": "~3.5 || >=4.3.9",
+    "contao-community-alliance/composer-plugin": "~3.0",
+    "menatwork/contao-multicolumnwizard": "~3.3"
+    //    "contao-legacy/calendarfield": ">=1.6.2"
+  },
+  "replace": {
+    "contao-legacy/table-reservation": "self.version"
+  },
+  "suggest": {
+    "terminal42/contao-notification_center": "Optionally use Notification Center to send confirmation mail"
+  },
+  "extra": {
+    "contao": {
+      "sources": {
+        "": "system/modules/table_reservation"
+      }
+    }
+  }
+}
