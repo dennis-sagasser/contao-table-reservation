@@ -25,7 +25,7 @@ $GLOBALS['BE_MOD']['table_reservation'] = [
         'tables'     => ['tl_table_category', 'tl_table_occupancy'],
         'icon'       => 'system/modules/table_reservation/assets/images/table16.png',
         'stylesheet' => 'system/modules/table_reservation/assets/css/layout.min.css',
-        'javascript' => 'system/modules/table_reservation/assets/js/datepicker.js'
+        'javascript' => 'system/modules/table_reservation/assets/js/datepicker.min.js'
     ],
     'table_timeslots'  => [
         'tables' => ['tl_table_slots'],

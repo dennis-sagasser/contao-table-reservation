@@ -182,7 +182,7 @@ class tl_table_occupancy extends Backend
             $strTimeSlots      = '';
             $strDayTimeWidgets = '';
 
-            if (!empty($this->objModuleModel->table_showTimeSlots && !empty($this->getTimeSlotNames()))) {
+            if (!empty($this->objModuleModel->table_showTimeSlots) && (count($this->getTimeSlotNames()) > 0)) {
                 $objCounts = Database::getInstance()->prepare("   
                 SELECT  " . implode(',', $this->getTimeSlotNames()) . "
                 FROM    tl_table_occupancy 
@@ -278,7 +278,8 @@ class tl_table_occupancy extends Backend
      * @param int $intParentId Id of the parent category
      *
      */
-    public function saveData($intMktime, $strCurrentDate, $objCounts, $intParentId)
+    public
+    function saveData($intMktime, $strCurrentDate, $objCounts, $intParentId)
     {
         $arrPostDate           = [];
         $arrPostDate['pid']    = $intParentId;
@@ -326,7 +327,8 @@ class tl_table_occupancy extends Backend
      * Loads DCA fields according to the time slot option.
      *
      */
-    public function loadFields()
+    public
+    function loadFields()
     {
         if (!empty($this->objModuleModel->table_showTimeSlots)) {
             unset($GLOBALS['TL_DCA']['tl_table_occupancy']['fields']['countMorning']);
@@ -364,7 +366,8 @@ class tl_table_occupancy extends Backend
      * Redirect to edit current date when date already exists in DB.
      *
      */
-    public function checkDate()
+    public
+    function checkDate()
     {
         if (Input::get('key') === 'reset') {
             $intId = Input::get('id');
@@ -397,7 +400,8 @@ class tl_table_occupancy extends Backend
      *
      * @return string
      */
-    public function loadDate()
+    public
+    function loadDate()
     {
         return date($GLOBALS['TL_CONFIG']['dateFormat']);
     }
@@ -407,7 +411,8 @@ class tl_table_occupancy extends Backend
      *
      * @return null
      */
-    public function doNotSaveDate()
+    public
+    function doNotSaveDate()
     {
         return null;
     }
@@ -419,12 +424,13 @@ class tl_table_occupancy extends Backend
      *
      * @return string
      */
-    public function showCalendar($arrRow)
+    public
+    function showCalendar($arrRow)
     {
         $strBuffer = '';
 
         if (!empty($this->objModuleModel->table_showTimeSlots)) {
-            if (empty($this->getTimeSlotTitles())) {
+            if (count($this->getTimeSlotTitles()) < 1) {
                 return sprintf(
                     '<span style="color:#cc3333;">%s</span>',
                     $GLOBALS['TL_LANG']['tl_table_occupancy']['noTimeSlot'][0]

@@ -96,4 +96,3 @@ $GLOBALS['TL_LANG']['XPL']['helpInsertTags']         = [
 /**
  * Info
  */
-$GLOBALS['TL_LANG']['tl_module']['info'] = '«Include MooTools» on tab «Mootools» must be checked in the page layout under «Themes», in order to use the full functionality of the module .';

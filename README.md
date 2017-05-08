@@ -11,7 +11,6 @@ Requirements
 Dependencies
 -----------------------
 The following Contao extensions are required to run this extension:
-+ contao-calendarfield https://github.com/terminal42/contao-calendarfield
 + MultiColumnWizard https://github.com/menatwork/MultiColumnWizard
 + notification_center (optional)
 

@@ -88,20 +88,20 @@ class ModuleTableReservation extends Module
         System::loadLanguageFile('tl_table_reservation');
 
         // Initialize form fields
-        $objWidgetArrival                = new \FormCalendarField();
-        $objWidgetArrival->dateImage     = true;
-        $objWidgetArrival->id            = 'arrival';
-        $objWidgetArrival->label         = empty($this->table_showTimeSlots) ?
-            $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDateTime'] :
-            $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDate'];
-        $objWidgetArrival->name          = 'arrival';
-        $objWidgetArrival->mandatory     = true;
-        $objWidgetArrival->rgxp          = empty($this->table_showTimeSlots) ? 'datim' : 'date';
-        $objWidgetArrival->dateDirection = 'geToday';
-        $objWidgetArrival->draggable     = false;
-        $objWidgetArrival->dateFormat    = empty($this->table_showTimeSlots) ?
-            $this->table_dateTimeFormat : Config::get('dateFormat');
-        $objWidgetArrival->value         = Input::post('arrival');
+        $objWidgetArrival = new FormTextField(
+            [
+                'id'        => 'arrival',
+                'label'     => empty($this->table_showTimeSlots) ?
+                    $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDateTime'] :
+                    $GLOBALS['TL_LANG']['MSC']['table_reservation']['formArrivalDate'],
+                'name'      => 'arrival',
+                'mandatory' => true,
+//                'rgxp'      => empty($this->table_showTimeSlots) ? 'datim' : 'date',
+                'value'     => Input::post('arrival'),
+//                'dateFormat' => empty($this->table_showTimeSlots) ?
+//                    $this->table_dateTimeFormat : Config::get('dateFormat')
+            ]
+        );
 
         $this->Template->objWidgetArrival = $objWidgetArrival;
 

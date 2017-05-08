@@ -1,10 +1,19 @@
 <!-- indexer::stop -->
 <?php if (TL_MODE === 'FE'): ?>
-    <?php $GLOBALS['TL_CSS']['table_reservation'] =
+    <?php
+    $GLOBALS['TL_CSS']['table_reservation'] =
         'system/modules/table_reservation/assets/css/bootstrap-button.min.css';
+//    $GLOBALS['TL_CSS']['table_reservation'] =
+//        'system/modules/table_reservation/assets/flatpickr/themes/light.min.css';
+    $GLOBALS['TL_CSS']['table_reservation']  =
+        'system/modules/table_reservation/assets/flatpickr/flatpickr.min.css';
+    $GLOBALS['TL_HEAD']['table_reservation'] =
+        '<script src="system/modules/table_reservation/assets/flatpickr/flatpickr.min.js">
+        </script>
+        <script src="system/modules/table_reservation/assets/flatpickr/l10n/' . $GLOBALS['TL_LANGUAGE'] . '.js">
+        </script>';
     ?>
 <?php endif; ?>
-
 <div class="<?= $this->class; ?> block"<?= $this->cssID; ?>
     <?php if ($this->style): ?> style="<?= $this->style; ?>"
     <?php endif; ?>>
@@ -85,6 +94,27 @@
         <?php endif; ?>
     </div>
 </form>
+
 <?php $this->endblock(); ?>
+
 </div>
+<?php $strDateFormat = ''; ?>
+<?php if (empty($this->table_showTimeSlots)) : ?>
+    <?php $strDateFormat = $this->table_dateTimeFormat ? $this->table_dateTimeFormat : Config::get('datimFormat'); ?>
+<?php else : ?>
+    <?= $strDateFormat = $this->table_dateFormat ? $this->table_dateFormat : Config::get('dateFormat'); ?>
+<?php endif; ?>
+<script type="text/javascript">
+    // <![CDATA[
+    flatpickr("#ctrl_arrival", {
+        "minDate": "today",
+        "locale": "{{page::language}}",
+        "minuteIncrement": 15,
+        "time_24hr": true,
+        "weekNumbers": true,
+        "enableTime": "<?= empty($this->table_showTimeSlots) ? 'true' : 'false'; ?>",
+        "dateFormat": "<?= $strDateFormat ?>",
+    });
+    // ]]>
+</script>
 <!-- indexer::continue -->

@@ -88,34 +88,16 @@ class tl_module_table_reservation extends Backend
     }
 
     /**
-     * Show a hint if a JavaScript library needs to be included in the page layout
-     *
-     * @param object $dc Data container object
+     * Show a hint that module must be installed to use this option
      *
      */
-    public function showHints($dc)
+    public function showHints()
     {
         if (!in_array('notification_center', ModuleLoader::getActive())) {
             $strMessage = &$GLOBALS['TL_LANG']['tl_module']['installInfo'];
 
             $GLOBALS['TL_DCA']['tl_module']['fields']['table_showNotification']['eval']['disabled'] = true;
             $GLOBALS['TL_DCA']['tl_module']['fields']['table_showNotification']['label']            = $strMessage;
-        }
-
-        if ($_POST || Input::get('act') != 'edit') {
-            return;
-        }
-
-        $objModule = ModuleModel::findByPk($dc->id);
-        if ($objModule === null) {
-            echo 'null' . $dc->id;
-            return;
-        }
-
-        switch ($objModule->type) {
-            case 'table_reservation':
-                Message::addInfo($GLOBALS['TL_LANG']['tl_module']['info']);
-                break;
         }
     }
 
