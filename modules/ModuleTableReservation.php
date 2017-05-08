@@ -40,6 +40,7 @@ use Contao\BackendTemplate;
 use Contao\Widget;
 use Contao\Date;
 use Contao\FrontendTemplate;
+use Contao\Frontend;
 use Contao\Controller;
 
 /**
@@ -685,7 +686,7 @@ class ModuleTableReservation extends Module
             $this->Template->infoMessage = $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationPossible'];
             $this->Template->arrSeats    = $arrSeats;
 
-            $strReserveNowUrl                 = Controller::addToUrl('FORM_PAGE=page2');
+            $strReserveNowUrl                 = Frontend::addToUrl('FORM_PAGE=page2');
             $this->Template->strReserveNowUrl = $strReserveNowUrl;
 
             $strArrival  = date($this->table_dateTimeFormat, $intArrivalDateTime);
