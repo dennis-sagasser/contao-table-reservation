@@ -19,7 +19,6 @@
 /**
  * Callbacks
  */
-$GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = ['tl_module_table_reservation', 'showHints'];
 $GLOBALS['TL_DCA']['tl_module']['config']['onload_callback'][] = ['tl_table_list', 'formatDates'];
 
 /**

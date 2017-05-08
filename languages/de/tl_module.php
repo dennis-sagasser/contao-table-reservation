@@ -97,4 +97,3 @@ $GLOBALS['TL_LANG']['XPL']['helpInsertTags']         = [
 /**
  * Info
  */
-$GLOBALS['TL_LANG']['tl_module']['info'] = '«MooTools laden» muss im Reiter «Mootools» des aktuellen Seitenlayouts unter «Themes» angehakt sein, um den vollen Funktionsumfang des Moduls nutzen zu können.';
