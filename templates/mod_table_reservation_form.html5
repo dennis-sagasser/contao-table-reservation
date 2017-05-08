@@ -1,11 +1,9 @@
 <!-- indexer::stop -->
 <?php if (TL_MODE === 'FE'): ?>
     <?php
-    $GLOBALS['TL_CSS']['table_reservation'] =
+    $GLOBALS['TL_CSS'][] =
         'system/modules/table_reservation/assets/css/bootstrap-button.min.css';
-//    $GLOBALS['TL_CSS']['table_reservation'] =
-//        'system/modules/table_reservation/assets/flatpickr/themes/light.min.css';
-    $GLOBALS['TL_CSS']['table_reservation']  =
+    $GLOBALS['TL_CSS'][]  =
         'system/modules/table_reservation/assets/flatpickr/flatpickr.min.css';
     $GLOBALS['TL_HEAD']['table_reservation'] =
         '<script src="system/modules/table_reservation/assets/flatpickr/flatpickr.min.js">
