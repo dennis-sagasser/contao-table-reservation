@@ -100,7 +100,7 @@
 <?php if (empty($this->table_showTimeSlots)) : ?>
     <?php $strDateFormat = $this->table_dateTimeFormat ? $this->table_dateTimeFormat : Config::get('datimFormat'); ?>
 <?php else : ?>
-    <?= $strDateFormat = $this->table_dateFormat ? $this->table_dateFormat : Config::get('dateFormat'); ?>
+    <?php $strDateFormat = $this->table_dateFormat ? $this->table_dateFormat : Config::get('dateFormat'); ?>
 <?php endif; ?>
 <script type="text/javascript">
     // <![CDATA[
