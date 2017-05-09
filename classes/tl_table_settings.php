@@ -64,11 +64,11 @@ class tl_table_settings extends Backend
         }
 
         if (!$objConfig->numRows && !Input::get('act')) {
-            Controller::redirect(Controller::addToUrl('act=create'));
+            Controller::redirect(Backend::addToUrl('act=create'));
         }
 
         if (!Input::get('id') && !Input::get('act')) {
-            Controller::redirect(Controller::addToUrl('act=edit&id=' . $objConfig->id));
+            Controller::redirect(Backend::addToUrl('act=edit&id=' . $objConfig->id));
         }
     }
 
