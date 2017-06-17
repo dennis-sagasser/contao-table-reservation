@@ -42,6 +42,7 @@ use Contao\Date;
 use Contao\FrontendTemplate;
 use Contao\Frontend;
 use Contao\Controller;
+use Contao\PageModel;
 
 /**
  * Class ModuleTableReservation
@@ -68,7 +69,7 @@ class ModuleTableReservation extends Module
     protected $objSession = null;
 
     /**
-     * Redirect to the selected page
+     * Parse template
      *
      * @return string
      */
@@ -764,9 +765,6 @@ class ModuleTableReservation extends Module
                     ->execute($arrCount["intCount"], $intTableCategory, $strCurrentDate);
             }
 
-            $this->strTemplate           = 'mod_table_reservation_form_success';
-            $this->Template              = new FrontendTemplate($this->strTemplate);
-            $this->Template->infoMessage = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSuccess'];
             $this->send();
 
             $arrSeats         = $this->objSession->get('seats');
@@ -798,6 +796,16 @@ class ModuleTableReservation extends Module
             $this->objSession->remove('arrCategoriesCount');
             $this->objSession->remove('arrival');
             $this->objSession->remove('seats');
+
+            if (!empty($this->jumpTo)) {
+                $objPage = PageModel::findByPK(intval($this->jumpTo));
+                $strPageURL = Controller::generateFrontendUrl($objPage->row());
+                Controller::redirect($strPageURL);
+            }
+
+            $this->strTemplate           = 'mod_table_reservation_form_success';
+            $this->Template              = new FrontendTemplate($this->strTemplate);
+            $this->Template->infoMessage = $GLOBALS['TL_LANG']['MSC']['table_reservation']['formReservationSuccess'];
         }
     }
 
