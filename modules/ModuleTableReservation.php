@@ -197,6 +197,12 @@ class ModuleTableReservation extends Module
             ]
         );
 
+        if (empty($arrSelect)) {
+            $objWidgetCheckboxes->addError(
+                $GLOBALS['TL_LANG']['MSC']['table_reservation']['formNoTableCategoryPublished']
+            );
+        }
+
         $this->Template->objWidgetCheckboxes = $objWidgetCheckboxes;
 
         if (Input::post('FORM_SUBMIT') === 'form_availability_submit') {
@@ -798,7 +804,7 @@ class ModuleTableReservation extends Module
             $this->objSession->remove('seats');
 
             if (!empty($this->jumpTo)) {
-                $objPage = PageModel::findByPK(intval($this->jumpTo));
+                $objPage    = PageModel::findByPK(intval($this->jumpTo));
                 $strPageURL = Controller::generateFrontendUrl($objPage->row());
                 Controller::redirect($strPageURL);
             }
