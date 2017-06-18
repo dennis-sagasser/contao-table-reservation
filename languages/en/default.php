@@ -48,6 +48,7 @@ $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationPossible']          
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationNotPossible']         = 'Sorry. Reservation is not possible.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationTooLate']             = 'Next possible reservation is after: "%s".';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['closed']                         = 'The time is outside the opening times.';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['formNoTableCategoryPublished']   = 'Sorry. Reservation is not possible, because there is no table category approved.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSalutation']                 = 'Gender';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formMale']                       = 'Mr.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFemale']                     = 'Mrs.';

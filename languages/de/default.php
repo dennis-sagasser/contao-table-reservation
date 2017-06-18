@@ -48,6 +48,7 @@ $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationPossible']          
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationTooLate']             = 'Der nächstmögliche Reservierungszeitpunkt ist nach: "%s".';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['closed']                         = 'Der Zeitpunkt liegt außerhalb der Öffnungszeiten.';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['reservationNotPossible']         = 'Es ist leider keine Reservierung möglich.';
+$GLOBALS['TL_LANG']['MSC']['table_reservation']['formNoTableCategoryPublished']   = 'Es ist leider keine Reservierung möglich, da keine Tischkategorien zur Auswahl stehen';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formSalutation']                 = 'Anrede';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formMale']                       = 'Herr';
 $GLOBALS['TL_LANG']['MSC']['table_reservation']['formFemale']                     = 'Frau';
