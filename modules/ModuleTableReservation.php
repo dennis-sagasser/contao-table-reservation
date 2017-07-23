@@ -193,7 +193,8 @@ class ModuleTableReservation extends Module
                 'name'      => 'tableCategory',
                 'options'   => $objCategorySettings->fetchAllAssoc(),
                 'mandatory' => true,
-                'value'     => Input::post('tableCategory')
+                'value'     => count($objCategorySettings->fetchAllAssoc()) === 1 ? true :
+                    Input::post('tableCategory')
             ]
         );
 
