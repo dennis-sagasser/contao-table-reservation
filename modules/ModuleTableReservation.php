@@ -697,7 +697,12 @@ class ModuleTableReservation extends Module
             $strReserveNowUrl                 = Frontend::addToUrl('FORM_PAGE=page2');
             $this->Template->strReserveNowUrl = $strReserveNowUrl;
 
-            $strArrival  = date($this->table_dateTimeFormat, $intArrivalDateTime);
+            $strArrival  = date(
+                !empty($this->table_dateTimeFormat) ?
+                    $this->table_dateTimeFormat :
+                    Config::get('dateFormat'),
+                $intArrivalDateTime
+            );
             $strDateTime = empty($objWidgetTimeSlots) ? $strArrival :
                 sprintf('%s - %s', $strArrival, $strDepartureTime);
 
